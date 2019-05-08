@@ -13,7 +13,9 @@ message FrameReadout {
 
 	enum Error {
 		NO_ERROR = 0;
-		PROCESS_OVERFLOW = 1;
+		PROCESS_OVERFLOW   = 1;
+		PROCESS_TIMEOUT    = 2;
+		ILLUMINATION_ERROR = 3;
 	}
 
 	int64                     timestamp = 1;
