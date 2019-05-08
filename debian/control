@@ -1,22 +1,39 @@
 Source: fort-hermes
 Priority: optional
 Maintainer: Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>
-Build-Depends: debhelper (>= 9)
+Build-Depends: debhelper (>= 9), protobuf-compiler, libprotobuf-dev
 Standards-Version: 3.9.8
 Section: libs
-Homepage: https:://github.com/formicidae-tracker/hermes
-Vcs-Git: https:://github.com/formicidae-tracker/hermes.git
+Homepage: https://github.com/formicidae-tracker/hermes
+Vcs-Git: https://github.com/formicidae-tracker/hermes.git
 
 
 Package: libfort-hermes-dev
 Section: libdevel
 Architecture: any
-Depends: fort-hermes.1 (= ${binary:Version}), ${misc:Depends}
+Depends: libfort-hermes0.1 (= ${binary:Version}), ${misc:Depends}
 Description: FORT Tracking Data Exchange Format - Dev files
- FORmicidae Tracker project Tacking Data Exchange format.
+ FORmicidae Tracker project Tacking Data Exchange format. This package
+ contains header and development files
 
 Package: libfort-hermes0.1
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description:  FORT Tracking Data Exchange Format - Runtime
- FORmicidae Tracker project Tacking Data Exchange format.
+ FORmicidae Tracker project Tacking Data Exchange format. This package
+ contains C runtime.
+
+Package: libfort-hermes-cpp-dev
+Section: libdevel
+Architecture: any
+Depends: libfort-hermes-cpp0.1 (= ${binary:Version}), ${misc:Depends}
+Description: FORT Tracking Data Exchange Format - Dev files
+ FORmicidae Tracker project Tacking Data Exchange format. This package
+ contains header and development files for C++ applications
+
+Package: libfort-hermes-cpp0.1
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description:  FORT Tracking Data Exchange Format - Runtime
+ FORmicidae Tracker project Tacking Data Exchange format. This package
+ contains C++ runtime.
