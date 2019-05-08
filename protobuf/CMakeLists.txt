@@ -8,7 +8,7 @@ set(PROTO_FILES Ant.proto
 protobuf_generate_cpp(PROTO_SRC PROTO_HDR ${PROTO_FILES})
 
 
-install(FILES ${PROTO_HDR} DESTINATION ${INCLUDE_INSTALL_DIR})
+install(FILES ${PROTO_HDR} ${PROTO_FILES} DESTINATION ${INCLUDE_INSTALL_DIR})
 
 add_library(fort-hermes-cpp SHARED ${SRC_FILES} ${HDR_FILES} ${PROTO_SRC} ${PROTO_HDR})
 set_target_properties(fort-hermes-cpp PROPERTIES VERSION ${VERSION_API}
