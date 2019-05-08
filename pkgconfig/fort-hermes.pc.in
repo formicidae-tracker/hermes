@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+includedir=${prefix}/@INCLUDE_DIR@
+libdir=${exec_prefix}/lib
+
+Name: fort-hermes
+Description: FORmicidae Tracker Tracking Data Exchange Format
+Requires: protobuf >= 3.0.0
+Version: @PROJECT_VERSION@
+Cflags: -I${includedir}
+Libs: -L${libdir} -lfort-hermes-cpp -lfort-hermes
