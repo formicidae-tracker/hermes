@@ -12,14 +12,14 @@ Package: libfort-hermes-dev
 Section: libdevel
 Architecture: any
 Depends: libfort-hermes0.1 (= ${binary:Version}), ${misc:Depends}
-Description: FORT Tracking Data Exchange Format - Dev files
+Description: FORT Tracking Data Exchange Format - C Dev files
  FORmicidae Tracker project Tacking Data Exchange format. This package
  contains header and development files
 
 Package: libfort-hermes0.1
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description:  FORT Tracking Data Exchange Format - Runtime
+Description:  FORT Tracking Data Exchange Format - C Runtime
  FORmicidae Tracker project Tacking Data Exchange format. This package
  contains C runtime.
 
@@ -27,13 +27,13 @@ Package: libfort-hermes-cpp-dev
 Section: libdevel
 Architecture: any
 Depends: libfort-hermes-cpp0.1 (= ${binary:Version}), ${misc:Depends}
-Description: FORT Tracking Data Exchange Format - Dev files
+Description: FORT Tracking Data Exchange Format - C++ Dev files
  FORmicidae Tracker project Tacking Data Exchange format. This package
  contains header and development files for C++ applications
 
 Package: libfort-hermes-cpp0.1
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description:  FORT Tracking Data Exchange Format - Runtime
+Description:  FORT Tracking Data Exchange Format - C++ Runtime
  FORmicidae Tracker project Tacking Data Exchange format. This package
  contains C++ runtime.

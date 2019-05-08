@@ -1,0 +1,4 @@
+usr/include/fort-hermes/*.pb.h
+usr/include/fort-hermes/*.proto
+usr/lib/libfort-hermes-cpp.so
+usr/lib/FortHermesCpp/cmake/*
