@@ -1,0 +1,5 @@
+fort-hermes (0.1.0-1) unstable; urgency=medium
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>  Wed, 08 May 2019 13:30:44 +0200
