@@ -12,11 +12,9 @@ else(${PROJECT_VERSION_MAJOR} EQUAL 0)
 	set(VERSION_ABI ${PROJECT_VERSION_MAJOR})
 endif(${PROJECT_VERSION_MAJOR} EQUAL 0)
 
+find_package(Protobuf 3.0.0 REQUIRED)
 
-find_package(Protobuf 3.5.0 REQUIRED)
-
-
-set(INCLUDE_DIR include/fort/hermes)
+set(INCLUDE_DIR include/fort-hermes)
 
 add_subdirectory(protobuf)
 
