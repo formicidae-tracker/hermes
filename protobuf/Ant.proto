@@ -6,8 +6,8 @@ option go_package = "github.com/formicidae-tracker/hermes";
 package fort.hermes;
 
 message Ant {
-	int32 ID    = 1;
-	float x     = 2;
-	float y     = 3;
-	float theta = 4;
+	uint32 ID    = 1;
+	double x     = 2;
+	double y     = 3;
+	double theta = 4;
 };

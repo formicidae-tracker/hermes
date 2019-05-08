@@ -12,12 +12,29 @@ else(${PROJECT_VERSION_MAJOR} EQUAL 0)
 	set(VERSION_ABI ${PROJECT_VERSION_MAJOR})
 endif(${PROJECT_VERSION_MAJOR} EQUAL 0)
 
+find_package(Protobuf 3.0.0 REQUIRED)
 
-find_package(Protobuf 3.5.0 REQUIRED)
+set(CMAKE_CXX_STANDARD 11)
+
+set(INCLUDE_INSTALL_DIR include/fort-hermes)
+set(LIB_INSTALL_DIR lib/ )
 
 
-set(INCLUDE_DIR include/fort/hermes)
+include(CMakePackageConfigHelpers)
+configure_package_config_file(FortHermesCppConfig.cmake.in
+	${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfig.cmake
+	INSTALL_DESTINATION ${LIB_INSTALL_DIR}/FortHermesCpp/cmake
+	PATH_VARS INCLUDE_INSTALL_DIR)
+write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfigVersion.cmake
+	VERSION ${PROJECT_VERSION}
+	COMPATIBILITY SameMajorVersion )
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfig.cmake
+              ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfigVersion.cmake
+        DESTINATION ${LIB_INSTALL_DIR}/FortHermesCpp/cmake )
 
 add_subdirectory(protobuf)
 
 add_subdirectory(src)
+
+add_subdirectory(pkgconfig)
