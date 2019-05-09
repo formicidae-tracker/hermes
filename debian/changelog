@@ -1,3 +1,9 @@
+fort-hermes (0.1.1-1) stretch; urgency=medium
+
+  * Debian stretch backport
+
+ -- Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>  Thu, 09 May 2019 12:47:03 +0200
+
 fort-hermes (0.1.1-0ubuntu1) bionic; urgency=medium
 
   * New upstream version 0.1.1
