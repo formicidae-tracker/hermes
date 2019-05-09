@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/formicidae-tracker/hermes";
+
+import "FrameReadout.proto";
+
+package fort.hermes;
+
+message SharedFrameReadout {
+	FrameReadout readout = 1;
+	string  uuid         = 2;
+	string  camera       = 3;
+	string  experiment   = 4;
+};
