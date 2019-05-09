@@ -12,7 +12,7 @@ else(${PROJECT_VERSION_MAJOR} EQUAL 0)
 	set(VERSION_ABI ${PROJECT_VERSION_MAJOR})
 endif(${PROJECT_VERSION_MAJOR} EQUAL 0)
 
-find_package(Protobuf 3.0.0 REQUIRED)
+find_package(Protobuf 3.3.0 REQUIRED)
 
 set(CMAKE_CXX_STANDARD 11)
 
