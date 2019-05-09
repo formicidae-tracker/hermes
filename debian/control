@@ -1,7 +1,7 @@
 Source: fort-hermes
 Priority: optional
 Maintainer: Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>
-Build-Depends: debhelper (>= 9), protobuf-compiler, libprotobuf-dev
+Build-Depends: debhelper (>= 9), protobuf-compiler, libprotobuf-dev, cmake (>= 3.2)
 Standards-Version: 3.9.8
 Section: libs
 Homepage: https://github.com/formicidae-tracker/hermes

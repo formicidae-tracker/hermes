@@ -1,5 +1,11 @@
-fort-hermes (0.1.0-1) unstable; urgency=medium
+fort-hermes (0.1.1-0ubuntu1) bionic; urgency=medium
 
-  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+  * New upstream version 0.1.1
+
+ -- Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>  Thu, 09 May 2019 11:51:04 +0200
+
+fort-hermes (0.1.0-0ubuntu1) bionic; urgency=medium
+
+  * Initial release
 
  -- Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>  Wed, 08 May 2019 13:30:44 +0200
