@@ -3,7 +3,6 @@ set(HDR_FILES )
 
 set(PROTO_FILES Ant.proto
                 FrameReadout.proto
-                SharedFrameReadout.proto
 	            )
 
 protobuf_generate_cpp(PROTO_SRC PROTO_HDR ${PROTO_FILES})
