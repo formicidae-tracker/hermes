@@ -17,14 +17,14 @@ find_package(Protobuf 3.3.0 REQUIRED)
 set(CMAKE_CXX_STANDARD 11)
 
 set(INCLUDE_INSTALL_DIR include/fort-hermes)
-set(LIB_INSTALL_DIR lib/ )
+set(LIB_INSTALL_DIR lib )
 
 
 include(CMakePackageConfigHelpers)
 configure_package_config_file(FortHermesCppConfig.cmake.in
 	${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfig.cmake
 	INSTALL_DESTINATION ${LIB_INSTALL_DIR}/FortHermesCpp/cmake
-	PATH_VARS INCLUDE_INSTALL_DIR)
+	PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR)
 write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfigVersion.cmake
 	VERSION ${PROJECT_VERSION}
 	COMPATIBILITY SameMajorVersion )

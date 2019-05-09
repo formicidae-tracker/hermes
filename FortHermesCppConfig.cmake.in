@@ -1,6 +1,6 @@
 set(FORT_HERMES_CPP_VERSION @PROJECT_VERSION@)
 
-find_package(Protobuf 3.0.0 REQUIRED)
+find_package(Protobuf 3.3.0 REQUIRED)
 
 @PACKAGE_INIT@
 
