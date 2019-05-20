@@ -7,10 +7,12 @@ Package hermes is a generated protocol buffer package.
 It is generated from these files:
 	Ant.proto
 	FrameReadout.proto
+	Header.proto
 
 It has these top-level messages:
 	Ant
 	FrameReadout
+	Version
 */
 package hermes
 
