@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/formicidae-tracker/hermes";
+
+package fort.hermes;
+
+message Version {
+	uint32 Major    = 1;
+	uint32 Minor    = 2;
+};
