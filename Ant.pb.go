@@ -15,6 +15,7 @@ It has these top-level messages:
 	Version
 	Header
 	Footer
+	FileLine
 */
 package hermes
 
