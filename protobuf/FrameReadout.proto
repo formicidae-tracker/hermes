@@ -24,5 +24,4 @@ message FrameReadout {
 	google.protobuf.Timestamp time          = 4;
 	Error error                             = 5;
 	string                    producer_uuid = 6;
-	bool                      EOS           = 7;
 };
