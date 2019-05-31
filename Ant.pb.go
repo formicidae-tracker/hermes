@@ -13,6 +13,8 @@ It has these top-level messages:
 	Ant
 	FrameReadout
 	Version
+	Header
+	Footer
 */
 package hermes
 
