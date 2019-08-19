@@ -15,25 +15,25 @@ extern "C" {
 	} fort_hermes_error_e;
 
 
-	typedef struct fort_hermes_frame_readout fort_hermes_frame_readout_t;
-	typedef struct fort_hermes_ant fort_hermes_ant_t;
+	typedef void fort_hermes_frame_readout_t;
+	typedef void fort_hermes_ant_t;
 
 	uint64_t fort_hermes_frame_readout_timestamp(fort_hermes_frame_readout_t * re);
 	uint64_t fort_hermes_frame_readout_frame_id(fort_hermes_frame_readout_t * re);
 	size_t fort_hermes_frame_readout_ant_size(fort_hermes_frame_readout_t * re);
 	fort_hermes_ant_t * fort_hermes_frame_readout_ant(fort_hermes_frame_readout_t * re, size_t i);
-	struct timeval * fort_hermes_frame_readout_time(fort_hermes_frame_readout_t * re);
+	void fort_hermes_frame_readout_time(fort_hermes_frame_readout_t * re,struct timeval * res);
 	fort_hermes_error_e fort_hermes_frame_readout_error(fort_hermes_frame_readout_t * re);
 
 	void fort_hermes_frame_readout_destroy(fort_hermes_frame_readout_t * re);
 
 
-	uint32_t fort_hermes_ant_id(fort_hermes_ant * a);
-	double fort_hermes_ant_x(fort_hermes_ant * a);
-	double fort_hermes_ant_y(fort_hermes_ant * a);
-	double fort_hermes_ant_theta(fort_hermes_ant * a);
+	uint32_t fort_hermes_ant_id(fort_hermes_ant_t * a);
+	double fort_hermes_ant_x(fort_hermes_ant_t * a);
+	double fort_hermes_ant_y(fort_hermes_ant_t * a);
+	double fort_hermes_ant_theta(fort_hermes_ant_t * a);
 
-	typedef struct fort_hermes_context fort_hermes_context_t;
+	typedef void * fort_hermes_context_t;
 
 	fort_hermes_context_t * fort_hermes_open_file(const char * filename);
 
