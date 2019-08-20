@@ -3,7 +3,8 @@
 #include "FrameReadout.pb.h"
 #include <google/protobuf/util/time_util.h>
 
-#include "Context.h"
+#include "NetworkContext.h"
+#include "FileContext.h"
 
 
 #ifdef __cplusplus
@@ -11,32 +12,32 @@ extern "C" {
 #endif //__cplusplus
 
 
-	uint32_t fort_hermes_ant_id(fort_hermes_ant_t * a) {
+	uint32_t fh_ant_id(fh_ant_t * a) {
 		return reinterpret_cast<fort::hermes::Ant*>(a)->id();
 	}
 
-	double fort_hermes_ant_x(fort_hermes_ant_t * a) {
+	double fh_ant_x(fh_ant_t * a) {
 		return reinterpret_cast<fort::hermes::Ant*>(a)->x();
 	}
 
-	double fort_hermes_ant_y(fort_hermes_ant_t * a) {
+	double fh_ant_y(fh_ant_t * a) {
 		return reinterpret_cast<fort::hermes::Ant*>(a)->y();
 	}
 
-	double fort_hermes_ant_theta(fort_hermes_ant_t * a) {
+	double fh_ant_theta(fh_ant_t * a) {
 		return reinterpret_cast<fort::hermes::Ant*>(a)->theta();
 	}
 
-	uint64_t fort_hermes_frame_readout_timestamp(fort_hermes_frame_readout_t * re) {
+	uint64_t fh_frame_readout_timestamp(fh_frame_readout_t * re) {
 		return reinterpret_cast<fort::hermes::FrameReadout*>(re)->timestamp();
 	}
-	uint64_t fort_hermes_frame_readout_frame_id(fort_hermes_frame_readout_t * re) {
+	uint64_t fh_frame_readout_frame_id(fh_frame_readout_t * re) {
 		return reinterpret_cast<fort::hermes::FrameReadout*>(re)->frameid();
 	}
-	size_t fort_hermes_frame_readout_ant_size(fort_hermes_frame_readout_t * re) {
+	size_t fh_frame_readout_ant_size(fh_frame_readout_t * re) {
 		return reinterpret_cast<fort::hermes::FrameReadout*>(re)->ants_size();
 	}
-	fort_hermes_ant_t * fort_hermes_frame_readout_ant(fort_hermes_frame_readout_t * re, size_t i) {
+	fh_ant_t * fh_frame_readout_ant(fh_frame_readout_t * re, size_t i) {
 		fort::hermes::FrameReadout * re_ = reinterpret_cast<fort::hermes::FrameReadout*>(re);
 		if ( i >= re_->ants_size() ) {
 			return NULL;
@@ -44,63 +45,90 @@ extern "C" {
 		return reinterpret_cast<void*>(re_->mutable_ants(i));
 	}
 
-	void fort_hermes_frame_readout_time(fort_hermes_frame_readout_t * re,struct timeval * res) {
+	void fh_frame_readout_time(fh_frame_readout_t * re,struct timeval * res) {
 		*res = google::protobuf::util::TimeUtil::TimestampToTimeval(reinterpret_cast<fort::hermes::FrameReadout*>(re)->time());
 	}
 
-	fort_hermes_error_e fort_hermes_frame_readout_error(fort_hermes_frame_readout_t * re) {
-		return (fort_hermes_error_e)reinterpret_cast<fort::hermes::FrameReadout*>(re)->error();
+	fh_readout_error_e fh_frame_readout_error(fh_frame_readout_t * re) {
+		return (fh_readout_error_e)reinterpret_cast<fort::hermes::FrameReadout*>(re)->error();
 	}
 
-	void fort_hermes_frame_readout_destroy(fort_hermes_frame_readout_t * re) {
+	void fh_frame_readout_destroy(fh_frame_readout_t * re) {
+		if ( re == NULL ) {
+			return;
+		}
 		delete reinterpret_cast<fort::hermes::FrameReadout*>(re);
 	}
 
-	fort_hermes_context_t * fort_hermes_open_file(const char * filename,fort_hermes_error_e * err) {
-		if ( err != NULL ) {
-			*err = UNHANDLED_INTERNAL_ERROR;
+	fh_context_t * fh_open_file(const char * filename,fh_error_t * err) {
+		try {
+			return reinterpret_cast<void*>(new fort::hermes::FileContext(filename));
+		} catch (const std::exception & e) {
+			if ( err != NULL ) {
+				err->what = strdup(e.what());
+			}
 		}
 		return NULL;
 	}
 
-	fort_hermes_context_t * fort_hermes_connect(const char * address,fort_hermes_error_e * err) {
-		if ( err != NULL ) {
-			*err = UNHANDLED_INTERNAL_ERROR;
+	fh_context_t * fh_connect(const char * address,fh_error_t * err) {
+		try {
+			return reinterpret_cast<void*>(new fort::hermes::NetworkContext(address));
+		} catch (const std::exception & e) {
+			if ( err != NULL ) {
+				err->what = strdup(e.what());
+			}
 		}
 		return NULL;
 	}
 
-	void fort_hermes_context_destroy(fort_hermes_context_t * ctx) {
-		delete reinterpret_cast<fort::hermes::Context*>(ctx);
+	void fh_context_destroy(fh_context_t * ctx) {
+		if ( ctx != NULL ) {
+			delete reinterpret_cast<fort::hermes::Context*>(ctx);
+		}
 	}
 
-	fort_hermes_frame_readout_t * fort_hermes_context_read(fort_hermes_context_t * ctx,fort_hermes_error_e * err) {
+	fh_frame_readout_t * fh_context_read(fh_context_t * ctx,fh_error_t * err) {
 		fort::hermes::FrameReadout * ro = new fort::hermes::FrameReadout();
 		try {
 			reinterpret_cast<fort::hermes::Context*>(ctx)->Read(ro);
 			return reinterpret_cast<void*>(ro);
 		} catch ( const std::exception & e ) {
 			if ( err != NULL ) {
-				*err = UNHANDLED_INTERNAL_ERROR;
+				err->what = strdup(e.what());
 			}
 			return NULL;
 		}
 	}
 
-	fort_hermes_frame_readout_t * fort_hermes_context_poll(fort_hermes_context_t * ctx,fort_hermes_error_e * err) {
+	fh_frame_readout_t * fh_context_poll(fh_context_t * ctx,fh_error_t * err) {
 		fort::hermes::FrameReadout * ro = new fort::hermes::FrameReadout();
 		try {
 			reinterpret_cast<fort::hermes::Context*>(ctx)->Poll(ro);
 			return reinterpret_cast<void*>(ro);
 		} catch ( const std::exception & e) {
 			if ( err != NULL ) {
-				*err = UNHANDLED_INTERNAL_ERROR;
+				err->what = strdup(e.what());
 			}
 			return NULL;
 		}
 	}
 
+	fh_error_t * fh_error_create() {
+		auto res = new fh_error_t();
+		res->what = NULL;
+		return res;
+	}
 
+	void fh_error_destroy(fh_error_t * err) {
+		if ( err == NULL ) {
+			return;
+		}
+		if ( err->what != NULL ) {
+			free(err);
+		}
+		delete err;
+	}
 
 #ifdef __cplusplus
 }  // extern "C"

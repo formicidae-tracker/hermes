@@ -1,8 +1,12 @@
-set(SRC_FILES hermes.cpp)
+set(SRC_FILES hermes.cpp
+              NetworkContext.cpp
+              FileContext.cpp)
 
 
 set(HDR_FILES hermes.h
-	          Context.h)
+              Context.h
+              NetworkContext.h
+              FileContext.h)
 
 install(FILES ${HDR_FILES} DESTINATION ${INCLUDE_INSTALL_DIR})
 
