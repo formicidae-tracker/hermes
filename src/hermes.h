@@ -12,6 +12,8 @@ extern "C" {
 		PROCESS_OVERFLOW = 1,
 		PROCESS_TIMEOUT = 2,
 		ILLUMINATION_ERROR = 3,
+
+		UNHANDLED_INTERNAL_ERROR = 4,
 	} fort_hermes_error_e;
 
 
@@ -35,17 +37,15 @@ extern "C" {
 
 	typedef void * fort_hermes_context_t;
 
-	fort_hermes_context_t * fort_hermes_open_file(const char * filename);
+	fort_hermes_context_t * fort_hermes_open_file(const char * filename, fort_hermes_error_e * err);
 
-	fort_hermes_context_t * fort_hermes_connect(const char * address);
+	fort_hermes_context_t * fort_hermes_connect(const char * address, fort_hermes_error_e * err);
 
 	void fort_hermes_context_destroy(fort_hermes_context_t * ctx);
 
-	fort_hermes_frame_readout_t * fort_hermes_context_read(fort_hermes_context_t * ctx);
+	fort_hermes_frame_readout_t * fort_hermes_context_read(fort_hermes_context_t * ctx,fort_hermes_error_e * err);
 
-	fort_hermes_frame_readout_t * fort_hermes_context_poll(fort_hermes_context_t * ctx);
-
-
+	fort_hermes_frame_readout_t * fort_hermes_context_poll(fort_hermes_context_t * ctx,fort_hermes_error_e * err);
 #ifdef __cplusplus
 }  // extern "C"
 #endif //__cplusplus
