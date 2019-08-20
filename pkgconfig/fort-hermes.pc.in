@@ -8,4 +8,4 @@ Description: FORmicidae Tracker Tracking Data Exchange Format
 Requires: protobuf >= 3.0.0
 Version: @PROJECT_VERSION@
 Cflags: -I${includedir}
-Libs: -L${libdir} -lfort-hermes-cpp -lfort-hermes
+Libs: -L${libdir} -lfort-hermes-cpp -lfort-hermes -lboost_iostreams -lboost_regex

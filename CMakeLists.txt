@@ -12,9 +12,21 @@ else(${PROJECT_VERSION_MAJOR} EQUAL 0)
 	set(VERSION_ABI ${PROJECT_VERSION_MAJOR})
 endif(${PROJECT_VERSION_MAJOR} EQUAL 0)
 
-find_package(Protobuf 3.3.0 REQUIRED)
-
 set(CMAKE_CXX_STANDARD 11)
+
+
+find_package(Protobuf 3.3.0 REQUIRED)
+find_package(Boost REQUIRED COMPONENTS iostreams)
+
+include(ExternalProject)
+ExternalProject_Add(ASIO
+	URL https://sourceforge.net/projects/asio/files/asio/1.10.8%20%28Stable%29/asio-1.10.8.tar.bz2/download
+	BUILD_IN_SOURCE 1
+	CONFIGURE_COMMAND ./configure --prefix=${PROJECT_BINARY_DIR}/ASIO-prefix
+	BUILD_COMMAND echo "done"
+	TEST_BEFORE_INSTALL 1
+	TEST_COMMAND make check -j 7
+	INSTALL_COMMAND make install)
 
 set(INCLUDE_INSTALL_DIR include/fort-hermes)
 set(LIB_INSTALL_DIR lib )
@@ -32,6 +44,11 @@ write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfig
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfig.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfigVersion.cmake
         DESTINATION ${LIB_INSTALL_DIR}/FortHermesCpp/cmake )
+
+include_directories(${PROJECT_BINARY_DIR}/ASIO-prefix/include
+	                ${PROTOBUF_INCLUDE_DIRS}
+	                ${Boost_INCLUDE_DIRS})
+
 
 add_subdirectory(protobuf)
 

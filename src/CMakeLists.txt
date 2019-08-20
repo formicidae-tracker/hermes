@@ -11,6 +11,7 @@ add_library(fort-hermes SHARED ${SRC_FILES} ${HDR_FILES} ${PROTO_C_HDR} ${PROTO_
 set_target_properties(fort-hermes PROPERTIES VERSION ${VERSION_API}
                                                      SOVERSION ${VERSION_ABI})
 
-target_link_libraries(fort-hermes fort-hermes-cpp)
+target_link_libraries(fort-hermes fort-hermes-cpp ${Boost_LIBRARIES})
+
 
 install(TARGETS fort-hermes DESTINATION lib)
