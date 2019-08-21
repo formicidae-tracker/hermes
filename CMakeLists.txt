@@ -16,7 +16,6 @@ set(CMAKE_CXX_STANDARD 11)
 
 
 find_package(Protobuf 3.3.0 REQUIRED)
-find_package(Boost REQUIRED COMPONENTS iostreams)
 
 include(ExternalProject)
 ExternalProject_Add(ASIO
@@ -46,7 +45,6 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfig.cmake
         DESTINATION ${LIB_INSTALL_DIR}/FortHermesCpp/cmake )
 
 include_directories(${PROJECT_BINARY_DIR}/ASIO-prefix/include
-	                ${PROTOBUF_INCLUDE_DIRS}
 	                ${Boost_INCLUDE_DIRS})
 
 
