@@ -44,8 +44,9 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfig.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfigVersion.cmake
         DESTINATION ${LIB_INSTALL_DIR}/FortHermesCpp/cmake )
 
-include_directories(${PROJECT_BINARY_DIR}/ASIO-prefix/include
-	                ${Boost_INCLUDE_DIRS})
+include_directories(BEFORE SYSTEM ${PROJECT_BINARY_DIR}/ASIO-prefix/include)
+
+include_directories(${PROTOBUF_INCLUDE_DIRS})
 
 add_subdirectory(protobuf)
 

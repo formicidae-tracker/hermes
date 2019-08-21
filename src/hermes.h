@@ -22,6 +22,8 @@ extern "C" {
 	    FH_STREAM_WRONG_VERSION = 10002,
 	    FH_END_OF_STREAM = 10003,
 	    FH_MESSAGE_DECODE_ERROR = 10004,
+	    FH_COULD_NOT_CONNECT = 10005,
+	    FH_SOCKET_ERROR = 10006,
 	} fh_error_code_e;
 
 	typedef struct fh_error {
