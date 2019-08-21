@@ -12,7 +12,7 @@ else(${PROJECT_VERSION_MAJOR} EQUAL 0)
 	set(VERSION_ABI ${PROJECT_VERSION_MAJOR})
 endif(${PROJECT_VERSION_MAJOR} EQUAL 0)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 11)
 
 
 find_package(Protobuf 3.3.0 REQUIRED)
@@ -52,3 +52,5 @@ add_subdirectory(protobuf)
 add_subdirectory(src)
 
 add_subdirectory(pkgconfig)
+
+add_subdirectory(examples)

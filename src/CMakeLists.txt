@@ -1,10 +1,12 @@
 set(SRC_FILES hermes.cpp
+              Path.cpp
               Error.cpp
               NetworkContext.cpp
               FileContext.cpp)
 
 
 set(HDR_FILES hermes.h
+              Path.h
               Error.h
               Context.h
               NetworkContext.h

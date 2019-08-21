@@ -3,13 +3,12 @@
 #include "Context.h"
 
 #include <memory>
-#include <filesystem>
 
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/io/gzip_stream.h>
 
 #include "Header.pb.h"
-
+#include "Path.h"
 
 namespace fort {
 
@@ -31,7 +30,7 @@ private:
 
 	void OpenFile(const std::string & filename);
 
-	std::filesystem::path d_path;
+	base::Path d_path;
 
 	FilePtr d_file;
 	GZipPtr d_gzip;

@@ -7,7 +7,7 @@ namespace hermes {
 
 class Context {
 public:
-	virtual ~Context();
+	virtual ~Context(){};
 
 	virtual void Read(fort::hermes::FrameReadout * ro) = 0;
 

@@ -92,6 +92,10 @@ extern "C" {
 		try {
 			reinterpret_cast<fort::hermes::Context*>(ctx)->Read(reinterpret_cast<fort::hermes::FrameReadout*>(ro));
 		} catch ( const fort::hermes::EndOfFile & e) {
+			if ( err != NULL ) {
+				err->what = strdup("End Of File");
+				err->code = FH_END_OF_STREAM;
+			}
 			return false;
 		} catch ( const fort::hermes::InternalError & e ) {
 			if ( err != NULL ) {
@@ -100,6 +104,7 @@ extern "C" {
 			}
 			return false;
 		}
+
 		return true;
 	}
 
@@ -134,6 +139,10 @@ extern "C" {
 			free(err);
 		}
 		delete err;
+	}
+
+	fh_frame_readout_t * fh_frame_readout_create() {
+		return reinterpret_cast<void*>(new fort::hermes::FrameReadout());
 	}
 
 #ifdef __cplusplus

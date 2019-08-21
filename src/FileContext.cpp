@@ -71,7 +71,7 @@ void FileContext::Read(fort::hermes::FrameReadout * ro) {
 		throw EndOfFile();
 	}
 
-	OpenFile(d_path.replace_filename(d_line.footer().next()));
+	OpenFile(d_path.Dir().Join({d_line.footer().next()}).Str());
 }
 
 void FileContext::Poll(fort::hermes::FrameReadout * ro) {

@@ -1,7 +1,8 @@
 #pragma once
 
-#include <cstdint>
-#include <cstddef>
+#include <stdint.h>
+#include <stddef.h>
+#include <stdbool.h>
 #include <sys/time.h>
 
 #ifdef __cplusplus
