@@ -63,9 +63,10 @@ extern "C" {
 	fh_context_t * fh_open_file(const char * filename,fh_error_t * err) {
 		try {
 			return reinterpret_cast<void*>(new fort::hermes::FileContext(filename));
-		} catch (const std::exception & e) {
+		} catch (const fort::hermes::InternalError & e) {
 			if ( err != NULL ) {
 				err->what = strdup(e.what());
+				err->code = e.Code();
 			}
 		}
 		return NULL;
@@ -74,9 +75,10 @@ extern "C" {
 	fh_context_t * fh_connect(const char * address,fh_error_t * err) {
 		try {
 			return reinterpret_cast<void*>(new fort::hermes::NetworkContext(address));
-		} catch (const std::exception & e) {
+		} catch (const fort::hermes::InternalError & e) {
 			if ( err != NULL ) {
 				err->what = strdup(e.what());
+				err->code = e.Code();
 			}
 		}
 		return NULL;
