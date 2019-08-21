@@ -21,13 +21,13 @@ private:
 	void Reset();
 	bool ReadMessageUnsafe(google::protobuf::MessageLite & m);
 
-	size_t ReadSome(uint8_t * data, size_t size);
+	void ReadSome(size_t size);
 
 	asio::io_service      d_service;
 	asio::ip::tcp::socket d_socket;
 	std::vector<uint8_t>  d_buffer;
 	bool                  d_sizeReceived;
-	size_t                d_readSize,d_readMessage;
+	size_t                d_bufferReceived,d_sizeByteLength;
 	uint32_t              d_messageSize;
 };
 
