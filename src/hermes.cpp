@@ -72,9 +72,9 @@ extern "C" {
 		return NULL;
 	}
 
-	fh_context_t * fh_connect(const char * address,fh_error_t * err) {
+	fh_context_t * fh_connect(const char * host, int port,bool nonblocking, fh_error_t * err) {
 		try {
-			return reinterpret_cast<void*>(new fort::hermes::NetworkContext(address));
+			return reinterpret_cast<void*>(new fort::hermes::NetworkContext(host,port,nonblocking));
 		} catch (const fort::hermes::InternalError & e) {
 			if ( err != NULL ) {
 				err->what = strdup(e.what());
@@ -93,6 +93,11 @@ extern "C" {
 	bool fh_context_read(fh_context_t * ctx,fh_frame_readout_t * ro,fh_error_t * err) {
 		try {
 			reinterpret_cast<fort::hermes::Context*>(ctx)->Read(reinterpret_cast<fort::hermes::FrameReadout*>(ro));
+		} catch ( const fort::hermes::WouldBlock & e ) {
+			if ( err != NULL ) {
+				err->code = FH_NO_ERROR;
+			}
+			return false;
 		} catch ( const fort::hermes::EndOfFile & e) {
 			if ( err != NULL ) {
 				err->what = strdup("End Of File");
@@ -110,22 +115,6 @@ extern "C" {
 		return true;
 	}
 
-	bool fh_context_poll(fh_context_t * ctx,fh_frame_readout_t * ro,fh_error_t * err) {
-		try {
-			reinterpret_cast<fort::hermes::Context*>(ctx)->Poll(reinterpret_cast<fort::hermes::FrameReadout*>(ro));
-		} catch ( const fort::hermes::EndOfFile & e) {
-			err->code = FH_END_OF_STREAM;
-			err->what = strdup("End Of Stream");
-			return false;
-		} catch ( const fort::hermes::WouldBlock & e ) {
-			return false;
-		} catch ( const fort::hermes::InternalError & e ) {
-			err->what = strdup(e.what());
-			err->code = e.Code();
-			return false;
-		}
-		return true;
-	}
 
 	fh_error_t * fh_error_create() {
 		auto res = new fh_error_t();

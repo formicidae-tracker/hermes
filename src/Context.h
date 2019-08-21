@@ -10,8 +10,6 @@ public:
 	virtual ~Context(){};
 
 	virtual void Read(fort::hermes::FrameReadout * ro) = 0;
-
-	virtual void Poll(fort::hermes::FrameReadout * ro) = 0;
 };
 
 } // namespace hermes

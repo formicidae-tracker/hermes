@@ -20,6 +20,7 @@ find_package(Protobuf 3.3.0 REQUIRED)
 include(ExternalProject)
 ExternalProject_Add(ASIO
 	URL https://sourceforge.net/projects/asio/files/asio/1.10.8%20%28Stable%29/asio-1.10.8.tar.bz2/download
+	URL_MD5 59702ae78da4c45e5fffad39b062cf42
 	BUILD_IN_SOURCE 1
 	CONFIGURE_COMMAND ./configure --prefix=${PROJECT_BINARY_DIR}/ASIO-prefix
 	BUILD_COMMAND echo "done"

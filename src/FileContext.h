@@ -20,8 +20,6 @@ public:
 	virtual ~FileContext();
 
 	void Read(fort::hermes::FrameReadout * ro);
-	void Poll(fort::hermes::FrameReadout * ro);
-
 
 
 private:

@@ -58,14 +58,11 @@ extern "C" {
 
 	fh_context_t * fh_open_file(const char * filename, fh_error_t * err);
 
-	fh_context_t * fh_connect(const char * address, fh_error_t * err);
+	fh_context_t * fh_connect(const char * host,int port , bool nonblocking, fh_error_t * err);
 
 	void fh_context_destroy(fh_context_t * ctx);
 
 	bool fh_context_read(fh_context_t * ctx,fh_frame_readout_t * ro, fh_error_t * err);
-
-	bool fh_context_poll(fh_context_t * ctx,fh_frame_readout_t * ro,fh_error_t * err);
-
 
 #ifdef __cplusplus
 }  // extern "C"

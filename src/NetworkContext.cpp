@@ -8,14 +8,19 @@
 using namespace fort::hermes;
 
 
-NetworkContext::NetworkContext(const std::string & address)
+void NetworkContext::Reset() {
+	d_readSize = 0;
+	d_sizeReceived = false;
+}
+
+NetworkContext::NetworkContext(const std::string & host, int port, bool nonblocking)
 	: d_socket(d_service)
 	, d_sizeReceived(false)
 	, d_readSize(0)
 	, d_readMessage(0) {
-
+	Reset();
 	asio::ip::tcp::resolver resolver(d_service);
-	asio::ip::tcp::resolver::query query(address,"tcp");
+	asio::ip::tcp::resolver::query query(host,"4002");
 	try {
 		asio::connect(d_socket,resolver.resolve(query));
 	} catch ( const asio::system_error & e ) {
@@ -23,48 +28,36 @@ NetworkContext::NetworkContext(const std::string & address)
 	}
 
 	fort::hermes::Header h;
-	d_socket.non_blocking(true);
 	for (;;) {
 		try {
 			ReadMessageUnsafe(h);
 			break;
-		} catch (const WouldBlock & e ) {
-			asio::error_code ec;
-			d_socket.read_some(asio::null_buffers(),ec);
-			if (ec) {
-				throw InternalError(ec.message(),FH_SOCKET_ERROR);
-			}
 		} catch (const InternalError & e ) {
 			throw InternalError(e.what(),FH_STREAM_NO_HEADER);
 		}
 	}
 
+
 	//TODO check version
 	if (false) {
+		d_socket.close();
 		throw InternalError("Wrong version",FH_STREAM_WRONG_VERSION);
 	}
 
+	if (nonblocking == true ) {
+		d_socket.non_blocking(true);
+	}
 }
 NetworkContext::~NetworkContext() {
+	d_socket.close();
 }
 
 void NetworkContext::Read(fort::hermes::FrameReadout * ro) {
 	for (;;) {
-		try {
-			ReadMessageUnsafe(*ro);
+		if (ReadMessageUnsafe(*ro) == true ) {
 			break;
-		} catch (const WouldBlock & e ) {
-			asio::error_code ec;
-			d_socket.read_some(asio::null_buffers(),ec);
-			if (ec) {
-				throw InternalError(ec.message(),FH_SOCKET_ERROR);
-			}
 		}
 	}
-}
-
-void NetworkContext::Poll(fort::hermes::FrameReadout * ro) {
-	ReadMessageUnsafe(*ro);
 }
 
 
@@ -73,7 +66,6 @@ size_t NetworkContext::ReadSome(uint8_t * data, size_t size) {
 	size_t read = d_socket.read_some(asio::mutable_buffers_1(data,size),ec);
 	if ( ec == asio::error::interrupted ) {
 		return ReadSome(data,size);
-
 	}
 
 	if ( ec == asio::error::would_block || ec == asio::error::try_again ) {
@@ -87,53 +79,50 @@ size_t NetworkContext::ReadSome(uint8_t * data, size_t size) {
 	return read;
 }
 
-void NetworkContext::ReadMessageUnsafe(google::protobuf::MessageLite & m) {
-	for (;;) {
-		if ( d_sizeReceived == false ) {
-			if ( d_readSize == 0 ) {
-				d_buffer.resize(10);
-			}
-			try {
-				d_readSize += ReadSome(&(d_buffer[d_readSize]),1);
-			} catch ( const InternalError & e ) {
-				d_sizeReceived = false;
-				d_readSize = 0;
-				throw;
-			}
-
-			if (d_buffer[d_readSize-1] & 0x80 != 0 ) {
-				continue;
-			}
-
-			google::protobuf::io::CodedInputStream cs(&(d_buffer[0]),d_readSize);
-
-			if ( cs.ReadVarint32(&d_messageSize) == false ) {
-				d_sizeReceived = false;
-				d_readSize = 0;
-				throw InternalError("Could not read varint32",FH_MESSAGE_DECODE_ERROR);
-			}
-
-			d_sizeReceived = true;
-			d_readMessage = 0;
-			d_buffer.clear();
-			d_buffer.resize(d_messageSize);
-		} else {
-			try {
-				d_readMessage += ReadSome(&(d_buffer[d_readMessage]),d_messageSize-d_readMessage);
-			} catch ( const InternalError & e ) {
-				d_sizeReceived = false;
-				d_readSize = 0;
-				throw;
-			}
-			if ( d_readMessage < d_messageSize ) {
-				continue;
-			}
-			d_sizeReceived = false;
-			d_readSize = 0;
-			if (m.ParseFromArray(&(d_buffer[0]),d_messageSize) == false ) {
-				throw InternalError("Could not parse message",FH_MESSAGE_DECODE_ERROR);
-			}
-			return;
+bool NetworkContext::ReadMessageUnsafe(google::protobuf::MessageLite & m) {
+	if ( d_sizeReceived == false ) {
+		if ( d_readSize == 0 ) {
+			d_buffer.resize(10);
 		}
+		try {
+			d_readSize += ReadSome(&(d_buffer[d_readSize]),1);
+		} catch ( const InternalError & e ) {
+			Reset();
+			throw;
+		}
+
+		if (d_buffer[d_readSize-1] & 0x80 != 0 ) {
+			return false;
+		}
+
+		google::protobuf::io::CodedInputStream cs(&(d_buffer[0]),d_readSize);
+
+		if ( cs.ReadVarint32(&d_messageSize) == false ) {
+			Reset();
+			throw InternalError("Could not read varint32",FH_MESSAGE_DECODE_ERROR);
+		}
+
+		d_sizeReceived = true;
+		d_readMessage = 0;
+		d_buffer.clear();
+		d_buffer.resize(d_messageSize);
+
+		return false;
+	} else {
+		try {
+			d_readMessage += ReadSome(&(d_buffer[d_readMessage]),d_messageSize-d_readMessage);
+		} catch ( const InternalError & e ) {
+			Reset();
+			throw;
+		}
+		if ( d_readMessage < d_messageSize ) {
+			return false;
+		}
+		Reset();
+		if (m.ParseFromArray(&(d_buffer[0]),d_messageSize) == false ) {
+			throw InternalError("Could not parse message",FH_MESSAGE_DECODE_ERROR);
+		}
+		return true;
 	}
+
 }

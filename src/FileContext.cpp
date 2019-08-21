@@ -73,8 +73,3 @@ void FileContext::Read(fort::hermes::FrameReadout * ro) {
 
 	OpenFile(d_path.Dir().Join({d_line.footer().next()}).Str());
 }
-
-void FileContext::Poll(fort::hermes::FrameReadout * ro) {
-	//Poll and read are the same for a file
-	Read(ro);
-}

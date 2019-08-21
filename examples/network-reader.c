@@ -11,7 +11,7 @@ int main( int argc, char ** argv) {
 	}
 
 	fh_error_t * err = fh_error_create();
-	fh_context_t * ctx = fh_connect(argv[1],err);
+	fh_context_t * ctx = fh_connect(argv[1],4002,false,err);
 	if ( ctx == NULL ) {
 		fprintf(stderr,"Got error %d: %s\n",err->code,err->what);
 		return 1;

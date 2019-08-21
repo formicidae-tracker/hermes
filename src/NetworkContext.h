@@ -12,15 +12,14 @@ namespace hermes {
 
 class NetworkContext : public Context {
 public:
-	NetworkContext(const std::string & address);
+	NetworkContext(const std::string & host,int port, bool nonblocking);
 	virtual ~NetworkContext();
 
 	void Read(fort::hermes::FrameReadout * ro);
-	void Poll(fort::hermes::FrameReadout * ro);
 
 private:
-
-	void ReadMessageUnsafe(google::protobuf::MessageLite & m);
+	void Reset();
+	bool ReadMessageUnsafe(google::protobuf::MessageLite & m);
 
 	size_t ReadSome(uint8_t * data, size_t size);
 
