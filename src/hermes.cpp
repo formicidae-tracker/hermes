@@ -136,7 +136,7 @@ extern "C" {
 			return;
 		}
 		if ( err->what != NULL ) {
-			free(err);
+			free(err->what);
 		}
 		delete err;
 	}
