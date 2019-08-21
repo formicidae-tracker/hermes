@@ -1,12 +1,15 @@
 set(SRC_FILES hermes.cpp
+              Error.cpp
               NetworkContext.cpp
               FileContext.cpp)
 
 
 set(HDR_FILES hermes.h
+              Error.h
               Context.h
               NetworkContext.h
               FileContext.h)
+
 
 install(FILES ${HDR_FILES} DESTINATION ${INCLUDE_INSTALL_DIR})
 

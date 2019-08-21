@@ -5,7 +5,7 @@
 
 #include "NetworkContext.h"
 #include "FileContext.h"
-
+#include "Error.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -88,30 +88,36 @@ extern "C" {
 		}
 	}
 
-	fh_frame_readout_t * fh_context_read(fh_context_t * ctx,fh_error_t * err) {
-		fort::hermes::FrameReadout * ro = new fort::hermes::FrameReadout();
+	bool fh_context_read(fh_context_t * ctx,fh_frame_readout_t * ro,fh_error_t * err) {
 		try {
-			reinterpret_cast<fort::hermes::Context*>(ctx)->Read(ro);
-			return reinterpret_cast<void*>(ro);
-		} catch ( const std::exception & e ) {
+			reinterpret_cast<fort::hermes::Context*>(ctx)->Read(reinterpret_cast<fort::hermes::FrameReadout*>(ro));
+		} catch ( const fort::hermes::EndOfFile & e) {
+			return false;
+		} catch ( const fort::hermes::InternalError & e ) {
 			if ( err != NULL ) {
 				err->what = strdup(e.what());
+				err->code = e.Code();
 			}
-			return NULL;
+			return false;
 		}
+		return true;
 	}
 
-	fh_frame_readout_t * fh_context_poll(fh_context_t * ctx,fh_error_t * err) {
-		fort::hermes::FrameReadout * ro = new fort::hermes::FrameReadout();
+	bool fh_context_poll(fh_context_t * ctx,fh_frame_readout_t * ro,fh_error_t * err) {
 		try {
-			reinterpret_cast<fort::hermes::Context*>(ctx)->Poll(ro);
-			return reinterpret_cast<void*>(ro);
-		} catch ( const std::exception & e) {
-			if ( err != NULL ) {
-				err->what = strdup(e.what());
-			}
-			return NULL;
+			reinterpret_cast<fort::hermes::Context*>(ctx)->Poll(reinterpret_cast<fort::hermes::FrameReadout*>(ro));
+		} catch ( const fort::hermes::EndOfFile & e) {
+			err->code = FH_END_OF_STREAM;
+			err->what = strdup("End Of Stream");
+			return false;
+		} catch ( const fort::hermes::WouldBlock & e ) {
+			return false;
+		} catch ( const fort::hermes::InternalError & e ) {
+			err->what = strdup(e.what());
+			err->code = e.Code();
+			return false;
 		}
+		return true;
 	}
 
 	fh_error_t * fh_error_create() {

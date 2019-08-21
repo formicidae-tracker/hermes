@@ -12,7 +12,7 @@ else(${PROJECT_VERSION_MAJOR} EQUAL 0)
 	set(VERSION_ABI ${PROJECT_VERSION_MAJOR})
 endif(${PROJECT_VERSION_MAJOR} EQUAL 0)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 
 find_package(Protobuf 3.3.0 REQUIRED)
@@ -46,7 +46,6 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfig.cmake
 
 include_directories(${PROJECT_BINARY_DIR}/ASIO-prefix/include
 	                ${Boost_INCLUDE_DIRS})
-
 
 add_subdirectory(protobuf)
 
