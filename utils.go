@@ -1,6 +1,7 @@
 package hermes
 
 import (
+	fmt "fmt"
 	"io"
 
 	"github.com/golang/protobuf/proto"
@@ -32,11 +33,11 @@ func ReadDelimitedMessage(stream io.Reader, pb proto.Message) (bool, error) {
 	data := make([]byte, size)
 	_, err := io.ReadFull(stream, data)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("io.ReadFull(%d bytes): %s", len(data), err)
 	}
 	err = proto.Unmarshal(data, pb)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("protobuf error: %s", err)
 	}
 	return true, nil
 }
