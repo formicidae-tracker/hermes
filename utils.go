@@ -35,9 +35,26 @@ func ReadDelimitedMessage(stream io.Reader, pb proto.Message) (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("io.ReadFull(%d bytes): %s", len(data), err)
 	}
+	pb.Reset()
 	err = proto.Unmarshal(data, pb)
 	if err != nil {
 		return false, fmt.Errorf("protobuf error: %s", err)
 	}
 	return true, nil
+}
+
+func SafeEncode(pb proto.Message) ([]byte, error) {
+	b := proto.NewBuffer(nil)
+	for i := 0; i < 10; i++ {
+		bSize := proto.Size(pb)
+		if err := b.EncodeMessage(pb); err != nil {
+			return nil, err
+		}
+		encSize, _ := proto.DecodeVarint(b.Bytes())
+		if int(encSize) == bSize {
+			return b.Bytes(), nil
+		}
+
+	}
+	return nil, fmt.Errorf("protobuf wants to make us miserable")
 }
