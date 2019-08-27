@@ -44,14 +44,18 @@ func ReadDelimitedMessage(stream io.Reader, pb proto.Message) (bool, error) {
 }
 
 func SafeEncode(pb proto.Message) ([]byte, error) {
-	b := proto.NewBuffer(nil)
 	for i := 0; i < 10; i++ {
+		b := proto.NewBuffer(nil)
+
 		bSize := proto.Size(pb)
+
 		if err := b.EncodeMessage(pb); err != nil {
 			return nil, err
 		}
+
 		encSize, _ := proto.DecodeVarint(b.Bytes())
-		if int(encSize) == bSize {
+
+		if int(encSize) == bSize && len(b.Bytes()) == int(encSize)+proto.SizeVarint(encSize) {
 			return b.Bytes(), nil
 		}
 
