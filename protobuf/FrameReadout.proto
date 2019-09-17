@@ -22,7 +22,9 @@ message FrameReadout {
 	int64                     frameID       = 2;
 	repeated Ant              ants          = 3;
 	google.protobuf.Timestamp time          = 4;
-	Error error                             = 5;
+	Error                     error         = 5;
 	string                    producer_uuid = 6;
 	int32                     quads         = 7;
+	int32                     width         = 8;
+	int32                     height        = 9;
 };

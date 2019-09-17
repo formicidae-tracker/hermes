@@ -24,6 +24,8 @@ message Header {
 	Version version  = 1;
 	Type    type     = 2;
 	string  previous = 3;
+	int32   width    = 4;
+	int32   height   = 5;
 }
 
 message Footer {
