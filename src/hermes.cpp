@@ -12,129 +12,131 @@ extern "C" {
 #endif //__cplusplus
 
 
-	uint32_t fh_ant_id(fh_ant_t * a) {
-		return reinterpret_cast<fort::hermes::Ant*>(a)->id();
-	}
+uint32_t fh_tag_id(fh_tag_t * a) {
+	return reinterpret_cast<fort::hermes::Tag*>(a)->id();
+}
 
-	double fh_ant_x(fh_ant_t * a) {
-		return reinterpret_cast<fort::hermes::Ant*>(a)->x();
-	}
+double fh_tag_x(fh_tag_t * a) {
+	return reinterpret_cast<fort::hermes::Tag*>(a)->x();
+}
 
-	double fh_ant_y(fh_ant_t * a) {
-		return reinterpret_cast<fort::hermes::Ant*>(a)->y();
-	}
+double fh_tag_y(fh_tag_t * a) {
+	return reinterpret_cast<fort::hermes::Tag*>(a)->y();
+}
 
-	double fh_ant_theta(fh_ant_t * a) {
-		return reinterpret_cast<fort::hermes::Ant*>(a)->theta();
-	}
+double fh_tag_theta(fh_tag_t * a) {
+	return reinterpret_cast<fort::hermes::Tag*>(a)->theta();
+}
 
-	uint64_t fh_frame_readout_timestamp(fh_frame_readout_t * re) {
-		return reinterpret_cast<fort::hermes::FrameReadout*>(re)->timestamp();
-	}
-	uint64_t fh_frame_readout_frame_id(fh_frame_readout_t * re) {
-		return reinterpret_cast<fort::hermes::FrameReadout*>(re)->frameid();
-	}
-	size_t fh_frame_readout_ant_size(fh_frame_readout_t * re) {
-		return reinterpret_cast<fort::hermes::FrameReadout*>(re)->ants_size();
-	}
-	fh_ant_t * fh_frame_readout_ant(fh_frame_readout_t * re, size_t i) {
-		fort::hermes::FrameReadout * re_ = reinterpret_cast<fort::hermes::FrameReadout*>(re);
-		if ( i >= re_->ants_size() ) {
-			return NULL;
-		}
-		return reinterpret_cast<void*>(re_->mutable_ants(i));
-	}
+uint64_t fh_frame_readout_timestamp(fh_frame_readout_t * re) {
+	return reinterpret_cast<fort::hermes::FrameReadout*>(re)->timestamp();
+}
+uint64_t fh_frame_readout_frame_id(fh_frame_readout_t * re) {
+	return reinterpret_cast<fort::hermes::FrameReadout*>(re)->frameid();
+}
 
-	void fh_frame_readout_time(fh_frame_readout_t * re,struct timeval * res) {
-		*res = google::protobuf::util::TimeUtil::TimestampToTimeval(reinterpret_cast<fort::hermes::FrameReadout*>(re)->time());
-	}
+size_t fh_frame_readout_tag_size(fh_frame_readout_t * re) {
+	return reinterpret_cast<fort::hermes::FrameReadout*>(re)->tags_size();
+}
 
-	fh_readout_error_e fh_frame_readout_error(fh_frame_readout_t * re) {
-		return (fh_readout_error_e)reinterpret_cast<fort::hermes::FrameReadout*>(re)->error();
-	}
-
-	void fh_frame_readout_destroy(fh_frame_readout_t * re) {
-		if ( re == NULL ) {
-			return;
-		}
-		delete reinterpret_cast<fort::hermes::FrameReadout*>(re);
-	}
-
-	fh_context_t * fh_open_file(const char * filename,fh_error_t * err) {
-		try {
-			return reinterpret_cast<void*>(new fort::hermes::FileContext(filename));
-		} catch (const fort::hermes::InternalError & e) {
-			if ( err != NULL ) {
-				err->what = strdup(e.what());
-				err->code = e.Code();
-			}
-		}
+fh_tag_t * fh_frame_readout_tag(fh_frame_readout_t * re, size_t i) {
+	fort::hermes::FrameReadout * re_ = reinterpret_cast<fort::hermes::FrameReadout*>(re);
+	if ( i >= re_->tags_size() ) {
 		return NULL;
 	}
+	return reinterpret_cast<void*>(re_->mutable_tags(i));
+}
 
-	fh_context_t * fh_connect(const char * host, int port,bool nonblocking, fh_error_t * err) {
-		try {
-			return reinterpret_cast<void*>(new fort::hermes::NetworkContext(host,port,nonblocking));
-		} catch (const fort::hermes::InternalError & e) {
-			if ( err != NULL ) {
-				err->what = strdup(e.what());
-				err->code = e.Code();
-			}
+void fh_frame_readout_time(fh_frame_readout_t * re,struct timeval * res) {
+	*res = google::protobuf::util::TimeUtil::TimestampToTimeval(reinterpret_cast<fort::hermes::FrameReadout*>(re)->time());
+}
+
+fh_readout_error_e fh_frame_readout_error(fh_frame_readout_t * re) {
+	return (fh_readout_error_e)reinterpret_cast<fort::hermes::FrameReadout*>(re)->error();
+}
+
+void fh_frame_readout_destroy(fh_frame_readout_t * re) {
+	if ( re == NULL ) {
+		return;
+	}
+	delete reinterpret_cast<fort::hermes::FrameReadout*>(re);
+}
+
+fh_context_t * fh_open_file(const char * filename,fh_error_t * err) {
+	try {
+		return reinterpret_cast<void*>(new fort::hermes::FileContext(filename));
+	} catch (const fort::hermes::InternalError & e) {
+		if ( err != NULL ) {
+			err->what = strdup(e.what());
+			err->code = e.Code();
 		}
-		return NULL;
 	}
+	return NULL;
+}
 
-	void fh_context_destroy(fh_context_t * ctx) {
-		if ( ctx != NULL ) {
-			delete reinterpret_cast<fort::hermes::Context*>(ctx);
+fh_context_t * fh_connect(const char * host, int port,bool nonblocking, fh_error_t * err) {
+	try {
+		return reinterpret_cast<void*>(new fort::hermes::NetworkContext(host,port,nonblocking));
+	} catch (const fort::hermes::InternalError & e) {
+		if ( err != NULL ) {
+			err->what = strdup(e.what());
+			err->code = e.Code();
 		}
 	}
+	return NULL;
+}
 
-	bool fh_context_read(fh_context_t * ctx,fh_frame_readout_t * ro,fh_error_t * err) {
-		try {
-			reinterpret_cast<fort::hermes::Context*>(ctx)->Read(reinterpret_cast<fort::hermes::FrameReadout*>(ro));
-		} catch ( const fort::hermes::WouldBlock & e ) {
-			if ( err != NULL ) {
-				err->code = FH_NO_ERROR;
-			}
-			return false;
-		} catch ( const fort::hermes::EndOfFile & e) {
-			if ( err != NULL ) {
-				err->what = strdup("End Of File");
-				err->code = FH_END_OF_STREAM;
-			}
-			return false;
-		} catch ( const fort::hermes::InternalError & e ) {
-			if ( err != NULL ) {
-				err->what = strdup(e.what());
-				err->code = e.Code();
-			}
-			return false;
+void fh_context_destroy(fh_context_t * ctx) {
+	if ( ctx != NULL ) {
+		delete reinterpret_cast<fort::hermes::Context*>(ctx);
+	}
+}
+
+bool fh_context_read(fh_context_t * ctx,fh_frame_readout_t * ro,fh_error_t * err) {
+	try {
+		reinterpret_cast<fort::hermes::Context*>(ctx)->Read(reinterpret_cast<fort::hermes::FrameReadout*>(ro));
+	} catch ( const fort::hermes::WouldBlock & e ) {
+		if ( err != NULL ) {
+			err->code = FH_NO_ERROR;
 		}
-
-		return true;
-	}
-
-
-	fh_error_t * fh_error_create() {
-		auto res = new fh_error_t();
-		res->what = NULL;
-		return res;
-	}
-
-	void fh_error_destroy(fh_error_t * err) {
-		if ( err == NULL ) {
-			return;
+		return false;
+	} catch ( const fort::hermes::EndOfFile & e) {
+		if ( err != NULL ) {
+			err->what = strdup("End Of File");
+			err->code = FH_END_OF_STREAM;
 		}
-		if ( err->what != NULL ) {
-			free(err->what);
+		return false;
+	} catch ( const fort::hermes::InternalError & e ) {
+		if ( err != NULL ) {
+			err->what = strdup(e.what());
+			err->code = e.Code();
 		}
-		delete err;
+		return false;
 	}
 
-	fh_frame_readout_t * fh_frame_readout_create() {
-		return reinterpret_cast<void*>(new fort::hermes::FrameReadout());
+	return true;
+}
+
+
+fh_error_t * fh_error_create() {
+	auto res = new fh_error_t();
+	res->what = NULL;
+	return res;
+}
+
+void fh_error_destroy(fh_error_t * err) {
+	if ( err == NULL ) {
+		return;
 	}
+	if ( err->what != NULL ) {
+		free(err->what);
+	}
+	delete err;
+}
+
+fh_frame_readout_t * fh_frame_readout_create() {
+	return reinterpret_cast<void*>(new fort::hermes::FrameReadout());
+}
 
 #ifdef __cplusplus
 }  // extern "C"

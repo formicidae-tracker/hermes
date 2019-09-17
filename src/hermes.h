@@ -35,24 +35,24 @@ extern "C" {
 	void fh_error_destroy(fh_error_t * err);
 
 	typedef void fh_frame_readout_t;
-	typedef void fh_ant_t;
+	typedef void fh_tag_t;
 
 
 	fh_frame_readout_t * fh_frame_readout_create();
 	uint64_t fh_frame_readout_timestamp(fh_frame_readout_t * re);
 	uint64_t fh_frame_readout_frame_id(fh_frame_readout_t * re);
-	size_t fh_frame_readout_ant_size(fh_frame_readout_t * re);
-	fh_ant_t * fh_frame_readout_ant(fh_frame_readout_t * re, size_t i);
+	size_t fh_frame_readout_tag_size(fh_frame_readout_t * re);
+	fh_tag_t * fh_frame_readout_tag(fh_frame_readout_t * re, size_t i);
 	void fh_frame_readout_time(fh_frame_readout_t * re,struct timeval * res);
 	fh_readout_error_e fh_frame_readout_error(fh_frame_readout_t * re);
 
 	void fh_frame_readout_destroy(fh_frame_readout_t * re);
 
 
-	uint32_t fh_ant_id(fh_ant_t * a);
-	double fh_ant_x(fh_ant_t * a);
-	double fh_ant_y(fh_ant_t * a);
-	double fh_ant_theta(fh_ant_t * a);
+	uint32_t fh_tag_id(fh_tag_t * a);
+	double fh_tag_x(fh_tag_t * a);
+	double fh_tag_y(fh_tag_t * a);
+	double fh_tag_theta(fh_tag_t * a);
 
 	typedef void fh_context_t;
 

@@ -4,7 +4,7 @@ option optimize_for = LITE_RUNTIME;
 option go_package = "github.com/formicidae-tracker/hermes";
 
 import "google/protobuf/timestamp.proto";
-import "Ant.proto";
+import "Tag.proto";
 
 package fort.hermes;
 
@@ -20,7 +20,7 @@ message FrameReadout {
 
 	int64                     timestamp     = 1;
 	int64                     frameID       = 2;
-	repeated Ant              ants          = 3;
+	repeated Tag              tags          = 3;
 	google.protobuf.Timestamp time          = 4;
 	Error                     error         = 5;
 	string                    producer_uuid = 6;

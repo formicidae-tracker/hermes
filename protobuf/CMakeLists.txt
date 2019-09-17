@@ -1,7 +1,7 @@
 set(SRC_FILES )
 set(HDR_FILES )
 
-set(PROTO_FILES Ant.proto
+set(PROTO_FILES Tag.proto
 	            FrameReadout.proto
 	            Header.proto
 	            )
