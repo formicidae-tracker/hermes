@@ -175,8 +175,12 @@ double fh_tag_y(fh_tag_t * a);
 double fh_tag_theta(fh_tag_t * a);
 
 
-// A context is an handle to either a list of offline tracking data
-// file or a network online datastyream of tracking data.
+/* A context is used to read <fh_frame_readout_t>
+ *
+ * It can represents an offline list of tracking datafile opened using
+ * <fh_open_file> or a connection to an online broadcast of tracking
+ * data opened using <fh_connect>.
+ */
 typedef void fh_context_t;
 
 /* Opens a list of tracking data file.
