@@ -138,8 +138,8 @@ func Execute() error {
 				line.Readout.Time.GetSeconds(),
 				line.Readout.Time.GetNanos()/1e7,
 				line.Readout.FrameID,
-				len(line.Readout.Ants))
-			for _, a := range line.Readout.Ants {
+				len(line.Readout.Tags))
+			for _, a := range line.Readout.Tags {
 				ID := int(a.ID)
 				if o.ARTagConvert == true {
 					if ID < len(ARTagID100) {
