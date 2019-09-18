@@ -33,7 +33,7 @@ private:
 	FilePtr d_file;
 	GZipPtr d_gzip;
 	FileLine d_line;
-
+	size_t   d_width,d_height;
 };
 
 } // namespace hermes

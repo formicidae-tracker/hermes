@@ -143,7 +143,16 @@ void fh_frame_readout_time(fh_frame_readout_t * re,struct timeval * res);
 //
 // @return a <fh_readout_error_e> representing the tracking process error.
 fh_readout_error_e fh_frame_readout_error(fh_frame_readout_t * re);
-
+// Frame width
+// @re the <fh_frame_readout_t>
+//
+// @return the original frame width
+int32_t fh_frame_readout_width(fh_frame_readout_t * re);
+// Frame height
+// @re the <fh_frame_readout_t>
+//
+// @return the original frame height
+int32_t fh_frame_readout_height(fh_frame_readout_t * re);
 // Frees all resources associated with a <fh_frame_readout_t>
 // @re the <fh_frame_readout_t> to free
 void fh_frame_readout_destroy(fh_frame_readout_t * re);

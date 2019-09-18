@@ -37,12 +37,18 @@ void FileContext::OpenFile(const std::string & filename) {
 		throw InternalError("Stream has an unsupported version",FH_STREAM_WRONG_VERSION);
 	}
 
+	// TODO: add some checks ???
+	d_width = h.width();
+	d_height = h.height();
+
 }
 
 
 
 FileContext::FileContext(const std::string & filename)
-	: d_path(filename) {
+	: d_path(filename)
+	, d_width(0)
+	, d_height(0) {
 	OpenFile(filename);
 }
 
@@ -62,6 +68,8 @@ void FileContext::Read(fort::hermes::FrameReadout * ro) {
 	}
 	if ( d_line.has_readout() ) {
 		ro->CopyFrom(d_line.readout());
+		ro->set_width(d_width);
+		ro->set_height(d_height);
 		return;
 	} else if ( d_line.has_footer() == false ) {
 		throw InternalError("Message is empty",FH_MESSAGE_DECODE_ERROR);

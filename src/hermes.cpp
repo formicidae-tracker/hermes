@@ -154,6 +154,17 @@ fh_frame_readout_t * fh_frame_readout_create() {
 	return reinterpret_cast<void*>(new fort::hermes::FrameReadout());
 }
 
+
+int32_t fh_frame_readout_width(fh_frame_readout_t * re) {
+	return reinterpret_cast<fort::hermes::FrameReadout*>(re)->width();
+}
+
+int32_t fh_frame_readout_height(fh_frame_readout_t * re) {
+	return reinterpret_cast<fort::hermes::FrameReadout*>(re)->height();
+
+}
+
+
 #ifdef __cplusplus
 }  // extern "C"
 #endif //__cplusplus
