@@ -31,7 +31,7 @@ var Header_Type_value = map[string]int32{
 func (x Header_Type) String() string {
 	return proto.EnumName(Header_Type_name, int32(x))
 }
-func (Header_Type) EnumDescriptor() ([]byte, []int) { return fileDescriptor2, []int{1, 0} }
+func (Header_Type) EnumDescriptor() ([]byte, []int) { return fileDescriptor1, []int{1, 0} }
 
 type Version struct {
 	Vmajor uint32 `protobuf:"varint,1,opt,name=vmajor" json:"vmajor,omitempty"`
@@ -41,7 +41,7 @@ type Version struct {
 func (m *Version) Reset()                    { *m = Version{} }
 func (m *Version) String() string            { return proto.CompactTextString(m) }
 func (*Version) ProtoMessage()               {}
-func (*Version) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{0} }
+func (*Version) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{0} }
 
 func (m *Version) GetVmajor() uint32 {
 	if m != nil {
@@ -68,7 +68,7 @@ type Header struct {
 func (m *Header) Reset()                    { *m = Header{} }
 func (m *Header) String() string            { return proto.CompactTextString(m) }
 func (*Header) ProtoMessage()               {}
-func (*Header) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{1} }
+func (*Header) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{1} }
 
 func (m *Header) GetVersion() *Version {
 	if m != nil {
@@ -112,7 +112,7 @@ type Footer struct {
 func (m *Footer) Reset()                    { *m = Footer{} }
 func (m *Footer) String() string            { return proto.CompactTextString(m) }
 func (*Footer) ProtoMessage()               {}
-func (*Footer) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{2} }
+func (*Footer) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{2} }
 
 func (m *Footer) GetNext() string {
 	if m != nil {
@@ -129,7 +129,7 @@ type FileLine struct {
 func (m *FileLine) Reset()                    { *m = FileLine{} }
 func (m *FileLine) String() string            { return proto.CompactTextString(m) }
 func (*FileLine) ProtoMessage()               {}
-func (*FileLine) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{3} }
+func (*FileLine) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{3} }
 
 func (m *FileLine) GetReadout() *FrameReadout {
 	if m != nil {
@@ -153,9 +153,9 @@ func init() {
 	proto.RegisterEnum("fort.hermes.Header_Type", Header_Type_name, Header_Type_value)
 }
 
-func init() { proto.RegisterFile("Header.proto", fileDescriptor2) }
+func init() { proto.RegisterFile("Header.proto", fileDescriptor1) }
 
-var fileDescriptor2 = []byte{
+var fileDescriptor1 = []byte{
 	// 331 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x54, 0x91, 0x41, 0x4f, 0xc2, 0x40,
 	0x10, 0x85, 0xad, 0x94, 0x16, 0xa6, 0x6a, 0xc8, 0x4a, 0x4c, 0x25, 0x9a, 0x90, 0xc6, 0x43, 0x13,
