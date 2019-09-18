@@ -12,6 +12,18 @@ extern "C" {
 #endif //__cplusplus
 
 
+void fh_error_safe_reset(fh_error_t * e) {
+	if ( e == NULL ) {
+		return;
+	}
+	e->code = FH_NO_ERROR;
+	if ( e->what == NULL ) {
+		return;
+	}
+	free(e->what);
+	e->what = NULL;
+}
+
 uint32_t fh_tag_id(fh_tag_t * a) {
 	return reinterpret_cast<fort::hermes::Tag*>(a)->id();
 }
@@ -63,6 +75,7 @@ void fh_frame_readout_destroy(fh_frame_readout_t * re) {
 }
 
 fh_context_t * fh_open_file(const char * filename,fh_error_t * err) {
+	fh_error_safe_reset(err);
 	try {
 		return reinterpret_cast<void*>(new fort::hermes::FileContext(filename));
 	} catch (const fort::hermes::InternalError & e) {
@@ -75,6 +88,7 @@ fh_context_t * fh_open_file(const char * filename,fh_error_t * err) {
 }
 
 fh_context_t * fh_connect(const char * host, int port,bool nonblocking, fh_error_t * err) {
+	fh_error_safe_reset(err);
 	try {
 		return reinterpret_cast<void*>(new fort::hermes::NetworkContext(host,port,nonblocking));
 	} catch (const fort::hermes::InternalError & e) {
@@ -93,6 +107,7 @@ void fh_context_destroy(fh_context_t * ctx) {
 }
 
 bool fh_context_read(fh_context_t * ctx,fh_frame_readout_t * ro,fh_error_t * err) {
+	fh_error_safe_reset(err);
 	try {
 		reinterpret_cast<fort::hermes::Context*>(ctx)->Read(reinterpret_cast<fort::hermes::FrameReadout*>(ro));
 	} catch ( const fort::hermes::WouldBlock & e ) {
@@ -121,6 +136,7 @@ bool fh_context_read(fh_context_t * ctx,fh_frame_readout_t * ro,fh_error_t * err
 fh_error_t * fh_error_create() {
 	auto res = new fh_error_t();
 	res->what = NULL;
+	res->code = FH_NO_ERROR;
 	return res;
 }
 
