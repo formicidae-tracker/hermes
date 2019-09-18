@@ -49,6 +49,7 @@ include_directories(BEFORE SYSTEM ${PROJECT_BINARY_DIR}/ASIO-prefix/include)
 
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 
+
 add_subdirectory(protobuf)
 
 add_subdirectory(src)
@@ -56,3 +57,5 @@ add_subdirectory(src)
 add_subdirectory(pkgconfig)
 
 add_subdirectory(examples)
+
+add_subdirectory(docs)

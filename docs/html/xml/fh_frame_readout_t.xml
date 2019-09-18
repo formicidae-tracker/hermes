@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='utf-8'?>
+<typedef id="fh_frame_readout_t" name="fh_frame_readout_t" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <brief> Represents a tag frame readout.</brief>
+  <doc>Frame readout are opaque objects. To read frame the user should
+initialize one using <ref ref="fh_frame_readout_t#fh_frame_readout_create">fh_frame_readout_create</ref>, and read over an
+opened <ref ref="fh_context_t#fh_context_t">fh_context_t</ref> using <ref ref="fh_context_t#fh_context_read">fh_context_read</ref>. It is
+a good practice to reuse for each read the same
+<ref ref="fh_frame_readout_t#fh_frame_readout_t">fh_frame_readout_t</ref>, and **not** to create a new one for each
+<ref ref="fh_context_t#fh_context_read">fh_context_read</ref> calls.
+
+To clean up allocated ressources the user would need to use the
+<ref ref="fh_frame_readout_t#fh_frame_readout_destroy">fh_frame_readout_destroy</ref> function.
+</doc>
+  <type builtin="yes" name="void" />
+  <function id="fh_frame_readout_create" name="fh_frame_readout_create">
+    <brief> Creates a new <ref ref="fh_frame_readout_t#fh_frame_readout_t">fh_frame_readout_t</ref> to be used with <ref ref="fh_context_t#fh_context_read">fh_context_read</ref>.</brief>
+    <return>
+      <doc>a newly allocated <ref ref="fh_frame_readout_t#fh_frame_readout_t">fh_frame_readout_t</ref></doc>
+      <type name="fh_frame_readout_t" qualifier="*" ref="fh_frame_readout_t#fh_frame_readout_t" />
+    </return>
+  </function>
+  <function id="fh_frame_readout_destroy" name="fh_frame_readout_destroy">
+    <brief>Frees all resources associated with a <ref ref="fh_frame_readout_t#fh_frame_readout_t">fh_frame_readout_t</ref>
+    </brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="fh_frame_readout_destroy::re" name="re">
+      <doc>the <ref ref="fh_frame_readout_t#fh_frame_readout_t">fh_frame_readout_t</ref> to free</doc>
+      <type name="fh_frame_readout_t" qualifier="*" ref="fh_frame_readout_t#fh_frame_readout_t" />
+    </argument>
+  </function>
+  <function id="fh_frame_readout_error" name="fh_frame_readout_error">
+    <brief>Tracking processing errors</brief>
+    <return>
+      <doc>a <ref ref="index#fh_readout_error_e">fh_readout_error_e</ref> representing the tracking process error.</doc>
+      <type name="fh_readout_error_e" ref="index#fh_readout_error_e" />
+    </return>
+    <argument id="fh_frame_readout_error::re" name="re">
+      <doc>the <ref ref="fh_frame_readout_t#fh_frame_readout_t">fh_frame_readout_t</ref></doc>
+      <type name="fh_frame_readout_t" qualifier="*" ref="fh_frame_readout_t#fh_frame_readout_t" />
+    </argument>
+  </function>
+  <function id="fh_frame_readout_frame_id" name="fh_frame_readout_frame_id">
+    <brief>Frame UID</brief>
+    <return>
+      <doc>the unique frame ID thte readout refers to.</doc>
+      <type name="uint64_t" />
+    </return>
+    <argument id="fh_frame_readout_frame_id::re" name="re">
+      <doc>the <ref ref="fh_frame_readout_t#fh_frame_readout_t">fh_frame_readout_t</ref></doc>
+      <type name="fh_frame_readout_t" qualifier="*" ref="fh_frame_readout_t#fh_frame_readout_t" />
+    </argument>
+  </function>
+  <function id="fh_frame_readout_tag" name="fh_frame_readout_tag">
+    <brief>A <ref ref="fh_tag_t#fh_tag_t">fh_tag_t</ref> accessor.</brief>
+    <return>
+      <doc>a <ref ref="fh_tag_t#fh_tag_t">fh_tag_t</ref> at the given index</doc>
+      <type name="fh_tag_t" qualifier="*" ref="fh_tag_t#fh_tag_t" />
+    </return>
+    <argument id="fh_frame_readout_tag::re" name="re">
+      <doc>the <ref ref="fh_frame_readout_t#fh_frame_readout_t">fh_frame_readout_t</ref></doc>
+      <type name="fh_frame_readout_t" qualifier="*" ref="fh_frame_readout_t#fh_frame_readout_t" />
+    </argument>
+    <argument id="fh_frame_readout_tag::i" name="i">
+      <doc>the index of the tag that should be &amp;lt; to &lt;fh\_frame\_readout\_tag\_size&amp;gt;.</doc>
+      <type name="size_t" />
+    </argument>
+  </function>
+  <function id="fh_frame_readout_tag_size" name="fh_frame_readout_tag_size">
+    <brief>Numbers of tags detected in the frame.</brief>
+    <return>
+      <doc>the number of tag detected in the frame</doc>
+      <type name="size_t" />
+    </return>
+    <argument id="fh_frame_readout_tag_size::re" name="re">
+      <doc>the <ref ref="fh_frame_readout_t#fh_frame_readout_t">fh_frame_readout_t</ref></doc>
+      <type name="fh_frame_readout_t" qualifier="*" ref="fh_frame_readout_t#fh_frame_readout_t" />
+    </argument>
+  </function>
+  <function id="fh_frame_readout_time" name="fh_frame_readout_time">
+    <brief>Original frame emission date.</brief>
+    <doc>Due to realtime issue implied by jitter and clock synchronization,
+this field could present jitter and irregularities (in some extreme
+cases, date will not even be monotonous in time). It should only be
+used to find a particular event in time. To measure time between
+frame, **use the monotonous <ref ref="fh_frame_readout_t#fh_frame_readout_timestamp">fh_frame_readout_timestamp</ref>
+function**.
+
+</doc>
+    <return>
+      <doc>a struct timeval at which the frame was originally received
+by the node who processed the tracking.</doc>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="fh_frame_readout_time::re" name="re">
+      <doc>the <ref ref="fh_frame_readout_t#fh_frame_readout_t">fh_frame_readout_t</ref></doc>
+      <type name="fh_frame_readout_t" qualifier="*" ref="fh_frame_readout_t#fh_frame_readout_t" />
+    </argument>
+    <argument id="fh_frame_readout_time::res" name="res">
+      <type name="timeval" qualifier="*" />
+    </argument>
+  </function>
+  <function id="fh_frame_readout_timestamp" name="fh_frame_readout_timestamp">
+    <brief>Frame timetamp.</brief>
+    <doc>Its an internal timestamp in microsecond of the frame, generated
+by the camera/framegrabber. It should be used to measure precise
+timing between frames The <ref ref="fh_frame_readout_t#fh_frame_readout_time">fh_frame_readout_time</ref> is an actual
+date that could be used to find a frame in time.
+
+</doc>
+    <return>
+      <doc>the frame timestamp in microsecond.</doc>
+      <type name="uint64_t" />
+    </return>
+    <argument id="fh_frame_readout_timestamp::re" name="re">
+      <doc>the <ref ref="fh_frame_readout_t#fh_frame_readout_t">fh_frame_readout_t</ref></doc>
+      <type name="fh_frame_readout_t" qualifier="*" ref="fh_frame_readout_t#fh_frame_readout_t" />
+    </argument>
+  </function>
+</typedef>

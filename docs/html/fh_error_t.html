@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>fh_error_t</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" type="text/css" href="styles/cldoc.css">
+</head>
+
+<body id="cldoc">
+    <div id="cldoc_sidebar">
+        <div id="cldoc_sidebar_items">
+            <div class="back">
+                <div class="name"><span><span class="keyword">Struct</span><span>fh_error_t</span></span></div><a href="index.html"><span class="arrow">↵</span> <span>Index</span></a>
+            </div>
+            <div id="cldoc_sidebar_pagenav"></div>
+            <div class="subtitle">Fields</div>
+            <ul>
+                <li><a href="#fh_error_t.what">what<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>Textual description of the error.</p>
+                    </div>
+                </li>
+                <li><a href="#fh_error_t.code">code<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>Type of the error</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="subtitle">Functions</div>
+            <ul>
+                <li><a href="#fh_error_create">fh_error_create<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>Creates a new fh_error_t structure for reporting</p>
+                    </div>
+                </li>
+                <li><a href="#fh_error_destroy">fh_error_destroy<span class="counter"></span></a>
+                    <div class="brief">
+                        <p>Frees an fh_error_t</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="cldoc_content">
+        <h1 id="fh_error_t"><span><span class="keyword">Struct</span><span>fh_error_t</span></span></h1>
+        <div class="description">
+            <div class="doc">
+                <p><a href="#fh_error_t">fh_error_t</a> represent any error / exceptional condition that could
+                    happens when using libfort-hermes functions. It contains an
+                    internal <a href="index.html#fh_error_code_e">fh_error_code_e</a> and a describing string.</p>
+                <p><a href="#fh_error_t">fh_error_t</a> are passed as initialized arguments to any function that
+                    reports error. They should be initialized by the user using
+                    <a href="#fh_error_create">fh_error_create</a> and cleaned up using <a href="#fh_error_destroy">fh_error_destroy</a>.</p>
+                <p>The same error structure can be used repeatidly accros multiple
+                    call to the library function.</p>
+            </div>
+        </div>
+        <h2 data-cldoc-dynamic="1" id="fields">Fields</h2>
+        <table class="fields">
+            <tbody>
+                <tr id="fh_error_t::what">
+                    <td class="field_name identifier">what</td>
+                    <td class="field_type"><span class="type"><span class="name builtin">char</span><span class="qualifier"> *</span></span></td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>Textual description of the error.</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="fh_error_t::code">
+                    <td class="field_name identifier">code</td>
+                    <td class="field_type"><span class="type"><span class="name "><a href="index.html#fh_error_code_e">fh_error_code_e</a></span></span></td>
+                    <td class="doc">
+                        <div class="brief">
+                            <p>Type of the error</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2 data-cldoc-dynamic="1" id="functions">Functions</h2>
+        <div class="functions">
+            <div class="function">
+                <div class="declaration" id="fh_error_create">
+                    <div class="return_type"><span class="type"><span class="name "><a href="#fh_error_t">fh_error_t</a></span><span class="qualifier"> *</span></span></div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">fh_error_create</td>
+                                <td class="open_paren">(</td>
+                                <td colspan="2"></td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>Creates a new fh_error_t structure for reporting</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr class="return">
+                            <td class="keyword">return</td>
+                            <td>
+                                <div class="doc">
+                                    <p>a newly allocated <a href="#fh_error_t">fh_error_t</a></p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="function">
+                <div class="declaration" id="fh_error_destroy">
+                    <div class="return_type"><span class="type"><span class="name builtin">void</span></span></div>
+                    <table class="declaration">
+                        <tbody>
+                            <tr>
+                                <td class="identifier">fh_error_destroy</td>
+                                <td class="open_paren">(</td>
+                                <td class="argument_type"><span class="type"><span class="name "><a href="#fh_error_t">fh_error_t</a></span><span class="qualifier"> *</span></span></td>
+                                <td class="argument_name">err</td>
+                                <td class="close_paren">)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="brief">
+                    <p>Frees an fh_error_t</p>
+                </div>
+                <table class="arguments">
+                    <tbody>
+                        <tr id="fh_error_destroy::err">
+                            <td>err</td>
+                            <td>
+                                <div class="doc">
+                                    <p>the <a href="#fh_error_t">fh_error_t</a> to free.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html><!-- vi:ts=2:et -->

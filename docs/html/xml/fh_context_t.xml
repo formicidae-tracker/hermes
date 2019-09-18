@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='utf-8'?>
+<typedef id="fh_context_t" name="fh_context_t" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <brief> A context is used to read <ref ref="fh_frame_readout_t#fh_frame_readout_t">fh_frame_readout_t</ref>
+  </brief>
+  <doc>It can represents an offline list of tracking datafile opened using
+<ref ref="index#fh_open_file">fh_open_file</ref> or a connection to an online broadcast of tracking
+data opened using <ref ref="index#fh_connect">fh_connect</ref>.
+</doc>
+  <type builtin="yes" name="void" />
+  <function id="fh_context_destroy" name="fh_context_destroy">
+    <brief> Frees any ressources associated with an opened context.</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="fh_context_destroy::ctx" name="ctx">
+      <doc>the <ref ref="fh_context_t#fh_context_t">fh_context_t</ref> to free</doc>
+      <type name="fh_context_t" qualifier="*" ref="fh_context_t#fh_context_t" />
+    </argument>
+  </function>
+  <function id="fh_context_read" name="fh_context_read">
+    <brief> Reads a new fh_frame_readout_t from a fh_context_t.</brief>
+    <doc>It returns true if a new fh_frame_readout_t has been successfully
+received and parsed. In the special case of a non blocking netwrok
+context, the <ref ref="fh_context_t#fh_context_read::err">err</ref> field should be used to distinguish case where
+no data is currently available (return value is false and err is
+FH_NO_ERROR) and end of stream cse (return value is false and err
+is FH_END_OF_STREAM).
+
+</doc>
+    <return>
+      <doc>true if a new fh_frame_readout_t has been successfully read.</doc>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="fh_context_read::ctx" name="ctx">
+      <doc>the fh_context_t to read from</doc>
+      <type name="fh_context_t" qualifier="*" ref="fh_context_t#fh_context_t" />
+    </argument>
+    <argument id="fh_context_read::ro" name="ro">
+      <doc>the fh_frame_readout_t to read to</doc>
+      <type name="fh_frame_readout_t" qualifier="*" ref="fh_frame_readout_t#fh_frame_readout_t" />
+    </argument>
+    <argument id="fh_context_read::err" name="err">
+      <doc>fh_error_t used for error reporting including FH_END_OF_STREAM cases.</doc>
+      <type name="fh_error_t" qualifier="*" ref="fh_error_t#fh_error_t" />
+    </argument>
+  </function>
+</typedef>

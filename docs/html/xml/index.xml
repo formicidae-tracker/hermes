@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='utf-8'?>
+<index xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <brief>libfort-hermes C API</brief>
+  <doc># libfort-hermes C API
+
+The main entry point of this library is using a <ref ref="fh_context_t#fh_context_t">fh_context_t</ref> to open
+either a file (<ref ref="index#fh_open_file">fh_open_file</ref>) or connect remotely to a live tracking
+application (<ref ref="index#fh_connect">fh_connect</ref>). Then <ref ref="fh_frame_readout_t#fh_frame_readout_t">fh_frame_readout_t</ref> can be obtained
+through the <ref ref="fh_context_t#fh_context_read">fh_context_read</ref> function.</doc>
+  <struct name="fh_error_t" ref="fh_error_t#fh_error_t">
+    <brief> Error reporting object.</brief>
+  </struct>
+  <enum anonymous="yes" id="fh_error_code" name="fh_error_code">
+    <enumvalue id="FH_NO_ERROR" name="FH_NO_ERROR" value="0">
+      <brief>Success</brief>
+    </enumvalue>
+    <enumvalue id="FH_STREAM_NO_HEADER" name="FH_STREAM_NO_HEADER" value="10001">
+      <brief>The selected traking stream did not gave any header.</brief>
+    </enumvalue>
+    <enumvalue id="FH_STREAM_WRONG_VERSION" name="FH_STREAM_WRONG_VERSION" value="10002">
+      <brief>The stream is in an incompatible version</brief>
+    </enumvalue>
+    <enumvalue id="FH_END_OF_STREAM" name="FH_END_OF_STREAM" value="10003">
+      <brief>The end of the stream has been reached</brief>
+    </enumvalue>
+    <enumvalue id="FH_MESSAGE_DECODE_ERROR" name="FH_MESSAGE_DECODE_ERROR" value="10004">
+      <brief>The next message in the stream could not be decoded.</brief>
+    </enumvalue>
+    <enumvalue id="FH_COULD_NOT_CONNECT" name="FH_COULD_NOT_CONNECT" value="10005">
+      <brief>Could not connect to the network stream</brief>
+    </enumvalue>
+    <enumvalue id="FH_SOCKET_ERROR" name="FH_SOCKET_ERROR" value="10006">
+      <brief>Network error</brief>
+    </enumvalue>
+  </enum>
+  <enum anonymous="yes" id="fh_readout_error" name="fh_readout_error">
+    <enumvalue id="NO_ERROR" name="NO_ERROR" value="0">
+      <brief>Success</brief>
+    </enumvalue>
+    <enumvalue id="PROCESS_OVERFLOW" name="PROCESS_OVERFLOW" value="1">
+      <brief>A low-level tracking process overflow occured.</brief>
+    </enumvalue>
+    <enumvalue id="PROCESS_TIMEOUT" name="PROCESS_TIMEOUT" value="2">
+      <brief>One of the distributed tracking process did not finished this</brief>
+      <doc>frame in time.</doc>
+    </enumvalue>
+    <enumvalue id="ILLUMINATION_ERROR" name="ILLUMINATION_ERROR" value="3">
+      <brief>issue with the illumination system prevented the tag tracking.</brief>
+    </enumvalue>
+  </enum>
+  <typedef name="fh_context_t" ref="fh_context_t#fh_context_t">
+    <brief> A context is used to read <ref ref="fh_frame_readout_t#fh_frame_readout_t">fh_frame_readout_t</ref>
+    </brief>
+    <type builtin="yes" name="void" />
+  </typedef>
+  <typedef id="fh_error_code_e" name="fh_error_code_e">
+    <brief>Error types that are returned by libfort-hermes functions.</brief>
+    <type name="fh_error_code" ref="index#fh_error_code" />
+  </typedef>
+  <typedef name="fh_frame_readout_t" ref="fh_frame_readout_t#fh_frame_readout_t">
+    <brief> Represents a tag frame readout.</brief>
+    <type builtin="yes" name="void" />
+  </typedef>
+  <typedef id="fh_readout_error_e" name="fh_readout_error_e">
+    <brief>Errors that are returned by any <ref ref="fh_frame_readout_t#fh_frame_readout_t">fh_frame_readout_t</ref>
+    </brief>
+    <type name="fh_readout_error" ref="index#fh_readout_error" />
+  </typedef>
+  <typedef name="fh_tag_t" ref="fh_tag_t#fh_tag_t">
+    <brief> Represents a detected tag</brief>
+    <type builtin="yes" name="void" />
+  </typedef>
+  <function id="fh_connect" name="fh_connect">
+    <brief> Connects to a remote for live tracking data processing.</brief>
+    <doc>If nonblocking is set to true, any call to fh_context_read will
+return immediatly even if no data is available. The error return
+value should be used to distinguish the End Of Stream case from the
+no data currently available case.
+
+</doc>
+    <return>
+      <doc>A new opened <ref ref="fh_context_t#fh_context_t">fh_context_t</ref> upon success, otherwise NULL
+with an appropriate error in <ref ref="#fh_connect::err">err</ref>.</doc>
+      <type name="fh_context_t" qualifier="*" ref="fh_context_t#fh_context_t" />
+    </return>
+    <argument id="fh_connect::host" name="host">
+      <doc>the host to connect to</doc>
+      <type builtin="yes" name="char" qualifier=" const *" />
+    </argument>
+    <argument id="fh_connect::port" name="port">
+      <doc>the port to connect to</doc>
+      <type builtin="yes" name="int" />
+    </argument>
+    <argument id="fh_connect::nonblocking" name="nonblocking">
+      <doc>if true, operates as a nonblocking socket.</doc>
+      <type builtin="yes" name="bool" />
+    </argument>
+    <argument id="fh_connect::err" name="err">
+      <doc><ref ref="fh_error_t#fh_error_t">fh_error_t</ref> used for error reporting</doc>
+      <type name="fh_error_t" qualifier="*" ref="fh_error_t#fh_error_t" />
+    </argument>
+  </function>
+  <function id="fh_open_file" name="fh_open_file">
+    <brief> Opens a list of tracking data file.</brief>
+    <return>
+      <doc>A new opened <ref ref="fh_context_t#fh_context_t">fh_context_t</ref> upon success, otherwise NULL
+        and an appropriate error in <ref ref="#fh_open_file::err">err</ref>.</doc>
+      <type name="fh_context_t" qualifier="*" ref="fh_context_t#fh_context_t" />
+    </return>
+    <argument id="fh_open_file::filename" name="filename">
+      <doc>filepath to the file.</doc>
+      <type builtin="yes" name="char" qualifier=" const *" />
+    </argument>
+    <argument id="fh_open_file::err" name="err">
+      <doc><ref ref="fh_error_t#fh_error_t">fh_error_t</ref> used for error reporting</doc>
+      <type name="fh_error_t" qualifier="*" ref="fh_error_t#fh_error_t" />
+    </argument>
+  </function>
+</index>
