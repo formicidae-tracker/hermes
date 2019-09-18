@@ -90,7 +90,7 @@ bool NetworkContext::ReadMessageUnsafe(google::protobuf::MessageLite & m) {
 			throw;
 		}
 
-		if (d_buffer[d_sizeByteLength-1] & 0x80 != 0 ) {
+		if ( (d_buffer[d_sizeByteLength-1] & 0x80) != 0 ) {
 			++d_sizeByteLength;
 			return false;
 		}
