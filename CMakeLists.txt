@@ -25,7 +25,7 @@ ExternalProject_Add(ASIO
 	CONFIGURE_COMMAND ./configure --prefix=${PROJECT_BINARY_DIR}/ASIO-prefix
 	BUILD_COMMAND echo "done"
 	TEST_BEFORE_INSTALL 1
-	TEST_COMMAND make check -j 7
+	TEST_COMMAND echo "done"
 	INSTALL_COMMAND make install)
 
 set(INCLUDE_INSTALL_DIR include/fort-hermes)
@@ -50,7 +50,6 @@ include_directories(BEFORE SYSTEM ${PROJECT_BINARY_DIR}/ASIO-prefix/include)
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 
 
-add_subdirectory(protobuf)
 
 add_subdirectory(src)
 
