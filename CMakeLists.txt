@@ -17,24 +17,7 @@ set(CMAKE_CXX_STANDARD 17)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 find_package(Protobuf 3.3.0 REQUIRED)
-find_package(Asio 1.10.8 EXACT)
-
-if(NOT Asio_FOUND)
-	include(ExternalProject)
-	ExternalProject_Add(ASIO
-		URL https://sourceforge.net/projects/asio/files/asio/1.10.8%20%28Stable%29/asio-1.10.8.tar.bz2/download
-		URL_MD5 59702ae78da4c45e5fffad39b062cf42
-		BUILD_IN_SOURCE 1
-		CONFIGURE_COMMAND ./configure --prefix=${PROJECT_BINARY_DIR}/ASIO-prefix
-		BUILD_COMMAND echo "done"
-		TEST_BEFORE_INSTALL 1
-		TEST_COMMAND echo "done"
-		INSTALL_COMMAND make install)
-
-	include_directories(BEFORE SYSTEM ${PROJECT_BINARY_DIR}/ASIO-prefix/include)
-else(NOT Asio_FOUND)
-	include_directories(${ASIO_INCLUDE_DIRS})
-endif(NOT Asio_FOUND)
+find_package(Asio)
 
 
 set(INCLUDE_INSTALL_DIR include/fort-hermes)
