@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "hermes.h"
+#include <fort-hermes/hermes.h>
 
 #include <stdio.h>
 

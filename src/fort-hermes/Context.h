@@ -1,6 +1,6 @@
 #pragma once
 
-#include "FrameReadout.pb.h"
+#include <fort-hermes/FrameReadout.pb.h>
 
 namespace fort {
 namespace hermes {

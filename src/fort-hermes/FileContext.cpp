@@ -8,7 +8,7 @@
 
 #include <google/protobuf/util/delimited_message_util.h>
 
-#include "Header.pb.h"
+#include <fort-hermes/Header.pb.h>
 
 #ifndef O_BINARY
 #define O_BINARY 0
