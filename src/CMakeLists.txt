@@ -1,1 +1,1 @@
-add_subdirectory(fort-hermes)
+add_subdirectory(fort/hermes)

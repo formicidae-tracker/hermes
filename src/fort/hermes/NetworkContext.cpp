@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 #include "Error.h"
-#include <fort-hermes/Header.pb.h>
+#include <fort/hermes/Header.pb.h>
 
 using namespace fort::hermes;
 

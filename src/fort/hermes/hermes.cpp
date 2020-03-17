@@ -1,6 +1,6 @@
 #include "hermes.h"
 
-#include <fort-hermes/FrameReadout.pb.h>
+#include <fort/hermes/FrameReadout.pb.h>
 #include <google/protobuf/util/time_util.h>
 
 #include "NetworkContext.h"

@@ -20,7 +20,7 @@ find_package(Protobuf 3.3.0 REQUIRED)
 find_package(Asio)
 
 
-set(INCLUDE_INSTALL_DIR include/fort-hermes)
+set(INCLUDE_INSTALL_DIR include/fort/hermes)
 set(LIB_INSTALL_DIR lib )
 
 
@@ -37,8 +37,6 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfig.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfigVersion.cmake
         DESTINATION ${LIB_INSTALL_DIR}/FortHermesCpp/cmake )
 
-
-include_directories(${PROTOBUF_INCLUDE_DIRS})
 
 
 add_subdirectory(src)
