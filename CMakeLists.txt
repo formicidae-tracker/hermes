@@ -17,8 +17,9 @@ set(CMAKE_CXX_STANDARD 17)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 find_package(Protobuf 3.3.0 REQUIRED)
-find_package(Asio)
+find_package(Asio REQUIRED)
 
+include_directories(${Protobuf_INCLUDE_DIRS})
 
 set(INCLUDE_INSTALL_DIR include/fort/hermes)
 set(LIB_INSTALL_DIR lib )
