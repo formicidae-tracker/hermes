@@ -39,7 +39,6 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfig.cmake
         DESTINATION ${LIB_INSTALL_DIR}/FortHermesCpp/cmake )
 
 
-
 add_subdirectory(src)
 
 add_subdirectory(pkgconfig)

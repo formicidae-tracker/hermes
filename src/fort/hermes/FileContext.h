@@ -16,7 +16,7 @@ namespace hermes {
 
 class FileContext : public Context {
 public:
-	FileContext(const std::string & filename);
+	FileContext(const std::string & filename, bool followFiles = true);
 	virtual ~FileContext();
 
 	void Read(fort::hermes::FrameReadout * ro);
@@ -34,6 +34,7 @@ private:
 	GZipPtr d_gzip;
 	FileLine d_line;
 	size_t   d_width,d_height;
+	bool     d_followFiles;
 };
 
 } // namespace hermes

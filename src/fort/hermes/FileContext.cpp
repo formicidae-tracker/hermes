@@ -45,10 +45,11 @@ void FileContext::OpenFile(const std::string & filename) {
 
 
 
-FileContext::FileContext(const std::string & filename)
+FileContext::FileContext(const std::string & filename, bool followFiles)
 	: d_path(filename)
 	, d_width(0)
-	, d_height(0) {
+	, d_height(0)
+	, d_followFiles(followFiles) {
 	OpenFile(filename);
 }
 
@@ -75,9 +76,10 @@ void FileContext::Read(fort::hermes::FrameReadout * ro) {
 		throw InternalError("Message is empty",FH_MESSAGE_DECODE_ERROR);
 	}
 
-	if (d_line.footer().next().length() == 0 ) {
+	if (d_line.footer().next().length() == 0 || d_followFiles == false) {
 		throw EndOfFile();
 	}
 
 	OpenFile(d_path.Dir().Join({d_line.footer().next()}).Str());
+	Read(ro);
 }
