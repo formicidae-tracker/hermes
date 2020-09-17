@@ -1,4 +1,4 @@
-find_program(CLDOC_EXE cldoc REQUIRED)
+find_program(CLDOC_EXE cldoc)
 
 if(CLDOC_EXE)
 	add_custom_target(docs
