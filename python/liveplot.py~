@@ -1,0 +1,55 @@
+import argparse
+import time
+import socket
+import struct
+from google.protobuf.internal.decoder import _DecodeVarint32
+import Header_pb2
+import FrameReadout_pb2
+from matplotlib import pyplot as plt
+import matplotlib
+matplotlib.use('TkAgg')
+
+
+def get_msg(sock):
+    data_size = bytearray()
+    for i in range(0, 100):
+        data_size += sock.recv(1)
+        if bytes([b'\x80'[0] & data_size[i]]) == b'\x00':
+            break
+    msg_len, new_pos = _DecodeVarint32(data_size, 0)
+    buf = sock.recv(msg_len)
+    return buf
+
+
+parser = argparse.ArgumentParser(description='Python hermes file reader')
+parser.add_argument('host', type=str, help='tracking host')
+args = parser.parse_args()
+
+PORT = 4002
+
+fig, ax = plt.subplots()
+ax.axis('equal')
+plt.ion()
+plt.show()
+
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    HOST = socket.gethostbyname(args.host)
+    s.connect((HOST, PORT))
+    msg = get_msg(s)
+    header = Header_pb2.Header()
+    header.ParseFromString(msg)
+    while plt.fignum_exists(fig.number):
+        msg = get_msg(s)
+        ro = FrameReadout_pb2.FrameReadout()
+        ro.ParseFromString(msg)
+        x = [t.x for t in ro.tags]
+        y = [t.y for t in ro.tags]
+        ax.clear()
+        ax.plot(x, y, 'b.')
+        ax.set_title("host: {} time: {}".format(args.host, time.strftime(
+            '%Y-%m-%d %H:%M:%S', time.localtime(ro.time.seconds))))
+        plt.draw()
+        plt.pause(0.001)
+    s.shutdown(socket.SHUT_RDWR)
+    s.close()
+    print("Socket closed")

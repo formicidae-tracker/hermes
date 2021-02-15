@@ -5,6 +5,8 @@ project(hermes VERSION 0.4.0
 
 cmake_minimum_required(VERSION 3.2)
 
+option(PYTHON "Generate protocol-buffer files for python" OFF)
+
 set(VERSION_API ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR})
 if(${PROJECT_VERSION_MAJOR} EQUAL 0)
 	set(VERSION_ABI ${VERSION_API})
@@ -46,3 +48,7 @@ add_subdirectory(pkgconfig)
 add_subdirectory(examples)
 
 add_subdirectory(docs)
+
+if(PYTHON)
+	add_subdirectory(python)
+endif()

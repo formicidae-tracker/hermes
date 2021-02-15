@@ -2,3 +2,5 @@ build/
 cover.out
 hermes-file-reader/hermes-file-reader
 hermes-file-doctor/hermes-file-doctor
+__pycache__
+*pb2_.py
