@@ -18,17 +18,27 @@ using namespace fort::hermes;
 
 
 void FileContext::OpenFile(const std::string & filename) {
-	int fd = open(filename.c_str(),O_RDONLY | O_BINARY);
-	if (fd < 0 ) {
-		throw InternalError("On call of open(): " +std::string(strerror(errno)),(fh_error_code_e)errno);
+	google::protobuf::io::ZeroCopyInputStream * stream = nullptr;
+	int fd = open((filename + "unc").c_str(),O_RDONLY | O_BINARY);
+	if ( fd > 0 ) {
+		d_file = std::make_shared<google::protobuf::io::FileInputStream>(fd);
+		d_file->SetCloseOnDelete(true);
+		d_gzip.reset();
+		stream = d_file.get();
+	} else {
+		fd = open(filename.c_str(),O_RDONLY | O_BINARY);
+		if (fd < 0 ) {
+			throw InternalError("On call of open(): " +std::string(strerror(errno)),(fh_error_code_e)errno);
+		}
+		d_file = std::make_shared<google::protobuf::io::FileInputStream>(fd);
+		d_file->SetCloseOnDelete(true);
+		d_gzip = std::make_shared<google::protobuf::io::GzipInputStream>(d_file.get());
+		stream = d_gzip.get();
 	}
-	d_file = std::make_shared<google::protobuf::io::FileInputStream>(fd);
-	d_file->SetCloseOnDelete(true);
-	d_gzip = std::make_shared<google::protobuf::io::GzipInputStream>(d_file.get());
 
 	Header h;
 	bool cleanEOF = false;
-	bool good = google::protobuf::util::ParseDelimitedFromZeroCopyStream(&h,d_gzip.get(),&cleanEOF);
+	bool good = google::protobuf::util::ParseDelimitedFromZeroCopyStream(&h,stream,&cleanEOF);
 	if ( good == false || cleanEOF == true ) {
 		throw InternalError("Stream has no header message",FH_STREAM_NO_HEADER);
 	}
@@ -43,8 +53,6 @@ void FileContext::OpenFile(const std::string & filename) {
 
 }
 
-
-
 FileContext::FileContext(const std::string & filename, bool followFiles)
 	: d_path(filename)
 	, d_width(0)
@@ -57,12 +65,20 @@ FileContext::~FileContext() {
 }
 
 void FileContext::Read(fort::hermes::FrameReadout * ro) {
+	google::protobuf::io::ZeroCopyInputStream * stream = d_gzip
+		? (google::protobuf::io::ZeroCopyInputStream * ) d_gzip.get()
+		: (google::protobuf::io::ZeroCopyInputStream * ) d_file.get();
+
 	d_line.Clear();
 	bool cleanEOF = false;
-	bool good = google::protobuf::util::ParseDelimitedFromZeroCopyStream(&d_line,d_gzip.get(),&cleanEOF);
+	bool good = google::protobuf::util::ParseDelimitedFromZeroCopyStream(&d_line,stream,&cleanEOF);
 	if ( good == false) {
 		if (cleanEOF == false ) {
-			throw InternalError("Could not decode message",FH_MESSAGE_DECODE_ERROR);
+			if ( d_gzip == nullptr ) {
+				throw UnexpectedEndOfFileSequence();
+			} else {
+				throw InternalError("Could not decode message",FH_MESSAGE_DECODE_ERROR);
+			}
 		} else {
 			throw EndOfFile();
 		}
@@ -71,6 +87,11 @@ void FileContext::Read(fort::hermes::FrameReadout * ro) {
 		ro->CopyFrom(d_line.readout());
 		ro->set_width(d_width);
 		ro->set_height(d_height);
+
+		if ( d_gzip == nullptr ) {
+			throw UnexpectedEndOfFileSequence();
+		}
+
 		return;
 	} else if ( d_line.has_footer() == false ) {
 		throw InternalError("Message is empty",FH_MESSAGE_DECODE_ERROR);

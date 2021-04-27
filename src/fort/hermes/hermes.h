@@ -41,6 +41,8 @@ typedef enum fh_error_code {
 	FH_COULD_NOT_CONNECT = 10005,
 	// Network error
 	FH_SOCKET_ERROR = 10006,
+	// Unexpected End of File Sequence
+	FH_UNEXPECTED_END_OF_FILE_SEQUENCE = 10007,
 } fh_error_code_e;
 
 /* Error reporting object.
