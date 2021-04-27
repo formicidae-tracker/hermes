@@ -29,4 +29,6 @@ message FrameReadout {
 	int32                     height        = 9;
 	google.protobuf.Timestamp cuestart      = 10;
 	google.protobuf.Timestamp cueend        = 11;
+
+	repeated google.protobuf.Any extensions = 12;
 };
