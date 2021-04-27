@@ -27,7 +27,7 @@ int main( int argc, char ** argv) {
 			fprintf(stderr,"Got error %d: %s\n",err->code,err->what);
 			return 1;
 		}
-		printf("Frame: %llu nb ants: %lud\n",fh_frame_readout_frame_id(ro),fh_frame_readout_tag_size(ro));
+		printf("Frame: %lu nb ants: %lu\n",fh_frame_readout_frame_id(ro),fh_frame_readout_tag_size(ro));
 	}
 	fh_frame_readout_destroy(ro);
 	fh_context_destroy(ctx);
