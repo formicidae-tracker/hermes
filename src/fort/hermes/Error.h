@@ -26,10 +26,12 @@ public:
 	virtual const char * what() const noexcept { return "EOF"; };
 };
 
-class UnexpectedEndOfFile : public std::exception {
+class UnexpectedEndOfFileSequence : public std::exception {
 public:
-	UnexpectedEndOfFile() noexcept{}
-	virtual ~UnexpectedEndOfFile()
+	UnexpectedEndOfFileSequence() noexcept{}
+	virtual ~UnexpectedEndOfFileSequence() {}
+	virtual const char * what() const noexcept { return "Unexpected end of file sequence"; }
+};
 
 class WouldBlock : public std::exception {
 public:
