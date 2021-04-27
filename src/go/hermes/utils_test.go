@@ -24,13 +24,13 @@ func (s *StreamReaderSuite) TestDelimitedMessageReading(c *C) {
 		&FrameReadout{
 			Timestamp: 10,
 			FrameID:   1,
-			Ants:      []*Ant{&Ant{ID: 0, X: 10, Y: 12}},
+			Tags:      []*Tag{&Tag{ID: 0, X: 10, Y: 12}},
 			Quads:     2,
 		},
 		&FrameReadout{
 			Timestamp: 20,
 			FrameID:   2,
-			Ants:      nil,
+			Tags:      nil,
 			Quads:     2,
 			Error:     FrameReadout_ILLUMINATION_ERROR,
 		},
@@ -56,7 +56,7 @@ func (s *StreamReaderSuite) TestDelimitedMessageReading(c *C) {
 			ok, err := ReadDelimitedMessage(rawBuffer, mm)
 			c.Assert(ok, Equals, true)
 			c.Assert(err, IsNil)
-			c.Assert(mm, DeepEquals, m)
+			c.Assert(proto.Equal(mm, m), Equals, true)
 		}
 	}
 }

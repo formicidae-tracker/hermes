@@ -26,6 +26,11 @@ public:
 	virtual const char * what() const noexcept { return "EOF"; };
 };
 
+class UnexpectedEndOfFile : public std::exception {
+public:
+	UnexpectedEndOfFile() noexcept{}
+	virtual ~UnexpectedEndOfFile()
+
 class WouldBlock : public std::exception {
 public:
 	WouldBlock() noexcept{}

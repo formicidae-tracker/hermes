@@ -9,7 +9,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/formicidae-tracker/hermes"
+	"github.com/formicidae-tracker/hermes/src/go/hermes"
 	"github.com/jessevdk/go-flags"
 )
 
