@@ -1,20 +1,15 @@
-cmake_policy(SET CMP0048 NEW)
-
-project(hermes VERSION 0.4.0
-               LANGUAGES C CXX)
+project(hermes LANGUAGES C CXX)
 
 cmake_minimum_required(VERSION 3.2)
 
-set(VERSION_API ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR})
-if(${PROJECT_VERSION_MAJOR} EQUAL 0)
-	set(VERSION_ABI ${VERSION_API})
-else(${PROJECT_VERSION_MAJOR} EQUAL 0)
-	set(VERSION_ABI ${PROJECT_VERSION_MAJOR})
-endif(${PROJECT_VERSION_MAJOR} EQUAL 0)
 
 set(CMAKE_CXX_STANDARD 17)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+
+include(VersionFromGit)
+version_from_git()
+
 
 find_package(Protobuf 3.3.0 REQUIRED)
 find_package(Asio REQUIRED)
@@ -31,13 +26,12 @@ configure_package_config_file(FortHermesCppConfig.cmake.in
 	INSTALL_DESTINATION ${LIB_INSTALL_DIR}/FortHermesCpp/cmake
 	PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR)
 write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfigVersion.cmake
-	VERSION ${PROJECT_VERSION}
+	VERSION "${PROJECT_VERSION}"
 	COMPATIBILITY SameMajorVersion )
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfig.cmake
-              ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfigVersion.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfigVersion.cmake
         DESTINATION ${LIB_INSTALL_DIR}/FortHermesCpp/cmake )
-
 
 add_subdirectory(src)
 

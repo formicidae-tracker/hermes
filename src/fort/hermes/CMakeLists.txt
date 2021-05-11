@@ -26,8 +26,8 @@ include_directories(${PROJECT_BINARY_DIR}/src)
 
 
 add_library(fort-hermes-cpp SHARED ${CPP_SRC_FILES} ${HDR_FILES} ${PROTO_SRC} ${PROTO_HDR})
-set_target_properties(fort-hermes-cpp PROPERTIES VERSION ${VERSION_API}
-                                      SOVERSION ${VERSION_ABI})
+set_target_properties(fort-hermes-cpp PROPERTIES VERSION ${PROJECT_VERSION_API}
+                                                 SOVERSION ${PROJECT_VERSION_ABI})
 
 target_link_libraries(fort-hermes-cpp ${PROTOBUF_LIBRARIES})
 
@@ -37,8 +37,8 @@ install(FILES ${HDR_FILES} ${PROTO_HDR} ${PROTO_FILES} DESTINATION ${INCLUDE_INS
 
 
 add_library(fort-hermes SHARED ${C_SRC_FILES} ${HDR_FILES})
-set_target_properties(fort-hermes PROPERTIES VERSION ${VERSION_API}
-                                                     SOVERSION ${VERSION_ABI})
+set_target_properties(fort-hermes PROPERTIES VERSION ${PROJECT_VERSION_API}
+                                             SOVERSION ${PROJECT_VERSION_ABI})
 
 target_link_libraries(fort-hermes fort-hermes-cpp ${Boost_LIBRARIES})
 
