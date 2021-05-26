@@ -14,7 +14,7 @@ version_from_git()
 
 
 find_package(Protobuf 3.3.0 REQUIRED)
-find_package(Asio REQUIRED)
+find_package(Asio 1.12 REQUIRED)
 
 include_directories(${Protobuf_INCLUDE_DIRS})
 
