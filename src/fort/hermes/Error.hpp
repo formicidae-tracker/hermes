@@ -29,7 +29,8 @@ public:
 class UnexpectedEndOfFileSequence : public std::exception {
 public:
 	UnexpectedEndOfFileSequence(const std::string & what, const std::string & segmentFilePath) noexcept
-		: d_what("Unexpected end of file sequence in '" + segmentFilePath + "': " + what) {
+		: d_what("Unexpected end of file sequence in '" + segmentFilePath + "': " + what)
+		, d_segmentFilePath(segmentFilePath) {
 	}
 	virtual ~UnexpectedEndOfFileSequence() {}
 

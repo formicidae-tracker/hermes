@@ -16,6 +16,17 @@ version_from_git()
 find_package(Protobuf 3.3.0 REQUIRED)
 find_package(Asio 1.12 REQUIRED)
 
+include(FetchGoogleTest)
+
+fetch_google_test(VERSION release-1.10.0)
+
+include(GoogleTest)
+enable_testing()
+set(MAKE_CHECK_TEST_COMMAND ${CMAKE_CTEST_COMMAND} -V)
+if(NOT TARGET check)
+	add_custom_target(check COMMAND ${MAKE_CHECK_TEST_COMMAND})
+endif(NOT TARGET check)
+
 include_directories(${Protobuf_INCLUDE_DIRS})
 
 set(INCLUDE_INSTALL_DIR include/fort/hermes)
@@ -34,6 +45,18 @@ write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfig
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfig.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfigVersion.cmake
         DESTINATION ${LIB_INSTALL_DIR}/FortHermesCpp/cmake )
+
+option(FORT_HERMES_ENABLE_COVERAGE "Enables code coverage" Off)
+if(FORT_HERMES_ENABLE_COVERAGE)
+	include(CodeCoverage)
+	enable_coverage()
+	setup_target_for_coverage(NAME coverage
+	                          DEPENDENCIES check
+	                          LCOV_OPTIONS --exclude "'*UTest.*'"
+	                                       --exclude "'*/main-check.cpp'"
+	                                       --include "'${PROJECT_SOURCE_DIR}/src/fort/hermes/*'"
+	                          )
+endif(FORT_HERMES_ENABLE_COVERAGE)
 
 add_subdirectory(src)
 

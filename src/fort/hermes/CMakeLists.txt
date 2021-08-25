@@ -44,7 +44,14 @@ target_link_libraries(fort-hermes fort-hermes-cpp ${Boost_LIBRARIES})
 install(TARGETS fort-hermes DESTINATION lib)
 
 
-set(UTEST_HDR_FILES UTestData.hpp)
-set(UTEST_SRC_FILES UTestData.cpp
+set(UTEST_HDR_FILES UTestDataUTest.hpp)
+set(UTEST_SRC_FILES UTestDataUTest.cpp
                     main-check.cpp
+                    ErrorUTest.cpp
                     )
+
+add_executable(fort-hermes-tests ${UTEST_HDR_FILES} ${UTEST_SRC_FILES})
+target_link_libraries(fort-hermes-tests fort-hermes gtest)
+
+add_test(NAME fort-hermes-tests COMMAND fort-hermes-tests)
+add_dependencies(check fort-hermes-tests)
