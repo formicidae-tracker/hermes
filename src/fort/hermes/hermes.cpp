@@ -3,9 +3,9 @@
 #include <fort/hermes/FrameReadout.pb.h>
 #include <google/protobuf/util/time_util.h>
 
-#include "NetworkContext.h"
-#include "FileContext.h"
-#include "Error.h"
+#include "NetworkContext.hpp"
+#include "FileContext.hpp"
+#include "Error.hpp"
 
 #ifdef __cplusplus
 extern "C" {
@@ -123,7 +123,7 @@ bool fh_context_read(fh_context_t * ctx,fh_frame_readout_t * ro,fh_error_t * err
 		return false;
 	} catch ( const fort::hermes::UnexpectedEndOfFileSequence & e ) {
 		if (err != NULL ) {
-			err->what = strdup("Unexpected end of file sequence");
+			err->what = strdup(e.what());
 			err->code = FH_UNEXPECTED_END_OF_FILE_SEQUENCE;
 		}
 		return false;

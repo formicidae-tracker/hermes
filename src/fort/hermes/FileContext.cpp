@@ -1,10 +1,10 @@
-#include "FileContext.h"
+#include "FileContext.hpp"
 
 #include <stdexcept>
 #include <fcntl.h>
 #include <sys/stat.h>
 
-#include "Error.h"
+#include "Error.hpp"
 
 #include <google/protobuf/util/delimited_message_util.h>
 
@@ -14,7 +14,8 @@
 #define O_BINARY 0
 #endif
 
-using namespace fort::hermes;
+namespace fort {
+namespace hermes {
 
 
 void FileContext::OpenFile(const std::string & filename) {
@@ -51,6 +52,7 @@ void FileContext::OpenFile(const std::string & filename) {
 	d_width = h.width();
 	d_height = h.height();
 
+	d_path = filename;
 }
 
 FileContext::FileContext(const std::string & filename, bool followFiles)
@@ -74,11 +76,8 @@ void FileContext::Read(fort::hermes::FrameReadout * ro) {
 	bool good = google::protobuf::util::ParseDelimitedFromZeroCopyStream(&d_line,stream,&cleanEOF);
 	if ( good == false) {
 		if (cleanEOF == false ) {
-			if ( d_gzip == nullptr ) {
-				throw UnexpectedEndOfFileSequence();
-			} else {
-				throw InternalError("Could not decode message",FH_MESSAGE_DECODE_ERROR);
-			}
+			throw UnexpectedEndOfFileSequence("unexpected EOF while decoding line",
+			                                  d_path.string());
 		} else {
 			throw EndOfFile();
 		}
@@ -88,19 +87,19 @@ void FileContext::Read(fort::hermes::FrameReadout * ro) {
 		ro->set_width(d_width);
 		ro->set_height(d_height);
 
-		if ( d_gzip == nullptr ) {
-			throw UnexpectedEndOfFileSequence();
-		}
-
 		return;
 	} else if ( d_line.has_footer() == false ) {
-		throw InternalError("Message is empty",FH_MESSAGE_DECODE_ERROR);
+		throw UnexpectedEndOfFileSequence("got an empty line",d_path.string());
 	}
 
 	if (d_line.footer().next().length() == 0 || d_followFiles == false) {
 		throw EndOfFile();
 	}
 
-	OpenFile(d_path.Dir().Join({d_line.footer().next()}).Str());
+	OpenFile((d_path.parent_path() / d_line.footer().next() ).string());
 	Read(ro);
 }
+
+
+} // namespace hermes
+} // namespace fort

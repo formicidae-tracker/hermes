@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Context.h"
+#include "Context.hpp"
 
 #include <memory>
 
@@ -8,10 +8,9 @@
 #include <google/protobuf/io/gzip_stream.h>
 
 #include <fort/hermes/Header.pb.h>
-#include "Path.h"
+#include <filesystem>
 
 namespace fort {
-
 namespace hermes {
 
 class FileContext : public Context {
@@ -28,7 +27,7 @@ private:
 
 	void OpenFile(const std::string & filename);
 
-	base::Path d_path;
+	std::filesystem::path d_path;
 
 	FilePtr d_file;
 	GZipPtr d_gzip;
@@ -38,5 +37,4 @@ private:
 };
 
 } // namespace hermes
-
 } // namespace fort

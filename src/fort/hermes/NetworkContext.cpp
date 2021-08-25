@@ -1,12 +1,12 @@
-#include "NetworkContext.h"
+#include "NetworkContext.hpp"
 
 #include <stdexcept>
 
-#include "Error.h"
+#include "Error.hpp"
 #include <fort/hermes/Header.pb.h>
 
-using namespace fort::hermes;
-
+namespace fort {
+namespace hermes {
 
 void NetworkContext::Reset() {
 	d_bufferReceived = 0;
@@ -126,3 +126,7 @@ bool NetworkContext::ReadMessageUnsafe(google::protobuf::MessageLite & m) {
 	}
 
 }
+
+
+} // namespace hermes
+} // namespace fort

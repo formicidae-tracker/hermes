@@ -1,5 +1,4 @@
-set(CPP_SRC_FILES Path.cpp
-                  Error.cpp
+set(CPP_SRC_FILES Error.cpp
                   NetworkContext.cpp
                   FileContext.cpp)
 
@@ -7,11 +6,10 @@ set(C_SRC_FILES hermes.cpp)
 
 
 set(HDR_FILES hermes.h
-              Path.h
-              Error.h
-              Context.h
-              NetworkContext.h
-              FileContext.h)
+              Error.hpp
+              Context.hpp
+              NetworkContext.hpp
+              FileContext.hpp)
 
 
 set(PROTO_FILES protobuf/Tag.proto
@@ -44,3 +42,9 @@ target_link_libraries(fort-hermes fort-hermes-cpp ${Boost_LIBRARIES})
 
 
 install(TARGETS fort-hermes DESTINATION lib)
+
+
+set(UTEST_HDR_FILES UTestData.hpp)
+set(UTEST_SRC_FILES UTestData.cpp
+                    main-check.cpp
+                    )

@@ -28,9 +28,23 @@ public:
 
 class UnexpectedEndOfFileSequence : public std::exception {
 public:
-	UnexpectedEndOfFileSequence() noexcept{}
+	UnexpectedEndOfFileSequence(const std::string & what, const std::string & segmentFilePath) noexcept
+		: d_what("Unexpected end of file sequence in '" + segmentFilePath + "': " + what) {
+	}
 	virtual ~UnexpectedEndOfFileSequence() {}
-	virtual const char * what() const noexcept { return "Unexpected end of file sequence"; }
+
+	virtual const char * what() const noexcept {
+		return d_what.c_str();
+	}
+
+	const std::string & SegmentFilePath() const {
+		return d_segmentFilePath;
+	}
+
+
+private:
+	std::string d_segmentFilePath;
+	std::string d_what;
 };
 
 class WouldBlock : public std::exception {
