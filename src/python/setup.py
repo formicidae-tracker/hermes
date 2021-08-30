@@ -7,10 +7,16 @@ import sys
 from distutils.spawn import find_executable
 from version import get_git_version
 
+import unittest
+
+def py_fort_hermes_test_suite():
+    test_loader = unittest.TestLoader()
+    test_suite = test_loader.discover('tests', pattern='test_*.py')
+    return test_suite
+
+
 with open("../../README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
-
-
 
 class BuildProtoCommand(setuptools.command.build_py.build_py):
     """A Command that generate required protobuf messages"""
@@ -76,4 +82,5 @@ setuptools.setup(
     cmdclass={
         'build_py': BuildProtoCommand,
     },
+    test_suite='setup.py_fort_hermes_test_suite',
 )
