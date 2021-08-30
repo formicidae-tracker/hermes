@@ -4,8 +4,6 @@ project(hermes LANGUAGES C CXX)
 
 cmake_minimum_required(VERSION 3.2)
 
-option(FORT_HERMES_BUILD_PYTHON "Generate protocol-buffer files for python" Off)
-
 set(CMAKE_CXX_STANDARD 17)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
@@ -68,5 +66,5 @@ add_subdirectory(examples)
 add_subdirectory(docs)
 
 if(FORT_HERMES_BUILD_PYTHON)
-	add_subdirectory(python)
+	add_subdirectory(src/python)
 endif()
