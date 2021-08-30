@@ -36,3 +36,4 @@ jobs:
           with:
             github-token: ${{ secrets.GITHUB_TOKEN }}
             path-to-lcov: ${{github.workspace}}/build/coverage/lcov.info
+            base-path: ${{github.workspace}}/src
