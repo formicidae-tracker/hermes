@@ -12,7 +12,7 @@ version_from_git()
 
 
 find_package(Protobuf 3.3.0 REQUIRED)
-find_package(Asio 1.14.1 REQUIRED)
+find_package(Asio 1.12 REQUIRED)
 
 include(FetchGoogleTest)
 
