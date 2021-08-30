@@ -1,0 +1,32 @@
+name: build
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  run-tests-and-coverage:
+    runs-on: ubuntu-20.04
+    steps:
+        - name: Checkout
+          uses: actions/checkout@v2.0.0
+        - name: Install dependencies
+          run: sudo apt install build-essential git cmake libasio-dev libboost-dev libprotobuf-dev protobuf-compiler lcov
+        - name: Uses ccache
+          uses: hendrikmuhs/ccache-action@v1
+        - name: Configure
+          run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=RelWithDebInfo  -DFORT_HERMES_ENABLE_COVERAGE=On
+        - name: Build
+          working-directory: ${{github.workspace}}/build
+          run: make all
+        - name: Test
+          run: make coverage
+          working-directory: ${{github.workspace}}/build
+        - name: Sends coverage
+          uses: coverallsapp/github-action@v1.1.2
+          with:
+            path-to-lcov: ${{github.workspace}}/build/coverage/lcov.info
+            base-path: ${{github.workspace}}
