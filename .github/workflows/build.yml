@@ -20,15 +20,19 @@ jobs:
         - name: Uses ccache
           uses: hendrikmuhs/ccache-action@v1
         - name: Configure
-          run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=RelWithDebInfo  -DFORT_HERMES_ENABLE_COVERAGE=On
+          run: |
+            export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+            cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=RelWithDebInfo  -DFORT_HERMES_ENABLE_COVERAGE=On
         - name: Build
           working-directory: ${{github.workspace}}/build
-          run: make all
+          run: |
+            export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+            make all
         - name: Test
           run: make coverage
           working-directory: ${{github.workspace}}/build
         - name: Sends coverage
           uses: coverallsapp/github-action@v1.1.2
           with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
             path-to-lcov: ${{github.workspace}}/build/coverage/lcov.info
-            base-path: ${{github.workspace}}
