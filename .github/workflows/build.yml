@@ -13,6 +13,8 @@ jobs:
     steps:
         - name: Checkout
           uses: actions/checkout@v2.0.0
+        - name: Get all git tags
+          run: git fetch --prune --unshallow --tags
         - name: Install dependencies
           run: sudo apt install build-essential git cmake libasio-dev libboost-dev libprotobuf-dev protobuf-compiler lcov
         - name: Uses ccache
