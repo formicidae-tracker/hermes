@@ -155,10 +155,10 @@ size_t WriteSegment(UTestData::SequenceInfo & info,
 	auto write =
 		[&gziped,&uncomp] ( const google::protobuf::MessageLite & m) {
 			if ( google::protobuf::util::SerializeDelimitedToZeroCopyStream(m,gziped.get()) == false ) {
-				throw std::runtime_error("Could not write message " + m.DebugString() );
+				throw std::runtime_error("Could not write message");
 			}
 			if (uncomp && google::protobuf::util::SerializeDelimitedToZeroCopyStream(m,uncomp.get()) == false ) {
-				throw std::runtime_error("Could not write uncompressed message " + m.DebugString() );
+				throw std::runtime_error("Could not write uncompressed message");
 			}
 		};
 
