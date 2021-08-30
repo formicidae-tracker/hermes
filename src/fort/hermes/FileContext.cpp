@@ -10,6 +10,8 @@
 
 #include <fort/hermes/Header.pb.h>
 
+#include "CheckHeader.hpp"
+
 #ifndef O_BINARY
 #define O_BINARY 0
 #endif
@@ -41,13 +43,10 @@ void FileContext::OpenFile(const std::string & filename) {
 	bool cleanEOF = false;
 	bool good = google::protobuf::util::ParseDelimitedFromZeroCopyStream(&h,stream,&cleanEOF);
 	if ( good == false
-	     || cleanEOF == true
-	     || h.version().vmajor() != 0
-	     || h.version().vminor() != 1
-	     || h.width() == 0
-	     || h.height() == 0 ) {
-		throw InternalError("Stream has no or wrong header message",FH_STREAM_NO_HEADER);
+	     || cleanEOF == true ) {
+		throw InternalError("Stream has no header message",FH_STREAM_NO_HEADER);
 	}
+	CheckFileHeader(h);
 
 	d_width = h.width();
 	d_height = h.height();

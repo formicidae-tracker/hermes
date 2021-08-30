@@ -1,18 +1,31 @@
 #pragma once
 
-
+#include <fort/hermes/FrameReadout.pb.h>
+#include <asio/io_context.hpp>
+#include <asio/ip/tcp.hpp>
+#include <thread>
 namespace fort {
 namespace hermes {
 
 class StreamServer {
 public:
-	typedef std::unique_ptr<StreamServer> Ptr;
+	struct Options {
+		int Port;
+		std::vector<FrameReadout>::const_iterator Begin,End;
+		bool WriteHeader;
+	};
 
-	static Ptr Listen(int port);
-
-
+	StreamServer(const Options & opts);
+	~StreamServer();
 private :
-	StreamServer(int port);
+
+	void ListenOnce();
+	void Write(asio::ip::tcp::socket socket);
+
+	Options d_options;
+	asio::io_context        d_context;
+	asio::ip::tcp::acceptor d_acceptor;
+	std::thread             d_thread;
 };
 
 

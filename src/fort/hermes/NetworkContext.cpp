@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #include "Error.hpp"
+#include "CheckHeader.hpp"
 #include <fort/hermes/Header.pb.h>
 
 namespace fort {
@@ -20,7 +21,7 @@ NetworkContext::NetworkContext(const std::string & host, int port, bool nonblock
 	, d_sizeReceived(false) {
 	Reset();
 	asio::ip::tcp::resolver resolver(d_service);
-	asio::ip::tcp::resolver::query query(host,"4002");
+	asio::ip::tcp::resolver::query query(host,std::to_string(port));
 	try {
 		asio::connect(d_socket,resolver.resolve(query));
 	} catch ( const asio::system_error & e ) {
@@ -30,19 +31,15 @@ NetworkContext::NetworkContext(const std::string & host, int port, bool nonblock
 	fort::hermes::Header h;
 	for (;;) {
 		try {
-			ReadMessageUnsafe(h);
-			break;
-		} catch (const InternalError & e ) {
-			throw InternalError(e.what(),FH_STREAM_NO_HEADER);
+			if ( ReadMessageUnsafe(h) == true ) {
+				break;
+			}
+		} catch (const std::exception & e ) {
+			throw InternalError(std::string("could not get header: ") + e.what(),FH_STREAM_NO_HEADER);
 		}
 	}
 
-
-	//TODO check version
-	if (false) {
-		d_socket.close();
-		throw InternalError("Wrong version",FH_STREAM_WRONG_VERSION);
-	}
+	CheckNetworkHeader(h);
 
 	if (nonblocking == true ) {
 		d_socket.non_blocking(true);
@@ -74,6 +71,9 @@ void NetworkContext::ReadSome(size_t size) {
 
 	if ( ec == asio::error::would_block || ec == asio::error::try_again ) {
 		throw WouldBlock();
+	}
+	if ( ec == asio::error::eof ) {
+		throw EndOfFile();
 	}
 
 	if ( ec ) {

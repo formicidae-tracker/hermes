@@ -1,6 +1,8 @@
 set(CPP_SRC_FILES Error.cpp
                   NetworkContext.cpp
-                  FileContext.cpp)
+                  FileContext.cpp
+                  CheckHeader.hpp
+                  CheckHeader.cpp)
 
 set(C_SRC_FILES hermes.cpp)
 
@@ -50,7 +52,11 @@ set(UTEST_SRC_FILES UTestDataUTest.cpp
                     ErrorUTest.cpp
                     FileContextUTest.cpp
                     NetworkContextUTest.cpp
+                    StreamServerUTest.hpp
+                    StreamServerUTest.cpp
+                    CheckHeaderUTest.cpp
                     )
+
 
 add_executable(fort-hermes-tests ${UTEST_HDR_FILES} ${UTEST_SRC_FILES})
 target_link_libraries(fort-hermes-tests fort-hermes gtest)

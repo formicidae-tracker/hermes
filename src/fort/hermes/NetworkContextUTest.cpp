@@ -2,6 +2,10 @@
 
 #include "NetworkContext.hpp"
 #include "Error.hpp"
+
+#include "StreamServerUTest.hpp"
+#include "UTestDataUTest.hpp"
+
 namespace fort {
 namespace hermes {
 
@@ -11,6 +15,41 @@ TEST_F(NetworkContextUTest,ConnectionFailure) {
 	EXPECT_THROW(NetworkContext("example.com.does-not-exists",12345,false),InternalError);
 
 }
+
+TEST_F(NetworkContextUTest,NormalOperation) {
+	const auto & readouts = UTestData::Instance().NormalSequence().Readouts;
+	StreamServer server({.Port = 12345,
+	                     .Begin = readouts.begin(),
+	                     .End = readouts.end(),
+	                     .WriteHeader = true});
+	usleep(1000);
+	std::shared_ptr<NetworkContext> context;
+	try {
+		context = std::make_shared<NetworkContext>("localhost",12345,false);
+	} catch (const std::exception & e ) {
+		FAIL() << "got unexpected exception: " << e.what();
+	}
+	FrameReadout ro;
+	for ( const auto & expected : readouts ) {
+		EXPECT_NO_THROW(context->Read(&ro));
+		EXPECT_READOUT_EQ(ro,expected);
+	}
+	EXPECT_THROW(context->Read(&ro),EndOfFile);
+}
+
+TEST_F(NetworkContextUTest,NoHeader) {
+	const auto & readouts = UTestData::Instance().NormalSequence().Readouts;
+	StreamServer server({.Port = 12345,
+	                     .Begin = readouts.begin(),
+	                     .End = readouts.end(),
+	                     .WriteHeader = false});
+	usleep(1000);
+	std::shared_ptr<NetworkContext> context;
+	EXPECT_THROW({
+			context = std::make_shared<NetworkContext>("localhost",12345,false);
+		},InternalError);
+}
+
 
 } // namespace hermes
 } // namespace fort
