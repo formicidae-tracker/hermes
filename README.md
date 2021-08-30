@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/formicidae-tracker/hermes/badge.svg?branch=master)](https://coveralls.io/github/formicidae-tracker/hermes?branch=master)
+[![codecov](https://codecov.io/gh/formicidae-tracker/hermes/branch/master/graph/badge.svg?token=UTIV500Z66)](https://codecov.io/gh/formicidae-tracker/hermes)
 
 # Hermes: Tracking data format based on protocol buffer for the FORmicidae Tracker
 
