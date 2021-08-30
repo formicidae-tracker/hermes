@@ -46,12 +46,15 @@ UTestData::~UTestData() {
 	std::filesystem::remove_all(d_basepath);
 }
 
+const std::filesystem::path & UTestData::Basepath() const {
+	return d_basepath;
+}
 
 const UTestData::SequenceInfo & UTestData::NormalSequence() const {
 	return d_normal;
 }
 
-const UTestData::SequenceInfo & UTestData::TruncatedClassisSequence() const {
+const UTestData::SequenceInfo & UTestData::TruncatedClassicSequence() const {
 	return d_truncated;
 }
 
@@ -63,6 +66,10 @@ const UTestData::SequenceInfo & UTestData::NoFooter() const {
 	return d_noFooter;
 }
 
+const UTestData::SequenceInfo & UTestData::NoHeader() const {
+	return d_noHeader;
+}
+
 struct SequenceInfoWriteArgs {
 	std::filesystem::path Basepath;
 	std::string           Basename;
@@ -72,6 +79,7 @@ struct SequenceInfoWriteArgs {
 	bool                  MissFooter;
 	bool                  Dual;
 	bool                  Truncated;
+	bool                  NoHeader;
 };
 
 
@@ -83,7 +91,7 @@ std::string HermesFileName(const std::string & basename,
 }
 
 
-void TruncateFile(const std::filesystem::path & filepath) {
+void TruncateFile(const std::filesystem::path & filepath, int bytes) {
 	FILE * file = fopen(filepath.c_str(),"r+");
 	if ( file == nullptr ) {
 		throw std::runtime_error("open('"
@@ -91,10 +99,12 @@ void TruncateFile(const std::filesystem::path & filepath) {
 		                         + "',O_CREAT | O_TRUNC | O_RDWR | O_BINARY): "
 		                         + std::to_string(errno));
 	}
-	if ( fseeko(file,-1,SEEK_END) != 0 ) {
+	if ( fseeko(file,-bytes,SEEK_END) != 0 ) {
 		throw std::runtime_error("fseeko('"
 		                         + filepath.string()
-		                         + "',-1,SEEK_END): "
+		                         + "',"
+		                         + std::to_string(-bytes)
+		                         + ",SEEK_END): "
 		                         + std::to_string(errno));
 	}
 	auto offset = ftello(file);
@@ -132,7 +142,7 @@ size_t WriteSegment(UTestData::SequenceInfo & info,
 	file->SetCloseOnDelete(true);
 	auto gziped = std::make_unique<google::protobuf::io::GzipOutputStream>(file.get());
 	std::unique_ptr<google::protobuf::io::FileOutputStream> uncomp;
-	if ( args.Truncated && args.Dual ) {
+	if ( args.Truncated && args.Dual && i == (args.NumberOfSegments - 1 ) ) {
 		int fdUncomp = open((filepath.string() + "unc").c_str(),
 		                    O_CREAT | O_TRUNC | O_RDWR | O_BINARY,
 		                    0644);
@@ -152,7 +162,13 @@ size_t WriteSegment(UTestData::SequenceInfo & info,
 			}
 		};
 
-	write(header);
+	if ( args.NoHeader == false ) {
+		std:: cerr << "Printing header for " << filepath <<  std::endl;
+		write(header);
+	} else {
+		std:: cerr << "Not printing header for " << filepath <<  std::endl;
+	}
+
 	FileLine line;
 
 	for ( size_t j = 0; j < args.ReadoutsPerSegment; ++j) {
@@ -176,17 +192,21 @@ size_t WriteSegment(UTestData::SequenceInfo & info,
 			tag->set_y(t.y());
 			tag->set_theta(t.theta());
 		}
-		info.Readouts.push_back(ro);
 		line.set_allocated_readout(&ro);
 		write(line);
 		line.release_readout();
+
+		ro.set_width(args.Readout.width());
+		ro.set_height(args.Readout.height());
+
+		info.Readouts.push_back(ro);
 
 		++frameID;
 	}
 
 
 
-	if ( i < args.NumberOfSegments -1 ||
+	if ( i < (args.NumberOfSegments -1) ||
 	     ( args.MissFooter == false && args.Truncated == false ) ) {
 		auto footer = line.mutable_footer();
 		if ( i < args.NumberOfSegments - 1 ) {
@@ -195,17 +215,17 @@ size_t WriteSegment(UTestData::SequenceInfo & info,
 		write(line);
 	}
 
-	if ( args.Truncated == true ) {
+	if ( (i == (args.NumberOfSegments - 1) ) && args.Truncated == true ) {
 		gziped.reset();
 		uncomp.reset();
 		file.reset();
-		TruncateFile(filepath);
+		TruncateFile(filepath,60);
 		if ( args.Dual == true ) {
-			TruncateFile(filepath.string() + "unc");
+			TruncateFile(filepath.string() + "unc",60);
 		}
 	}
 
-
+	info.Segments.push_back(filepath);
 	return frameID;
 
 }
@@ -218,6 +238,7 @@ UTestData::SequenceInfo WriteSequenceInfo(const SequenceInfoWriteArgs & args) {
 	for ( size_t i = 0; i < args.NumberOfSegments; ++i) {
 		frameID = WriteSegment(res,args,i,frameID);
 	}
+	res.ReadoutsPerSegment = args.ReadoutsPerSegment;
 	return res;
 }
 
@@ -241,7 +262,9 @@ void UTestData::WriteSequenceInfos(const std::filesystem::path & basepath) {
 	                             .ReadoutsPerSegment = 10,
 	                             .MissFooter = false,
 	                             .Dual = false,
-	                             .Truncated = false});
+	                             .Truncated = false,
+	                             .NoHeader = false,
+		});
 
 	d_noFooter= WriteSequenceInfo({.Basepath = basepath,
 	                               .Basename = "no-footer",
@@ -250,7 +273,9 @@ void UTestData::WriteSequenceInfos(const std::filesystem::path & basepath) {
 	                               .ReadoutsPerSegment = 10,
 	                               .MissFooter = true,
 	                               .Dual = false,
-	                               .Truncated = false});
+	                               .Truncated = false,
+	                               .NoHeader = false,
+		});
 
 	d_truncated= WriteSequenceInfo({.Basepath = basepath,
 	                                .Basename = "truncated-classic",
@@ -259,19 +284,72 @@ void UTestData::WriteSequenceInfos(const std::filesystem::path & basepath) {
 	                                .ReadoutsPerSegment = 10,
 	                                .MissFooter = false,
 	                                .Dual = false,
-	                                .Truncated = true});
+	                                .Truncated = true,
+	                                .NoHeader = false,
+		});
 
-	d_truncated= WriteSequenceInfo({.Basepath = basepath,
-	                                .Basename = "truncated-dual",
+	d_truncatedDual = WriteSequenceInfo({.Basepath = basepath,
+	                                     .Basename = "truncated-dual",
+	                                     .Readout = ro,
+	                                     .NumberOfSegments = 3,
+	                                     .ReadoutsPerSegment = 10,
+	                                     .MissFooter = false,
+	                                     .Dual = true,
+	                                     .Truncated = true,
+	                                     .NoHeader = false,
+		});
+
+	d_noHeader = WriteSequenceInfo({.Basepath = basepath,
+	                                .Basename = "no-header",
 	                                .Readout = ro,
-	                                .NumberOfSegments = 3,
-	                                .ReadoutsPerSegment = 10,
+	                                .NumberOfSegments = 1,
+	                                .ReadoutsPerSegment = 2,
 	                                .MissFooter = false,
-	                                .Dual = true,
-	                                .Truncated = true});
+	                                .Dual = false,
+	                                .Truncated = false,
+	                                .NoHeader = true,
+		});
 
 }
 
 
 } // namespace hermes
 } // namespace fort
+
+#define failure_helper(aExpr,bExpr,a,b,field) \
+	::testing::AssertionFailure() \
+	<< "Value of: " << aExpr << "." << #field << std::endl \
+	<< "  Actual: " << a.field << std::endl \
+	<< "Expected: " << bExpr << "." << #field << std::endl \
+	<< "Which is: " << b.field
+
+#define assert_equal(aExpr,bExpr,a,b,field) do {	  \
+		if ( a.field != b.field ) { \
+			return failure_helper(aExpr,bExpr,a,b,field); \
+		} \
+	} while(0)
+
+
+::testing::AssertionResult AssertReadoutEqual(const char * aExpr,
+                                              const char * bExpr,
+                                              const fort::hermes::FrameReadout & a,
+                                              const fort::hermes::FrameReadout & b) {
+
+	assert_equal(aExpr,bExpr,a,b,timestamp());
+	assert_equal(aExpr,bExpr,a,b,frameid());
+	assert_equal(aExpr,bExpr,a,b,producer_uuid());
+	assert_equal(aExpr,bExpr,a,b,quads());
+	assert_equal(aExpr,bExpr,a,b,width());
+	assert_equal(aExpr,bExpr,a,b,height());
+	assert_equal(aExpr,bExpr,a,b,tags_size());
+
+	for ( size_t i = 0; i < b.tags_size(); ++i ) {
+		assert_equal(aExpr,bExpr,a,b,tags(i).id());
+		assert_equal(aExpr,bExpr,a,b,tags(i).x());
+		assert_equal(aExpr,bExpr,a,b,tags(i).y());
+		assert_equal(aExpr,bExpr,a,b,tags(i).theta());
+	}
+
+
+	return ::testing::AssertionSuccess();
+}

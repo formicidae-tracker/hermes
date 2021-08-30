@@ -48,6 +48,8 @@ set(UTEST_HDR_FILES UTestDataUTest.hpp)
 set(UTEST_SRC_FILES UTestDataUTest.cpp
                     main-check.cpp
                     ErrorUTest.cpp
+                    FileContextUTest.cpp
+                    NetworkContextUTest.cpp
                     )
 
 add_executable(fort-hermes-tests ${UTEST_HDR_FILES} ${UTEST_SRC_FILES})

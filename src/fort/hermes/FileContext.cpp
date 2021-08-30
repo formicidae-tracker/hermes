@@ -40,15 +40,15 @@ void FileContext::OpenFile(const std::string & filename) {
 	Header h;
 	bool cleanEOF = false;
 	bool good = google::protobuf::util::ParseDelimitedFromZeroCopyStream(&h,stream,&cleanEOF);
-	if ( good == false || cleanEOF == true ) {
-		throw InternalError("Stream has no header message",FH_STREAM_NO_HEADER);
-	}
-	//TODO check version
-	if (false) {
-		throw InternalError("Stream has an unsupported version",FH_STREAM_WRONG_VERSION);
+	if ( good == false
+	     || cleanEOF == true
+	     || h.version().vmajor() != 0
+	     || h.version().vminor() != 1
+	     || h.width() == 0
+	     || h.height() == 0 ) {
+		throw InternalError("Stream has no or wrong header message",FH_STREAM_NO_HEADER);
 	}
 
-	// TODO: add some checks ???
 	d_width = h.width();
 	d_height = h.height();
 
@@ -71,6 +71,11 @@ void FileContext::Read(fort::hermes::FrameReadout * ro) {
 		? (google::protobuf::io::ZeroCopyInputStream * ) d_gzip.get()
 		: (google::protobuf::io::ZeroCopyInputStream * ) d_file.get();
 
+
+	if ( stream == nullptr) {
+		throw EndOfFile();
+	}
+
 	d_line.Clear();
 	bool cleanEOF = false;
 	bool good = google::protobuf::util::ParseDelimitedFromZeroCopyStream(&d_line,stream,&cleanEOF);
@@ -79,7 +84,7 @@ void FileContext::Read(fort::hermes::FrameReadout * ro) {
 			throw UnexpectedEndOfFileSequence("unexpected EOF while decoding line",
 			                                  d_path.string());
 		} else {
-			throw EndOfFile();
+			throw UnexpectedEndOfFileSequence("missing a footer",d_path.string());
 		}
 	}
 	if ( d_line.has_readout() ) {
@@ -93,12 +98,17 @@ void FileContext::Read(fort::hermes::FrameReadout * ro) {
 	}
 
 	if (d_line.footer().next().length() == 0 || d_followFiles == false) {
+		d_gzip.reset();
+		d_file.reset();
+
 		throw EndOfFile();
 	}
 
 	OpenFile((d_path.parent_path() / d_line.footer().next() ).string());
 	Read(ro);
 }
+
+
 
 
 } // namespace hermes
