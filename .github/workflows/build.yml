@@ -32,10 +32,9 @@ jobs:
           run: make coverage
           working-directory: ${{github.workspace}}/build
         - name: Sends coverage
-          uses: coverallsapp/github-action@1.1.3
+          uses: codecov/codecov-action@v2
           id: send-coverage
           with:
-            github-token: ${{ secrets.GITHUB_TOKEN }}
-            path-to-lcov: ${{github.workspace}}/build/coverage/lcov.info
+            directory: ${{github.workspace}}/build/coverage
         - name: Does not need to be silent
           run: echo ${{join(steps.send-coverage.outputs.*)}}
