@@ -2,6 +2,7 @@ import setuptools
 import setuptools.command.build_py
 import os
 import subprocess
+import sys
 
 from distutils.spawn import find_executable
 from version import get_git_version
@@ -10,10 +11,6 @@ with open("../../README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 
-def GenerateProtos():
-    generate_proto('../../protobuf/Tag.proto')
-    generate_proto('../../protobuf/FrameReadout.proto')
-    generate_proto('../../protobuf/Header.proto')
 
 class BuildProtoCommand(setuptools.command.build_py.build_py):
     """A Command that generate required protobuf messages"""
@@ -23,14 +20,10 @@ class BuildProtoCommand(setuptools.command.build_py.build_py):
     else:
         protoc = find_executable("protoc")
 
-
-    def generate_proto(source, require = True):
+    def generate_proto(source):
         """Invokes the Protocol Compiler to generate a _pb2.py from the given
         .proto file.  Does nothing if the output already exists and is newer than
         the input."""
-
-        if not require and not os.path.exists(source):
-            return
 
         output = source.replace(".proto", "_pb2.py").replace("../src/", "")
 
@@ -43,19 +36,19 @@ class BuildProtoCommand(setuptools.command.build_py.build_py):
             sys.stderr.write("Can't find required file: %s\n" % source)
             sys.exit(-1)
 
-        if protoc is None:
+        if BuildProtoCommand.protoc is None:
             sys.stderr.write(
                 "protoc is not found. Please install the binary package.\n")
             sys.exit(-1)
 
-        protoc_command = [ protoc, "-I../../protobuf", "--python_out=src/py_fort_myrmidon/", source ]
+        protoc_command = [ BuildProtoCommand.protoc, "-I../../protobuf", "--python_out=src/py_fort_hermes/", source ]
         if subprocess.call(protoc_command) != 0:
             sys.exit(-1)
 
     def run(self):
-        generate_proto('../../protobuf/Tag.proto')
-        generate_proto('../../protobuf/FrameReadout.proto')
-        generate_proto('../../protobuf/Header.proto')
+        BuildProtoCommand.generate_proto('../../protobuf/Tag.proto')
+        BuildProtoCommand.generate_proto('../../protobuf/FrameReadout.proto')
+        BuildProtoCommand.generate_proto('../../protobuf/Header.proto')
         setuptools.command.build_py.build_py.run(self)
 
 
