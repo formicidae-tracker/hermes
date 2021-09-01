@@ -6,21 +6,18 @@ set(CPP_SRC_FILES Error.cpp
 
 set(C_SRC_FILES hermes.cpp)
 
-
 set(HDR_FILES hermes.h
               Error.hpp
               Context.hpp
               NetworkContext.hpp
               FileContext.hpp)
 
-
 set(PROTO_FILES protobuf/Tag.proto
-	            protobuf/FrameReadout.proto
-	            protobuf/Header.proto
-	            )
+                protobuf/FrameReadout.proto
+                protobuf/Header.proto
+                )
 
 protobuf_generate_cpp(PROTO_SRC PROTO_HDR ${PROTO_FILES})
-
 
 include_directories(${PROJECT_BINARY_DIR}/src)
 

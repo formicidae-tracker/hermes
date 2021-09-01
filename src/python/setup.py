@@ -25,13 +25,14 @@ class BuildProtoCommand(setuptools.command.build_py.build_py):
         protoc = os.environ['PROTOC']
     else:
         protoc = find_executable("protoc")
+        sed = find_executable("sed")
 
     def generate_proto(source):
         """Invokes the Protocol Compiler to generate a _pb2.py from the given
         .proto file.  Does nothing if the output already exists and is newer than
         the input."""
 
-        output = source.replace(".proto", "_pb2.py").replace("../src/", "")
+        output = os.path.join('py_fort_hermes', os.path.basename(source).replace(".proto", "_pb2.py"))
 
         if (not os.path.exists(output) or
             (os.path.exists(source) and
@@ -47,8 +48,12 @@ class BuildProtoCommand(setuptools.command.build_py.build_py):
                 "protoc is not found. Please install the binary package.\n")
             sys.exit(-1)
 
-        protoc_command = [ BuildProtoCommand.protoc, "-I../../protobuf", "--python_out=src/py_fort_hermes/", source ]
+        protoc_command = [ BuildProtoCommand.protoc, "-I../../protobuf", "--python_out=py_fort_hermes", source ]
         if subprocess.call(protoc_command) != 0:
+            sys.exit(-1)
+
+        sed_command = [BuildProtoCommand.sed, 's/^import \(.*_pb2\) as \(.*_pb2\)$/from . import \\1 as \\2/g', "-i", output]
+        if subprocess.call(sed_command) != 0:
             sys.exit(-1)
 
     def run(self):
@@ -60,7 +65,7 @@ class BuildProtoCommand(setuptools.command.build_py.build_py):
 
 
 setuptools.setup(
-    name="py_fort_myrmidon",
+    name="py_fort_hermes",
     version=get_git_version(),
     author="Alexandre Tuleu",
     author_email="alexandre.tuleu.2005@polytechnique.org",
@@ -76,11 +81,14 @@ setuptools.setup(
         "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
         "Operating System :: OS Independent",
     ],
-    package_dir={"": "src"},
-    packages=setuptools.find_packages(where="src"),
+    package_dir={"": "."},
+    packages= ["py_fort_hermes"],
     python_requires=">=3.6",
     cmdclass={
         'build_py': BuildProtoCommand,
     },
+    install_requires = [
+        "protobuf",
+        ],
     test_suite='setup.py_fort_hermes_test_suite',
 )
