@@ -121,13 +121,11 @@ class UTestData(metaclass=Singleton):
             self.Segments = []
             self.Readouts = []
 
-    def removeDataDirectories(self):
-        print('removing')
-        shutils.rmtree(self.Basepath)
+    def cleanUpFileSystem(self):
+        shutil.rmtree(self.Basepath)
 
     def __init__(self):
-        print('init')
-        self.Basepath = tempfile.mkdtemp()
+        self.Basepath = tempfile.mkdtemp(prefix = "py_fort_hermes_utestdata-")
         self.initSequences()
 
     def initSequences(self):

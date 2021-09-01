@@ -46,6 +46,8 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfig.cmake
         DESTINATION ${LIB_INSTALL_DIR}/FortHermesCpp/cmake )
 
 option(FORT_HERMES_ENABLE_COVERAGE "Enables code coverage" Off)
+option(FORT_HERMES_BUILD_PYTHON "Enables python building" Off)
+
 if(FORT_HERMES_ENABLE_COVERAGE)
 	include(CodeCoverage)
 	enable_coverage()

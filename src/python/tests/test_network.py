@@ -1,5 +1,7 @@
 import unittest
-import utestdata
+from tests import utestdata
+
+import py_fort_hermes
 
 class NetworkTestCase(unittest.TestCase):
     def setUp(self):
