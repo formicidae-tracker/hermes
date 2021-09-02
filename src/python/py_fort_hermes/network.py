@@ -74,13 +74,7 @@ class Context:
         """
 
         ro = fh.FrameReadout()
-        try:
-            self._readMessage(ro)
-        except socket.timeout:
-            if self.blocking == True:
-                raise StopIteration
-            else:
-                raise
+        self._readMessage(ro)
         return ro
 
     def __exit__(self, type, value, traceback):
@@ -109,7 +103,7 @@ class Context:
             b = self._s.recv_into(memoryview(self._buffer)[self._bytesRead:size],
                                   size - self._bytesRead)
             if b == 0 and self.blocking == True:
-                raise socket.timeout
+                raise StopIteration
             self._bytesRead += b
 
     def _readVaruint32(self):

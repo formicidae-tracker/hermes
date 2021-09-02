@@ -99,7 +99,7 @@ def _WriteSegment(index,
             h.version.vmajor = 0
             h.version.vminor = 1
             dir(Header_pb2)
-            h.type = Header_pb2.Header.Type.File
+            h.type = Header_pb2.Header.File
             h.width = args.Readout.width
             h.height = args.Readout.height
             if index > 0:

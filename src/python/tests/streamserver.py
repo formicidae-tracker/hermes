@@ -28,6 +28,7 @@ class StreamServer:
         with self._ready:
             while self.port == 0:
                 self._ready.wait()
+        print('server is listening')
 
     def run(self):
         for port in range(self._port, self._port+20):
@@ -52,7 +53,7 @@ class StreamServer:
                             h = Header_pb2.Header()
                             h.version.vmajor = 0
                             h.version.vminor = 1
-                            h.type = Header_pb2.Header.Type.Network
+                            h.type = Header_pb2.Header.Network
                             self._sendMessage(conn, h)
                         for ro in self.readouts:
                             self._sendMessage(conn, ro)

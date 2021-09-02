@@ -9,7 +9,7 @@ def CheckVersion(version):
 
 def CheckFileHeader(header):
     CheckVersion((header.version.vmajor, header.version.vminor))
-    if header.type != fh.Header.Type.File:
+    if header.type != fh.Header.File:
         raise fh.InternalError(fh.ErrorCode.FH_STREAM_NO_HEADER,
                                "wrong header type")
     if header.width == 0:
@@ -22,6 +22,6 @@ def CheckFileHeader(header):
 
 def CheckNetworkHeader(header):
     CheckVersion((header.version.vmajor, header.version.vminor))
-    if header.type != fh.Header.Type.Network:
+    if header.type != fh.Header.Network:
         raise fh.InternalError(fh.ErrorCode.FH_STREAM_NO_HEADER,
                                "wrong header type")

@@ -26,7 +26,7 @@ class NetworkTestCase(assertions.Assertions):
     def test_normal_reading(self):
         with py_fort_hermes.network.connect(host=self.server.hostname,
                                             port=self.server.port,
-                                            timeout=0.01) as s:
+                                            timeout=0.1) as s:
             for expected in self.server.readouts:
                 self.assertReadoutEqual(next(s), expected)
             with self.assertRaises(StopIteration):
@@ -37,4 +37,4 @@ class NetworkTestCase(assertions.Assertions):
         with self.assertRaises(py_fort_hermes.InternalError):
             py_fort_hermes.network.connect(host=self.server.hostname,
                                            port=self.server.port,
-                                           timeout=0.01)
+                                           timeout=0.1)
