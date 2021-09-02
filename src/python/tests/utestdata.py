@@ -4,7 +4,8 @@ import tempfile
 import math
 import os
 import gzip
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import List
 
 
 class HermesFileWriter(object):
@@ -89,9 +90,7 @@ class _WriteSequenceArgs:
 
 def _WriteSequence(*sargs, **kwargs):
     args = _WriteSequenceArgs(*sargs, **kwargs)
-    res = UTestData.SequenceInfo()
-    res.Segments = []
-    res.Readouts = []
+    res = SequenceInfo(readoutsPerSegment=args.ReadoutsPerSegment)
     frameID = args.Readout.frameID
     for i in range(args.NumberOfSegments):
         frameID, segmentPath, readouts = _WriteSegment(
@@ -99,6 +98,12 @@ def _WriteSequence(*sargs, **kwargs):
         res.Readouts += readouts
         res.Segments.append(segmentPath)
     return res
+
+
+def _truncateFile(filepath, length):
+    with open(filepath, 'rb+') as f:
+        f.seek(-length, os.SEEK_END)
+        f.truncate()
 
 
 def _WriteSegment(index,
@@ -139,10 +144,13 @@ def _WriteSegment(index,
             ro.tags.extend(args.Readout.tags)
 
             f.write(line)
-            ro.width = args.Readout.width
-            ro.height = args.Readout.height
+            newRO = FrameReadout_pb2.FrameReadout()
+            newRO.CopyFrom(ro)
 
-            readouts.append(ro)
+            newRO.width = args.Readout.width
+            newRO.height = args.Readout.height
+
+            readouts.append(newRO)
             frameID += 1
 
         line.Clear()
@@ -154,14 +162,22 @@ def _WriteSegment(index,
                 line.footer.next = ''
             f.write(line)
 
+    if args.Truncated == True and index == args.NumberOfSegments - 1:
+        _truncateFile(filepath, 60)
+        if args.Dual == True:
+            _truncateFile(filepath+"unc", 60)
+
     return frameID, filepath, readouts
 
 
+class SequenceInfo():
+    def __init__(self, readoutsPerSegment):
+        self.ReadoutsPerSegment = readoutsPerSegment
+        self.Segments = []
+        self.Readouts = []
+
+
 class UTestData(metaclass=Singleton):
-    class SequenceInfo(object):
-        def __init__(self):
-            self.Segments = []
-            self.Readouts = []
 
     def cleanUpFileSystem(self):
         shutil.rmtree(self.Basepath)
