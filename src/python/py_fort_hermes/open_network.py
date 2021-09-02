@@ -4,18 +4,26 @@ import socket
 
 
 class NetworkContext:
-    def __init__(self, host, port=4002, blocking=True):
+    def __init__(self, host, port=4002, blocking=True, timeout=2.0):
         self._buffer = bytearray()
         self._bytesRead = 0
         self._nextSize = 0
         self._s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.blocking = blocking
         try:
             host = socket.gethostbyname(host)
+            self._s.setblocking(blocking)
+            if blocking:
+                self._s.settimeout(timeout)
+
             self._s.connect((host, port))
             header = fh.Header()
-            self._readMessage(header)
+            try:
+                self._readMessage(header)
+            except Exception as e:
+                raise fh.InternalError(fh.ErrorCode.FH_STREAM_NO_HEADER,
+                                       "could not read header: %s" % e)
             fh.check.CheckNetworkHeader(header)
-            self._s.setblocking(blocking)
         except:
             self._s.close()
             raise
@@ -30,7 +38,13 @@ class NetworkContext:
 
     def __next__(self):
         ro = fh.FrameReadout()
-        self._readMessage(ro)
+        try:
+            self._readMessage(ro)
+        except socket.timeout:
+            if self.blocking == True:
+                raise StopIteration
+            else:
+                raise
         return ro
 
     def __exit__(self, type, value, traceback):
@@ -43,7 +57,7 @@ class NetworkContext:
         self._readAll(self._nextSize)
         message.ParseFromString(self._buffer[:self._bytesRead])
         self._nextSize = 0
-        self._readByte = 0
+        self._bytesRead = 0
 
     def _readReset(self):
         self._bytesRead = 0
@@ -58,6 +72,8 @@ class NetworkContext:
         while self._bytesRead < size:
             b = self._s.recv_into(memoryview(self._buffer)[self._bytesRead:size],
                                   size - self._bytesRead)
+            if b == 0 and self.blocking == True:
+                raise socket.timeout
             self._bytesRead += b
 
     def _readVaruint32(self):
@@ -72,5 +88,5 @@ class NetworkContext:
         return v
 
 
-def OpenNetworkStream(host, port=4002, blocking=True):
-    return NetworkContext(host, port, blocking)
+def OpenNetworkStream(host, port=4002, blocking=True, timeout=2.0):
+    return NetworkContext(host, port, blocking, timeout)
