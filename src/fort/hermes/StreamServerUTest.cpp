@@ -60,7 +60,7 @@ void StreamServer::Write(asio::ip::tcp::socket socket) {
 	}
 }
 
-
+o
 
 } // namespace hermes
 } // namespace fort

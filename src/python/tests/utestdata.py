@@ -1,4 +1,4 @@
-from py_fort_hermes import Tag_pb2, FrameReadout_pb2, Header_pb2
+from py_fort_hermes import Tag_pb2, FrameReadout_pb2, Header_pb2, utils
 import shutil
 import tempfile
 import math
@@ -27,28 +27,9 @@ class HermesFileWriter(object):
         self.close()
 
     def write(self, message):
-        self._writeMessageToFile(self.gziped, message)
+        utils._encodeMessageToStream(self.gziped, message)
         if self.uncomp is not None:
-            self._writeMessageToFile(self.uncomp, message)
-
-    @staticmethod
-    def _encodeVaruint32(v: int):
-        if (v < 0):
-            raise ValueError("%d must be positive" % v)
-        if (v > 2 ** 32 - 1):
-            raise ValueError("%d is too large (max is 2^32-1)" % v)
-        res = bytearray()
-        while (v > 127):
-            res += ((v & 0x7f) | 0x80).to_bytes(1, byteorder='big')
-            v = v >> 7
-        res += (v & 0x7f).to_bytes(1, byteorder='big')
-        return res
-
-    def _writeMessageToFile(self, f, message):
-        encodedMessageSize = HermesFileWriter._encodeVaruint32(
-            message.ByteSize())
-        f.write(encodedMessageSize)
-        f.write(message.SerializeToString())
+            utils._encodeMessageToStream(self.uncomp, message)
 
 
 class Singleton(type):
