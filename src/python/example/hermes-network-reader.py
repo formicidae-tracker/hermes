@@ -11,7 +11,7 @@ args = parser.parse_args()
 
 if __name__ == '__main__':
     try:
-        with py_fort_hermes.OpenNetworkStream(args.host) as s:
+        with py_fort_hermes.network.connect(args.host) as s:
             for ro in s:
                 print("FrameID: %d, tags: %d" % (ro.frameID, len(ro.tags)))
     except KeyboardInterrupt:

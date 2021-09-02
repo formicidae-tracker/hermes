@@ -12,6 +12,6 @@ args = parser.parse_args()
 
 
 if __name__ == '__main__':
-    with py_fort_hermes.OpenFile(args.file) as f:
+    with py_fort_hermes.file.open(args.file) as f:
         for readout in f:
             print(readout)

@@ -23,7 +23,7 @@ y_lim = [0.0, 0.0]
 
 
 try:
-    with py_fort_hermes.OpenNetworkStream(args.host) as s:
+    with py_fort_hermes.network.connect(args.host) as s:
         # TODO: header.width/height fields seem to send zero
         while plt.fignum_exists(fig.number):
             msg = next(s)

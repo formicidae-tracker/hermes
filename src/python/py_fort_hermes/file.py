@@ -4,9 +4,10 @@ from py_fort_hermes import utils, check
 import os
 import gzip
 import inspect
+import builtins
 
 
-class FileContext:
+class Context:
     __slots__ = ['width', 'height', 'path', 'followFile', 'filestream', 'line']
 
     def __init__(self, filepath, followFile=True):
@@ -58,7 +59,7 @@ class FileContext:
 
     def _openFile(self, filepath):
         try:
-            self.filestream = open(filepath + "unc", "rb")
+            self.filestream = builtins.open(filepath + "unc", "rb")
         except:
             self.filestream = gzip.open(filepath)
 
@@ -79,5 +80,5 @@ class FileContext:
         message.ParseFromString(self.filestream.read(size))
 
 
-def OpenFile(filepath, followFile=True):
-    return FileContext(filepath, followFile)
+def open(filepath, followFile=True):
+    return Context(filepath, followFile)

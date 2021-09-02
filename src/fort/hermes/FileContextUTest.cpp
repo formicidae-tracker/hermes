@@ -44,7 +44,7 @@ TEST_F(FileContextUTest,TruncatedReadingLosses) {
 	FileContext context(info.Segments.front());
 	FrameReadout ro;
 	size_t i;
-	for (i = 0; i < info.Readouts.size()-5; ++i ) {
+	for (i = 0; i < info.Readouts.size()-4; ++i ) {
 		EXPECT_NO_THROW({
 				try {
 					context.Read(&ro);

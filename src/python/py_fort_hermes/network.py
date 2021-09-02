@@ -3,7 +3,7 @@ import py_fort_hermes as fh
 import socket
 
 
-class NetworkContext:
+class Context:
     def __init__(self, host, port=4002, blocking=True, timeout=2.0):
         self._buffer = bytearray()
         self._bytesRead = 0
@@ -88,5 +88,5 @@ class NetworkContext:
         return v
 
 
-def OpenNetworkStream(host, port=4002, blocking=True, timeout=2.0):
-    return NetworkContext(host, port, blocking, timeout)
+def connect(host, port=4002, blocking=True, timeout=2.0):
+    return Context(host, port, blocking, timeout)

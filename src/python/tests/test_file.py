@@ -8,7 +8,7 @@ from tests import utestdata, assertions
 class FileTestCase(assertions.Assertions):
     def test_normal_reading(self):
         info = utestdata.UTestData().Normal
-        with py_fort_hermes.OpenFile(info.Segments[0]) as f:
+        with py_fort_hermes.file.open(info.Segments[0]) as f:
             for expected in info.Readouts:
                 self.assertReadoutEqual(next(f), expected)
             with self.assertRaises(StopIteration):
@@ -18,7 +18,7 @@ class FileTestCase(assertions.Assertions):
 
     def test_normal_partial_reading(self):
         info = utestdata.UTestData().Normal
-        with py_fort_hermes.OpenFile(info.Segments[0], followFile=False) as f:
+        with py_fort_hermes.file.open(info.Segments[0], followFile=False) as f:
             for i in range(info.ReadoutsPerSegment):
                 expected = info.Readouts[i]
                 self.assertReadoutEqual(next(f), expected)
@@ -27,7 +27,7 @@ class FileTestCase(assertions.Assertions):
 
     def test_truncated_file_reading(self):
         info = utestdata.UTestData().Truncated
-        with py_fort_hermes.OpenFile(info.Segments[0]) as f:
+        with py_fort_hermes.file.open(info.Segments[0]) as f:
             for i in range(len(info.Readouts)-4):
                 self.assertReadoutEqual(next(f), info.Readouts[i])
             with self.assertRaises(py_fort_hermes.UnexpectedEndOfFileSequence) as cm:
@@ -37,7 +37,7 @@ class FileTestCase(assertions.Assertions):
 
     def test_truncated_dual_losses_less(self):
         info = utestdata.UTestData().TruncatedDual
-        with py_fort_hermes.OpenFile(info.Segments[0]) as f:
+        with py_fort_hermes.file.open(info.Segments[0]) as f:
             for i in range(len(info.Readouts)-2):
                 self.assertReadoutEqual(next(f), info.Readouts[i])
             with self.assertRaises(py_fort_hermes.UnexpectedEndOfFileSequence) as cm:
@@ -47,7 +47,7 @@ class FileTestCase(assertions.Assertions):
 
     def test_reports_no_footer_file(self):
         info = utestdata.UTestData().NoFooter
-        with py_fort_hermes.OpenFile(info.Segments[0]) as f:
+        with py_fort_hermes.file.open(info.Segments[0]) as f:
             for expected in info.Readouts:
                 self.assertReadoutEqual(next(f), expected)
             with self.assertRaises(py_fort_hermes.UnexpectedEndOfFileSequence) as cm:
@@ -57,9 +57,10 @@ class FileTestCase(assertions.Assertions):
 
     def test_reports_file_without_header(self):
         with self.assertRaises(py_fort_hermes.InternalError):
-            py_fort_hermes.OpenFile(utestdata.UTestData().NoHeader.Segments[0])
+            py_fort_hermes.file.open(
+                utestdata.UTestData().NoHeader.Segments[0])
 
     def test_report_unexisting_file(self):
         with self.assertRaises(FileNotFoundError):
-            py_fort_hermes.OpenFile(os.path.join(
+            py_fort_hermes.file.open(os.path.join(
                 utestdata.UTestData().Basepath, "oops"))
