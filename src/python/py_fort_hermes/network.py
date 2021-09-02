@@ -4,7 +4,29 @@ import socket
 
 
 class Context:
+    """
+    A context manager to open network connection to a live leto
+
+    Example:
+        import py_fort_hermes as fh
+
+        with fg.network.connect(host) as s:
+             for ro in s:
+                 # do something
+                 pass
+    """
+
     def __init__(self, host, port=4002, blocking=True, timeout=2.0):
+        """
+        Initializes a connection to leto
+        Args:
+            host (str): a host to connect to
+            port (int): the port to connect to
+            blocking (bool): use a blocking connection
+            timeout (float): timeout in second to use for waiting a message
+        Raises:
+            various error with socket.connect
+        """
         self._buffer = bytearray()
         self._bytesRead = 0
         self._nextSize = 0
@@ -37,6 +59,20 @@ class Context:
         self._s = None
 
     def __next__(self):
+        """
+        Gets the next FrameReadout in the stream
+
+        Returns:
+            FrameReadout: the next readout
+
+        Raises:
+            StopIteration: if no data was received after self.timeout
+            socket.timeout: if some incomplete data have been received
+                in self.timeout
+            OSError: with EWOULDBLOCK or EAGAIN if non-blocking and no
+                message where fully ready
+        """
+
         ro = fh.FrameReadout()
         try:
             self._readMessage(ro)
@@ -89,4 +125,19 @@ class Context:
 
 
 def connect(host, port=4002, blocking=True, timeout=2.0):
+    """
+    Connects to a leto host.
+    Args:
+        host (str): the host to connect to
+        port (int): the port to connect to
+        blocking (bool): use a blocking connection
+        timeout (float): sets a timeout for IO
+    Returns:
+        Context: an iterable context manager for the connection
+
+    Example:
+        with py_fort_hermes.network.connect(host) as c:
+            for ro in c:
+                pass
+    """
     return Context(host, port, blocking, timeout)
