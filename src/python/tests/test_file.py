@@ -27,23 +27,23 @@ class FileTestCase(assertions.Assertions):
 
     def test_truncated_file_reading(self):
         info = utestdata.UTestData().Truncated
-        with py_fort_hermes.file.open(info.Segments[0]) as f:
-            for i in range(len(info.Readouts)-4):
+        classic = 0
+        dual = 0
+        with py_fort_hermes.file.open(info.Segments[0]) as f, self.assertRaises(py_fort_hermes.UnexpectedEndOfFileSequence) as cm:
+            for i in range(len(info.Readouts)):
                 self.assertReadoutEqual(next(f), info.Readouts[i])
-            with self.assertRaises(py_fort_hermes.UnexpectedEndOfFileSequence) as cm:
-                next(f)
-            self.assertEqual(cm.exception.segmentPath,
-                             info.Segments[len(info.Segments)-1])
+                classic = i + 1
 
-    def test_truncated_dual_losses_less(self):
+        self.assertEqual(cm.exception.segmentPath,
+                         info.Segments[len(info.Segments)-1])
+
         info = utestdata.UTestData().TruncatedDual
-        with py_fort_hermes.file.open(info.Segments[0]) as f:
-            for i in range(len(info.Readouts)-2):
+        with py_fort_hermes.file.open(info.Segments[0]) as f, self.assertRaises(py_fort_hermes.UnexpectedEndOfFileSequence) as cm:
+            for i in range(len(info.Readouts)):
                 self.assertReadoutEqual(next(f), info.Readouts[i])
-            with self.assertRaises(py_fort_hermes.UnexpectedEndOfFileSequence) as cm:
-                next(f)
-            self.assertEqual(cm.exception.segmentPath,
-                             info.Segments[len(info.Segments)-1])
+                dual = i + 1
+
+        self.assertGreater(dual, classic)
 
     def test_reports_no_footer_file(self):
         info = utestdata.UTestData().NoFooter

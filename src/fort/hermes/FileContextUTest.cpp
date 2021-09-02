@@ -41,61 +41,23 @@ TEST_F(FileContextUTest,NormalPartialReading) {
 
 TEST_F(FileContextUTest,TruncatedReadingLosses) {
 	const auto & info = UTestData::Instance().TruncatedClassicSequence();
+	const auto & infoDual = UTestData::Instance().TruncatedDualStreamSequence();
 	FileContext context(info.Segments.front());
 	FrameReadout ro;
-	size_t i;
-	for (i = 0; i < info.Readouts.size()-4; ++i ) {
-		EXPECT_NO_THROW({
-				try {
-					context.Read(&ro);
-				} catch ( const UnexpectedEndOfFileSequence & e ) {
-					ADD_FAILURE() << "Got an unexpected UnexpectedEndOfFileSequence for " << e.SegmentFilePath() << " with i " << i;
-				}
-			});
-		EXPECT_READOUT_EQ(ro,info.Readouts[i]);
-	}
-
-	try {
-		context.Read(&ro);
-		ADD_FAILURE() << "Should throw UnexpectedEndOfFileSequence for i "
-		              << i << ", but throw nothing with "
-		              << info.Segments.back();
-	} catch ( const UnexpectedEndOfFileSequence & e ) {
-		EXPECT_EQ(e.SegmentFilePath(),info.Segments.back());
-	} catch (...) {
-		ADD_FAILURE() << "Should throw UnexpectedEndOfFileSequence, but throw another one";
-	}
-
-}
-
-
-TEST_F(FileContextUTest,TruncatedDualReadingLosses) {
-	const auto & info = UTestData::Instance().TruncatedDualStreamSequence();
-	FileContext context(info.Segments.front());
-	FrameReadout ro;
-	size_t i;
-	for (i = 0; i < info.Readouts.size()-2; ++i ) {
-		EXPECT_NO_THROW({
-				try {
-					context.Read(&ro);
-				} catch ( const UnexpectedEndOfFileSequence & e ) {
-					ADD_FAILURE() << "Got an unexpected UnexpectedEndOfFileSequence for " << e.SegmentFilePath() << " with i " << i;
-				}
-			});
-		EXPECT_READOUT_EQ(ro,info.Readouts[i]);
-	}
-
-	try {
-		context.Read(&ro);
-		ADD_FAILURE() << "Should throw UnexpectedEndOfFileSequence for i "
-		              << i << ", but throw nothing with "
-		              << info.Segments.back();
-	} catch ( const UnexpectedEndOfFileSequence & e ) {
-		EXPECT_EQ(e.SegmentFilePath(),info.Segments.back());
-	} catch (...) {
-		ADD_FAILURE() << "Should throw UnexpectedEndOfFileSequence, but throw another one";
-	}
-
+	size_t classic;
+	EXPECT_THROW({
+			for ( classic = 0; classic < info.Readouts.size(); ++classic ) {
+				context.Read(&ro);
+			}
+		},UnexpectedEndOfFileSequence);
+	size_t dual;
+	context = FileContext(infoDual.Segments.front());
+	EXPECT_THROW({
+			for ( dual = 0; dual < infoDual.Readouts.size(); ++dual) {
+				context.Read(&ro);
+			}
+		},UnexpectedEndOfFileSequence);
+	EXPECT_GT(dual,classic);
 }
 
 
