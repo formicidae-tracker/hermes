@@ -22,7 +22,10 @@ jobs:
         - name: Configure
           run: |
             export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
-            cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=RelWithDebInfo  -DFORT_HERMES_ENABLE_COVERAGE=On
+            cmake -B ${{github.workspace}}/build \
+               -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+               -DFORT_HERMES_ENABLE_COVERAGE=On \
+               -DFORT_HERMES_BUILD_PYTHON=On
         - name: Build
           working-directory: ${{github.workspace}}/build
           run: |
