@@ -131,6 +131,10 @@ size_t WriteSegment(UTestData::SequenceInfo & info,
 	header.set_type(Header::Type::Header_Type_File);
 	header.set_width(args.Readout.width());
 	header.set_height(args.Readout.height());
+	if ( i > 0 ) {
+		header.set_previous(HermesFileName(args.Basename,i-1));
+	}
+
 	int fd = open(filepath.c_str(),
 	              O_CREAT | O_TRUNC | O_RDWR | O_BINARY,
 	              0644);
@@ -163,10 +167,7 @@ size_t WriteSegment(UTestData::SequenceInfo & info,
 		};
 
 	if ( args.NoHeader == false ) {
-		std:: cerr << "Printing header for " << filepath <<  std::endl;
 		write(header);
-	} else {
-		std:: cerr << "Not printing header for " << filepath <<  std::endl;
 	}
 
 	FileLine line;
@@ -177,8 +178,8 @@ size_t WriteSegment(UTestData::SequenceInfo & info,
 		ro.set_frameid(frameID);
 		ro.set_timestamp(ts + 1);
 		auto t = ro.mutable_time();
-		int64_t ts_s = ts / 1e9;
-		int64_t ts_ns = ts - ts_s + args.Readout.time().nanos();
+		int64_t ts_s = ts / 1e6;
+		int64_t ts_ns = (ts - ts_s) * 1e3 + args.Readout.time().nanos();
 		while( ts_ns >= 1e9 ) {
 			ts_s += 1;
 			ts_ns -= 1e9;
