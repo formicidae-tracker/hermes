@@ -66,8 +66,8 @@ License
 -------
 
 This project is licensed under the GNU Lesser General Public License
-v3.0 or later - see the `COPYING.LESSER
-<https://github.com/formicidae-tracker/hermes/blob/master/COPYING.LESSER>`_
+v3.0 or later - see the `LICENSE
+<https://github.com/formicidae-tracker/hermes/blob/master/LICENSE>`_
 file for details
 
 ..
@@ -82,4 +82,4 @@ file for details
 .. |PyPI package|  image:: https://img.shields.io/pypi/v/formicidae-tracker-hermes.svg
    :target: https://pypi.org/project/formicidae-tracker-project/
 .. |License| image:: https://img.shields.io/github/license/formicidae-tracker/hermes.svg
-   :target: https://github.com/formicidae-tracker/hermes/blob/master/COPYING.LESSER
+   :target: https://github.com/formicidae-tracker/hermes/blob/master/LICENSE
