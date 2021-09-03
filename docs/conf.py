@@ -1,5 +1,6 @@
 import subprocess
 import os
+import glob
 
 
 def configureDoxyfile(input_files, output_dir):
@@ -15,9 +16,8 @@ def configureDoxyfile(input_files, output_dir):
 
 def listFiles():
     input_dir = '../src/fort/hermes'
-    files = ['Context.hpp', 'FileContext.hpp',
-             'NetworkContext.hpp', 'Error.hpp']
-    return ' '.join(os.path.join(input_dir, x) for x in files)
+    files = glob.glob(input_dir + '/*.hpp') + glob.glob(input_dir + '*.h')
+    return ' '.join(str(x) for x in files)
 
 
 # Check if we're running on Read the Docs' servers
@@ -26,7 +26,8 @@ read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 breathe_projects = {}
 
 if read_the_docs_build:
-    output_dir = 'build'
+    output_dir = '../build'
+    os.makedirs(output_dir)
     configureDoxyfile(listFiles(), output_dir)
     subprocess.call('doxygen', shell=True)
     breathe_projects['fort-hermes'] = output_dir + '/xml'
