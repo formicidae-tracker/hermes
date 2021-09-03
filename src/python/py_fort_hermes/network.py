@@ -16,22 +16,40 @@ class Context:
                  pass
     """
 
-    def __init__(self, host, port=4002, blocking=True, timeout=2.0):
-        """
-        Initializes a connection to leto
+    __slots__ = [
+        "_buffer",
+        "_bytesRead",
+        "_nextSize",
+        "_s",
+        "blocking",
+        "_ro",
+    ]
+
+    def __init__(self, host, port=4002, blocking=True, timeout=2.0, allocateNewMessages=False):
+        """Initializes a connection to leto
         Args:
             host (str): a host to connect to
             port (int): the port to connect to
             blocking (bool): use a blocking connection
             timeout (float): timeout in second to use for waiting a message
+            allocateNewMessages (bool): if True, each call to
+                __next__() will return a newly allocated FrameReadout,
+                with some performance onverhead. Otherwise the same
+                object will be reused to avoid memory allocation.
         Raises:
             various error with socket.connect
+
         """
         self._buffer = bytearray()
         self._bytesRead = 0
         self._nextSize = 0
         self._s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.blocking = blocking
+        if allocateNewMessages is True:
+            self._ro = None
+        else:
+            self._ro = fh.FrameReadout()
+
         try:
             host = socket.gethostbyname(host)
             self._s.setblocking(blocking)
@@ -72,8 +90,9 @@ class Context:
             OSError: with EWOULDBLOCK or EAGAIN if non-blocking and no
                 message where fully ready
         """
-
-        ro = fh.FrameReadout()
+        ro = self._ro
+        if ro is None:
+            ro = fh.FrameReadout()
         self._readMessage(ro)
         return ro
 
@@ -118,7 +137,7 @@ class Context:
         return v
 
 
-def connect(host, port=4002, blocking=True, timeout=2.0):
+def connect(host, port=4002, blocking=True, timeout=2.0, allocateNewMessages=False):
     """
     Connects to a leto host.
     Args:
@@ -126,6 +145,10 @@ def connect(host, port=4002, blocking=True, timeout=2.0):
         port (int): the port to connect to
         blocking (bool): use a blocking connection
         timeout (float): sets a timeout for IO
+        allocateNewMessages (bool): if True, each call to
+            next() will return a newly allocated FrameReadout,
+            with some performance onverhead. Otherwise the same
+            object will be reused to avoid memory allocation.
     Returns:
         Context: an iterable context manager for the connection
 
