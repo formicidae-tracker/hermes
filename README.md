@@ -61,11 +61,6 @@ go get github.com/formicidae-tracker/hermes
 
 [Documentation](https://fort-hermes.readthedocs.io) is hosted through readthedocs.
 
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code
-of conduct, and the process for submitting pull requests.
-
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions
@@ -97,5 +92,3 @@ C API Documentation can be found at https://formicidae-tracker.github.io/hermes/
 [issues-url]: https://github.com/formicidae-tracker/hermes/issues
 [license-shield]: https://img.shields.io/github/license/formicidae-tracker/hermes.svg
 [license-url]: https://github.com/formicidae-tracker/hermes/blob/master/COPYING.LESSER
-
-[![codecov](?token=UTIV500Z66)]()
