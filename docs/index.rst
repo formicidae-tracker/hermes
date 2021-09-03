@@ -1,19 +1,20 @@
-.. fort-hermes documentation
+.. include:: ../README.rst
 
-Welcome to `fort-hermes` documentation
-======================================
+Contents:
+
+.. toctree::
+   :maxdepth: 1
+   :caption: The Basics
+
+   getting_started
+   read_a_file_sequence
+   connect_to_a_leto_instance
+
 
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Extra Informations
 
-
-Table of Contents
-^^^^^^^^^^^^^^^^^
-
-.. toctree::
-   :maxdepth: 1
-
-   self
    api/index
+   format

@@ -3,13 +3,18 @@
 C/C++ API Reference
 ===================
 
-The following pages list a reference to the ``fort-hermes`` C++ and C
-API. Since the python and go versions are native libraries, one mus
-use the respective documentation tools ``pydoc`` and ``godoc`` for
-these libraries
 
 .. toctree::
-
    FileContext
    NetworkContext
    Errors
+
+Python API Reference
+====================
+
+
+.. toctree::
+
+   py_fort_hermes_file
+   py_fort_hermes_network
+   py_fort_hermes_errors

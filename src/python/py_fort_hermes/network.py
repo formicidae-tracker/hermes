@@ -1,19 +1,23 @@
+""" This modules provides a Context to read from a live leto instance
+
+Example:
+    .. code-block:: python
+
+        import py_fort_hermes as fh
+
+        with fh.network.connect("host") as c:
+            for ro in c:
+                # do something with c
+
+"""
 import py_fort_hermes as fh
 
 import socket
 
 
 class Context:
-    """
-    A context manager to open network connection to a live leto
+    """A context manager to open network connection to a live leto
 
-    Example:
-        import py_fort_hermes as fh
-
-        with fg.network.connect(host) as s:
-             for ro in s:
-                 # do something
-                 pass
     """
 
     __slots__ = [
@@ -21,18 +25,18 @@ class Context:
         "_bytesRead",
         "_nextSize",
         "_s",
-        "blocking",
+        "_blocking",
         "_ro",
     ]
 
     def __init__(self, host, port=4002, blocking=True, timeout=2.0, allocateNewMessages=False):
         """Initializes a connection to leto
         Args:
-            host (str): a host to connect to
-            port (int): the port to connect to
-            blocking (bool): use a blocking connection
-            timeout (float): timeout in second to use for waiting a message
-            allocateNewMessages (bool): if True, each call to
+            host(str): a host to connect to
+            port(int): the port to connect to
+            blocking(bool): use a blocking connection
+            timeout(float): timeout in second to use for waiting a message
+            allocateNewMessages(bool): if True, each call to
                 __next__() will return a newly allocated FrameReadout,
                 with some performance onverhead. Otherwise the same
                 object will be reused to avoid memory allocation.
@@ -44,7 +48,7 @@ class Context:
         self._bytesRead = 0
         self._nextSize = 0
         self._s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.blocking = blocking
+        self._blocking = blocking
         if allocateNewMessages is True:
             self._ro = None
         else:
@@ -53,7 +57,7 @@ class Context:
         try:
             host = socket.gethostbyname(host)
             self._s.setblocking(blocking)
-            if blocking:
+            if self._blocking:
                 self._s.settimeout(timeout)
 
             self._s.connect((host, port))
@@ -121,7 +125,7 @@ class Context:
         while self._bytesRead < size:
             b = self._s.recv_into(memoryview(self._buffer)[self._bytesRead:size],
                                   size - self._bytesRead)
-            if b == 0 and self.blocking == True:
+            if b == 0 and self._blocking == True:
                 raise StopIteration
             self._bytesRead += b
 
@@ -138,23 +142,21 @@ class Context:
 
 
 def connect(host, port=4002, blocking=True, timeout=2.0, allocateNewMessages=False):
-    """
-    Connects to a leto host.
+    """Connects to a leto host.
+
     Args:
-        host (str): the host to connect to
-        port (int): the port to connect to
-        blocking (bool): use a blocking connection
-        timeout (float): sets a timeout for IO
-        allocateNewMessages (bool): if True, each call to
+        host(str): the host to connect to
+        port(int): the port to connect to
+        blocking(bool): use a blocking connection
+        timeout(float): sets a timeout for IO
+        allocateNewMessages(bool): if True, each call to
             next() will return a newly allocated FrameReadout,
             with some performance onverhead. Otherwise the same
             object will be reused to avoid memory allocation.
     Returns:
         Context: an iterable context manager for the connection
-
-    Example:
-        with py_fort_hermes.network.connect(host) as c:
-            for ro in c:
-                pass
+    Raises:
+        Exception: If the connection could not be established
+        InternalError: If the stream does not contain a valid header
     """
     return Context(host, port, blocking, timeout)

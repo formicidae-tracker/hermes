@@ -1,7 +1,9 @@
 .. raw:: html
 
-    <p align="center"><img src="https://github.com/formicidae-tracker/hermes/raw/master/resources/icons/fort-hermes.svg" width="300px" alt="fort-hermes logo"></p>
+    <p align="center"><img src="https://github.com/formicidae-tracker/hermes/raw/master/resources/icons/fort-hermes.svg" width="200px" alt="fort-hermes logo"></p>
 
+``fort-hermes`` — Tracking Data exchange format for the FORMicidae Tracker
+**************************************************************************
 
 |Build Status| |Coverage Status| |Stable Documentation Status| |PyPI package| |License|
 
@@ -9,16 +11,14 @@
 • `Report a Bug <https://github.com/fortmicidae-tracker/hermes/issues/new>`_
 • `Request a Feature <https://github.com/formicidae-tracker/hermes/issues/new>`_
 
-.. start
-
 **fort-hermes** is a small library, implemented in C/C++, go and
 python for the exchange format of tracking data for the FORmicidae
 Tracker project. This is mostly based on protocol buffer. It provides
 utilities to access file sequence of saved tracking data or to connect
 to live tracking instance to access broadcasted data.
 
-Getting started
----------------
+Installation
+------------
 
 C/C++
 =====
@@ -28,6 +28,7 @@ within the larger conda **libfort-myrmidon** package through the
 `formicidae-tracker <https://anaconda.org/formicidae-tracker>`_ channel.
 
 .. code-block:: bash
+
    conda install -c formicidae-tracker libfort-myrmidon
 
 Python
@@ -41,6 +42,7 @@ Golang
 ======
 
 .. code-block:: bash
+
    go get github.com/formicidae-tracker/hermes
 
 

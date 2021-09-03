@@ -7,12 +7,26 @@
 
 
 namespace fort {
-
 namespace hermes {
 
+/**
+ * A Context that reads FrameReadout from a live leto instance.
+ */
 class NetworkContext : public Context {
 public:
-	NetworkContext(const std::string & host,int port, bool nonblocking);
+	/**
+	 * Opens a leto broadcast
+	 *
+	 * @param host the host to connect to
+	 * @param port the port to connect to, usually 4002
+	 * @param nonblocking if true the connection will be non-blocking,
+	 *        meaning that WouldBlock can be thrown if no message are
+	 *        ready when Reading
+	 *
+	 * @throws asio::system_error if no connection could be made
+	 * @throws InternalError if no valid header is found in the stream
+	 */
+	NetworkContext(const std::string & host,int port = 4002, bool nonblocking = false);
 	virtual ~NetworkContext();
 
 	void Read(fort::hermes::FrameReadout * ro);
@@ -33,5 +47,4 @@ private:
 
 
 } // namespace hermes
-
 } // namespace fort

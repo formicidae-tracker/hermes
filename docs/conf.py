@@ -1,6 +1,7 @@
 import subprocess
 import os
 import glob
+import sys
 
 
 def configureDoxyfile(input_files, output_dir):
@@ -61,8 +62,13 @@ author = 'Alexandre Tuleu'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "breathe"
+    "breathe",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
 ]
+
+rootpath = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+sys.path.append(os.path.join(rootpath, 'src/python'))
 
 breathe_default_project = "fort-hermes"
 

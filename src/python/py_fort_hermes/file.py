@@ -1,3 +1,22 @@
+"""This module provides a Context to read sequences of tracking file.
+
+Through the file.open() function one can get a context to read hermes
+tracking data file sequences.
+
+Example:
+   .. code-block:: python
+
+        import py_fort_hermes as fh
+
+        with fh.file.open('tracking.0000.hermes') as f:
+            try:
+                for ro in f:
+                    #do something with ro
+            except fh.UnexpectedEndOfFileSequence as e:
+                print("%s is corrupted"%e.segmentPath)
+
+"""
+
 import py_fort_hermes as fh
 from py_fort_hermes import utils, check
 
@@ -12,17 +31,6 @@ class Context:
 
     It is an iterable to be used in a for loop.
 
-    Example:
-        import py_fort_hermes as fh
-
-        with fg.file.open(filepath) as f:
-            try:
-                for ro in f:
-                    #do something
-                    pass
-            except fh.UnexpectedEndOfFileSequence as e:
-                # some error happened before the end of the sequence
-                pass
     """
     __slots__ = ['width', 'height', 'path', 'followFile',
                  'filestream', '_line', 'allocateNewMessages']
@@ -132,22 +140,16 @@ class Context:
 
 
 def open(filepath, followFile=True, allocateNewMessages=False):
-    """Opens a sequence of hermes tracking file
+    """Opens a sequence of hermes tracking file.
 
     Args:
         filepath : a path-like object to open
         followFile (bool): if True the sequence will be read until the
             last file, otherwise only filepath is read
-       allocateNewMessages (bool): if True each call to next() will
-           return a new FrameReadout. Otherwise, the same object will
-           be Clear() and returned.
+        allocateNewMessages (bool): if True each call to next() will
+            return a new FrameReadout. Otherwise, the same object will
+            be Clear() and returned.
     Returns:
         Context: a context manager which is iterable
-    Example:
-        with py_fort_hermes.file.open(filepath) as f:
-            for ro in f:
-                print(ro))
-
     """
-
     return Context(filepath, followFile, allocateNewMessages)
