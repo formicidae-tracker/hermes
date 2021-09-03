@@ -7,7 +7,7 @@ import sys
 from distutils.spawn import find_executable
 
 
-with open("../../README.md", "r", encoding="utf-8") as fh:
+with open("./README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 class BuildProtoCommand(setuptools.command.build_py.build_py):
@@ -40,7 +40,7 @@ class BuildProtoCommand(setuptools.command.build_py.build_py):
                 "protoc is not found. Please install the binary package.\n")
             sys.exit(-1)
 
-        protoc_command = [ BuildProtoCommand.protoc, "-I../../protobuf", "--python_out=py_fort_hermes", source ]
+        protoc_command = [ BuildProtoCommand.protoc, "-Ipy_fort_hermes/protobuf", "--python_out=py_fort_hermes", source ]
         if subprocess.call(protoc_command) != 0:
             sys.exit(-1)
 
@@ -49,9 +49,9 @@ class BuildProtoCommand(setuptools.command.build_py.build_py):
             sys.exit(-1)
 
     def run(self):
-        BuildProtoCommand.generate_proto('../../protobuf/Tag.proto')
-        BuildProtoCommand.generate_proto('../../protobuf/FrameReadout.proto')
-        BuildProtoCommand.generate_proto('../../protobuf/Header.proto')
+        BuildProtoCommand.generate_proto('py_fort_hermes/protobuf/Tag.proto')
+        BuildProtoCommand.generate_proto('py_fort_hermes/protobuf/FrameReadout.proto')
+        BuildProtoCommand.generate_proto('py_fort_hermes/protobuf/Header.proto')
         setuptools.command.build_py.build_py.run(self)
 
 
@@ -75,6 +75,7 @@ setuptools.setup(
     ],
     packages= ["py_fort_hermes"],
     package_dir={"": "."},
+    package_data={"py_fort_hermes" : ["protobuf/*.proto"] },
     python_requires=">=3.6",
     cmdclass={
         'build_py': BuildProtoCommand,
