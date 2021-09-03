@@ -1,3 +1,36 @@
+import subprocess
+import os
+
+
+def configureDoxyfile(input_files, output_dir):
+    with open('Doxyfile.in', 'r') as file:
+        filedata = file.read()
+
+    filedata = filedata.replace('@DOXYGEN_INPUT_FILES@', input_files)
+    filedata = filedata.replace('@DOXYGEN_OUTPUT_DIR@', output_dir)
+
+    with open('Doxyfile', 'w') as file:
+        file.write(filedata)
+
+
+def listFiles():
+    input_dir = '../src/fort/hermes'
+    files = ['Context.hpp', 'FileContext.hpp',
+             'NetworkContext.hpp', 'Error.hpp']
+    return ' '.join(os.path.join(input_dir, x) for x in files)
+
+
+# Check if we're running on Read the Docs' servers
+read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
+
+breathe_projects = {}
+
+if read_the_docs_build:
+    output_dir = 'build'
+    configureDoxyfile(listFiles(), output_dir)
+    subprocess.call('doxygen', shell=True)
+    breathe_projects['fort-hermes'] = output_dir + '/xml'
+
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
