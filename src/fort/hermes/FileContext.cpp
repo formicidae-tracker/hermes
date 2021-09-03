@@ -76,8 +76,11 @@ void FileContext::Read(fort::hermes::FrameReadout * ro) {
 	}
 
 	d_line.Clear();
+	ro->Clear();
+	d_line.set_allocated_readout(ro);
 	bool cleanEOF = false;
 	bool good = google::protobuf::util::ParseDelimitedFromZeroCopyStream(&d_line,stream,&cleanEOF);
+	d_line.release_readout();
 	if ( good == false) {
 		if (cleanEOF == false ) {
 			throw UnexpectedEndOfFileSequence("unexpected EOF while decoding line",
@@ -86,8 +89,8 @@ void FileContext::Read(fort::hermes::FrameReadout * ro) {
 			throw UnexpectedEndOfFileSequence("missing a footer",d_path.string());
 		}
 	}
-	if ( d_line.has_readout() ) {
-		ro->CopyFrom(d_line.readout());
+
+	if ( ro->has_time() ) {
 		ro->set_width(d_width);
 		ro->set_height(d_height);
 
