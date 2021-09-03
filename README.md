@@ -9,13 +9,11 @@
   <a href="https://github.com/formicidae-tracker/hermes">
     <img src="resources/icons/fort-hermes.svg" alt="Logo" width="180" height="180">
   </a>
-
-# `fort-hermes`
-
+  <h1 align="center"><code> fort-hermes</code></h1>
   <p align="center">
 	Tracking data exchange format and utilities for the FORmicidae Tracker.
     <br />
-    <a href="https://fort-hermes.readthedocs.io/en/stable/"><strong>`fort-hermes` docs »</strong></a>
+    <a href="https://fort-hermes.readthedocs.io/en/stable/"><strong><code>fort-hermes</code> docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/formicidae-tracker/documentation/wiki">FORT Project Wiki</a>
