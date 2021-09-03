@@ -1,4 +1,5 @@
 [![Build Status][build-status-shield]][build-status-url]
+[![Docs Status][docs-status-shield]][docs-status-url]
 [![Coverage Status][coverage-status-shield]][coverage-status-url]
 [![Contributors][contributors-shield]][contributors-url]
 [![Issues][issues-shield]][issues-url]
@@ -84,6 +85,8 @@ C API Documentation can be found at https://formicidae-tracker.github.io/hermes/
 
 [build-status-shield]: https://github.com/formicidae-tracker/hermes/actions/workflows/build.yml/badge.svg
 [build-status-url]: https://github.com/formicidae-tracker/hermes/actions/workflows/build.yml
+[docs-status-shield]: https://readthedocs.org/projects/fort-hermes/badge/?version=stable
+[docs-status-url]: https://fort-hermes.readthedocs.io/en/stable/?badge=stable
 [coverage-status-shield]: https://codecov.io/gh/formicidae-tracker/hermes/branch/master/graph/badge.svg
 [coverage-status-url]: https://codecov.io/gh/formicidae-tracker/hermes
 [contributors-shield]: https://img.shields.io/github/contributors/formicidae-tracker/hermes.svg
