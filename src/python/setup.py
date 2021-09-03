@@ -59,7 +59,9 @@ class BuildProtoCommand(setuptools.command.build_py.build_py):
 setuptools.setup(
     name="formicidae_tracker_hermes",
     author="Alexandre Tuleu",
-    version_config=True,
+    version_config= {
+        "dev_template" : "{tag}.post{ccount}",
+        },
     author_email="alexandre.tuleu.2005@polytechnique.org",
     description="FORmicidae Tracker hermes python implementation",
     long_description=long_description,
