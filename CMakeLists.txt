@@ -47,6 +47,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfig.cmake
 
 option(FORT_HERMES_ENABLE_COVERAGE "Enables code coverage" Off)
 option(FORT_HERMES_BUILD_PYTHON "Enables python building" Off)
+option(FORT_HERMES_BUILD_DOCS "Enables building of documentation" Off)
 
 if(FORT_HERMES_ENABLE_COVERAGE)
 	include(CodeCoverage)
@@ -59,14 +60,15 @@ if(FORT_HERMES_ENABLE_COVERAGE)
 	                          )
 endif(FORT_HERMES_ENABLE_COVERAGE)
 
-add_subdirectory(src)
+add_subdirectory(src/fort/hermes)
 
 add_subdirectory(pkgconfig)
 
 add_subdirectory(examples)
-
-add_subdirectory(docs)
+if(FORT_HERMES_BUILD_DOCS)
+	add_subdirectory(docs)
+endif(FORT_HERMES_BUILD_DOCS)
 
 if(FORT_HERMES_BUILD_PYTHON)
 	add_subdirectory(src/python)
-endif()
+endif(FORT_HERMES_BUILD_PYTHON)
