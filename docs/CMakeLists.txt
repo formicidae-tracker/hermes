@@ -13,7 +13,7 @@ configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
 
 file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR})
 add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
-                   DEPENDS ${MYRMIDON_API_DOC_FILES}
+                   DEPENDS ${HERMES_API_DOC_FILES}
                    COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
                    MAIN_DEPENDENCY ${DOXYFILE_IN}
                    COMMENT "Generate doxygen index")

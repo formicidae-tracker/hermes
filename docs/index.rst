@@ -16,3 +16,4 @@ Table of Contents
    :maxdepth: 5
 
    self
+   api/index
