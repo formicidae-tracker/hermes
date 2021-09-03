@@ -3,7 +3,6 @@ from py_fort_hermes import utils, check
 
 import os
 import gzip
-import inspect
 import builtins
 
 
@@ -25,15 +24,31 @@ class Context:
                 # some error happened before the end of the sequence
                 pass
     """
-    __slots__ = ['width', 'height', 'path', 'followFile', 'filestream', 'line']
+    __slots__ = ['width', 'height', 'path', 'followFile',
+                 'filestream', '_line', 'allocateNewMessages']
 
-    def __init__(self, filepath, followFile=True):
+    def __init__(self, filepath, followFile=True, allocateNewMessages=False):
+        """Initializes a new Context
+
+        Args:
+            filepath (str): the first segment in the sequence to open
+            followFile (bool): if False, will stop at the end of filepath,
+                otherwise it will try to follow the file sequence
+                until the last.
+            allocateNewMessages (bool): if True, each call to `next` will
+                allocate a new FrameReadout, which will lead to
+                performance losses. Otherwise the same object will be
+                used and returned.
+
+        """
+
         self.followFile = followFile
         self.width = 0
         self.height = 0
         self.path = ''
-        self.line = fh.Header_pb2.FileLine()
+        self._line = fh.Header_pb2.FileLine()
         self._openFile(filepath)
+        self.allocateNewMessages = allocateNewMessages
 
     def __enter__(self):
         return self
@@ -62,28 +77,31 @@ class Context:
         """
         if self.filestream is None:
             raise StopIteration
-        self.line.Clear()
+        self._line.Clear()
         try:
-            self._readMessage(self.line)
+            self._readMessage(self._line)
         except Exception as e:
             raise fh.UnexpectedEndOfFileSequence(segmentPath=self.path,
                                                  what="cannot decode line: %s" % e)
-        if self.line.HasField('readout'):
-            ro = fh.FrameReadout()
-            ro.CopyFrom(self.line.readout)
-            ro.width = self.width
-            ro.height = self.height
-            return ro
-        elif not self.line.HasField('footer'):
+        if self._line.HasField('readout'):
+            self._line.readout.width = self.width
+            self._line.readout.height = self.height
+            if self.allocateNewMessages is True:
+                ro = fh.FrameReadout()
+                ro.CopyFrom(self._line.readout)
+                return ro
+            else:
+                return self._line.readout
+        elif not self._line.HasField('footer'):
             raise fh.UnexpectedEndOfFileSequence(segmentPath=self.path,
                                                  what="got an empty line")
 
-        if self.line.footer.next == '' or self.followFile == False:
+        if self._line.footer.next == '' or self.followFile == False:
             self.close()
             raise StopIteration
 
         newPath = os.path.join(os.path.dirname(self.path),
-                               self.line.footer.next)
+                               self._line.footer.next)
         self._openFile(newPath)
         return self.__next__()
 
@@ -93,14 +111,14 @@ class Context:
     def _openFile(self, filepath):
         try:
             self.filestream = builtins.open(filepath + "unc", "rb")
-        except:
+        except Exception:
             self.filestream = gzip.open(filepath)
 
         h = fh.Header()
         try:
             self._readMessage(h)
         except Exception as e:
-            raise fh.InternalError(ErrorCode.FH_STREAM_NO_HEADER,
+            raise fh.InternalError(fh.ErrorCode.FH_STREAM_NO_HEADER,
                                    "cannot parse header: %s" % e.message)
 
         check.CheckFileHeader(h)
@@ -113,20 +131,23 @@ class Context:
         message.ParseFromString(self.filestream.read(size))
 
 
-def open(filepath, followFile=True):
-    """
-    Opens a sequence of hermes tracking file
+def open(filepath, followFile=True, allocateNewMessages=False):
+    """Opens a sequence of hermes tracking file
 
     Args:
         filepath : a path-like object to open
         followFile (bool): if True the sequence will be read until the
-        last file, otherwise only filepath is read
+            last file, otherwise only filepath is read
+       allocateNewMessages (bool): if True each call to next() will
+           return a new FrameReadout. Otherwise, the same object will
+           be Clear() and returned.
     Returns:
         Context: a context manager which is iterable
     Example:
         with py_fort_hermes.file.open(filepath) as f:
             for ro in f:
                 print(ro))
+
     """
 
-    return Context(filepath, followFile)
+    return Context(filepath, followFile, allocateNewMessages)
