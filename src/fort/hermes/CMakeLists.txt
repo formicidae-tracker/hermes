@@ -60,3 +60,8 @@ target_link_libraries(fort-hermes-tests fort-hermes gtest)
 
 add_test(NAME fort-hermes-tests COMMAND fort-hermes-tests)
 add_dependencies(check fort-hermes-tests)
+
+foreach(h ${HDR_FILES})
+	list(APPEND HERMES_API_DOC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/${h})
+endforeach(h ${HDR_FILES})
+set(HERMES_API_DOC_FILES ${HERMES_API_DOC_FILES} PARENT_SCOPE)
