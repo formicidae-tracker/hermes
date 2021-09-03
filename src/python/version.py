@@ -41,10 +41,12 @@ def call_git_describe(abbrev):
         p = Popen(['git', 'describe', '--abbrev=%d' % abbrev],
                   stdout=PIPE, stderr=PIPE)
         p.stderr.close()
-        line = p.stdout.readlines()[0]
-        return line.strip().decode('ascii')
+        line = p.stdout.readlines()[0].strip().decode('ascii')
+        if line.startswith('v'):
+            line = line[1:]               
+        return line
 
-    except:
+    except Exception as e:
         return None
 
 
