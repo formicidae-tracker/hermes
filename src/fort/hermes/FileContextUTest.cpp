@@ -20,7 +20,6 @@ TEST_F(FileContextUTest,NormalFullReading) {
 	}
 	EXPECT_THROW(context.Read(&ro),EndOfFile);
 	EXPECT_THROW(context.Read(&ro),EndOfFile);
-
 }
 
 TEST_F(FileContextUTest,NormalPartialReading) {
