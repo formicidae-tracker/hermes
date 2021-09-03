@@ -1,7 +1,7 @@
-.. figure:: https://github.com/formicidae-tracker/hermes/raw/master/resources/icons/fort-hermes.svg
-   :alt: ``fort-hermes`` logo
+.. raw:: html
 
-** fort-hermes — Tracking Data exchange format for the FORMicidae Tracker**
+    <p align="center"><img src="https://github.com/formicidae-tracker/hermes/raw/master/resources/icons/fort-hermes.svg" width="300px" alt="fort-hermes logo"></p>
+
 
 |Build Status| |Coverage Status| |Stable Documentation Status| |PyPI package| |License|
 
