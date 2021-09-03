@@ -70,7 +70,6 @@ setuptools.setup(
     author_email="alexandre.tuleu.2005@polytechnique.org",
     description="FORmicidae Tracker hermes python implementation",
     long_description=long_description,
-    long_description_content_type="text/x-rst",
     url="https://github.com/formicidae-tracker/hermes",
     project_urls={
         "Bug Tracker": "https://github.com/formicidae-tracker/hermes/issues",
