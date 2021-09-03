@@ -26,8 +26,7 @@ read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 breathe_projects = {}
 
 if read_the_docs_build:
-    output_dir = '../build'
-    os.makedirs(output_dir)
+    output_dir = 'build'
     configureDoxyfile(listFiles(), output_dir)
     subprocess.call('doxygen', shell=True)
     breathe_projects['fort-hermes'] = output_dir + '/xml'
