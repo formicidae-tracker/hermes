@@ -1,5 +1,5 @@
 RELEASE-VERSION
-py_fort_hermes.egg-info
+*.egg-info
 .eggs/
 dist/
 build/
