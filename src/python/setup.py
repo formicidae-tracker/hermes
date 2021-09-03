@@ -5,7 +5,6 @@ import subprocess
 import sys
 
 from distutils.spawn import find_executable
-from version import get_git_version
 
 
 with open("../../README.md", "r", encoding="utf-8") as fh:
@@ -59,8 +58,8 @@ class BuildProtoCommand(setuptools.command.build_py.build_py):
 
 setuptools.setup(
     name="py_fort_hermes",
-    version=get_git_version(),
     author="Alexandre Tuleu",
+    version_config=True,
     author_email="alexandre.tuleu.2005@polytechnique.org",
     description="FORmicidae Tracker hermes python implementation",
     long_description=long_description,
@@ -74,12 +73,13 @@ setuptools.setup(
         "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
         "Operating System :: OS Independent",
     ],
-    package_dir={"": "."},
     packages= ["py_fort_hermes"],
+    package_dir={"": "."},
     python_requires=">=3.6",
     cmdclass={
         'build_py': BuildProtoCommand,
     },
+    setup_requires=['setuptools-git-versioning'],
     install_requires = [
         "protobuf",
         ],
