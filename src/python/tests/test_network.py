@@ -38,3 +38,10 @@ class NetworkTestCase(assertions.Assertions):
             py_fort_hermes.network.connect(host=self.server.hostname,
                                            port=self.server.port,
                                            timeout=0.1)
+
+    def test_is_also_an_iterable(self):
+        with py_fort_hermes.network.connect(host=self.server.hostname,
+                                            port=self.server.port,
+                                            timeout=0.1) as s:
+            for ro in s:
+                pass

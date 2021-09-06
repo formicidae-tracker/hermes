@@ -80,6 +80,9 @@ class Context:
             self._s.close()
         self._s = None
 
+    def __iter__(self):
+        return self
+
     def __next__(self):
         """
         Gets the next FrameReadout in the stream

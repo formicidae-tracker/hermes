@@ -69,6 +69,9 @@ class Context:
             self.filestream.close()
         self.filestream = None
 
+    def __iter__(self):
+        return self
+
     def __next__(self):
         """
         Gets the next readout in the file sequence

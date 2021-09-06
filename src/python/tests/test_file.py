@@ -64,3 +64,9 @@ class FileTestCase(assertions.Assertions):
         with self.assertRaises(FileNotFoundError):
             py_fort_hermes.file.open(os.path.join(
                 utestdata.UTestData().Basepath, "oops"))
+
+    def test_is_also_an_iterable(self):
+        info = utestdata.UTestData().Normal
+        with py_fort_hermes.file.open(info.Segments[0]) as f:
+            for ro in f:
+                pass
