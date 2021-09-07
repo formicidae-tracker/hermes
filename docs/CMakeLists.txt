@@ -20,7 +20,7 @@ add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
 
 set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR})
 set(SPHINX_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sphinx)
-add_custom_target(hermes-docs
+add_custom_target(fort-hermes-docs
                   COMMAND ${SPHINX_BUILD_EXECUTABLE} -b html
                           -Dbreathe_projects.fort-hermes=${DOXYGEN_OUTPUT_DIR}/xml
                           ${SPHINX_SOURCE} ${SPHINX_OUTPUT}
@@ -28,4 +28,4 @@ add_custom_target(hermes-docs
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                   COMMENT "Generating documentation with Sphinx")
 
-add_dependencies(hermes-docs py_fort_hermes)
+add_dependencies(fort-hermes-docs py_fort_hermes)
