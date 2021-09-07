@@ -45,3 +45,8 @@ jobs:
         - name: Build documentation
           working-directory: ${{github.workspace}}/build
           run: make fort-hermes-docs
+        - name: Uploads documentation
+          uses: actions/upload-artifact@v2
+          with:
+            name: sphinx-documentation
+            path: ${{github.workspace}}/build/docs/sphinx
