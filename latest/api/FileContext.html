@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>fort::hermes::FileContext &mdash; fort-hermes  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="fort::hermes::NetworkContext" href="NetworkContext.html" />
+    <link rel="prev" title="C/C++ API Reference" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> fort-hermes
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">The Basics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../read_a_file_sequence.html">Reading a file sequence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connect_to_a_leto_instance.html">Connect to a <strong>leto</strong> instance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Extra Informations</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">C/C++ API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">fort::hermes::FileContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NetworkContext.html">fort::hermes::NetworkContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Errors.html"><strong>fort::hermes</strong> Exception and Errors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#python-api-reference">Python API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../format.html"><strong>fort-hermes</strong> File Format</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">fort-hermes</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">C/C++ API Reference</a> &raquo;</li>
+        
+      <li>fort::hermes::FileContext</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/api/FileContext.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="fort-hermes-filecontext">
+<h1>fort::hermes::FileContext<a class="headerlink" href="#fort-hermes-filecontext" title="Permalink to this headline">¶</a></h1>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N4fort6hermes11FileContextE">
+<span id="_CPPv3N4fort6hermes11FileContextE"></span><span id="_CPPv2N4fort6hermes11FileContextE"></span><span id="fort::hermes::FileContext"></span><span class="target" id="classfort_1_1hermes_1_1FileContext"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">fort</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">hermes</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">FileContext</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">fort</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">hermes</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Context</span></span><a class="headerlink" href="#_CPPv4N4fort6hermes11FileContextE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A context that reads from a hermes file sequence. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4fort6hermes11FileContext11FileContextERKNSt6stringEb">
+<span id="_CPPv3N4fort6hermes11FileContext11FileContextERKNSt6stringEb"></span><span id="_CPPv2N4fort6hermes11FileContext11FileContextERKNSt6stringEb"></span><span id="fort::hermes::FileContext::FileContext__ssCR.b"></span><span class="target" id="classfort_1_1hermes_1_1FileContext_1a2136800f9db19281eba85ecdd2b863c8"></span><span class="sig-name descname"><span class="n"><span class="pre">FileContext</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">filename</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">followFiles</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4fort6hermes11FileContext11FileContextERKNSt6stringEb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Open the file sequence starting with filename. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – the first file of the sequence to open </p></li>
+<li><p><strong>followFiles</strong> – if false, only filename will be read, otherwise the complete sequence until the last segment is read by this context.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Throws</dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="Errors.html#_CPPv4N4fort6hermes13InternalErrorE" title="fort::hermes::InternalError"><span class="n">InternalError</span></a></span></span> – if filename is not a valid hermes file sequence </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4fort6hermes11FileContext4ReadEPN4fort6hermes12FrameReadoutE">
+<span id="_CPPv3N4fort6hermes11FileContext4ReadEPN4fort6hermes12FrameReadoutE"></span><span id="_CPPv2N4fort6hermes11FileContext4ReadEPN4fort6hermes12FrameReadoutE"></span><span id="fort::hermes::FileContext::Read__fort::hermes::FrameReadoutP"></span><span class="target" id="classfort_1_1hermes_1_1FileContext_1a9338ea5ff6247d1f51d26809abe59271"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Read</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">fort</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">hermes</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">FrameReadout</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ro</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4fort6hermes11FileContext4ReadEPN4fort6hermes12FrameReadoutE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Reads a FrameReadout from the Context. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ro</strong> – the FrameReadout to parse to</p>
+</dd>
+<dt class="field-even">Throws</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><span><span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="Errors.html#_CPPv4N4fort6hermes9EndOfFileE" title="fort::hermes::EndOfFile"><span class="n">EndOfFile</span></a></span></span> – if the Context does not contains any other data </p></li>
+<li><p><span><span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="Errors.html#_CPPv4N4fort6hermes27UnexpectedEndOfFileSequenceE" title="fort::hermes::UnexpectedEndOfFileSequence"><span class="n">UnexpectedEndOfFileSequence</span></a></span></span> – if a sequence of files does not end up gracefully </p></li>
+<li><p><span><span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="Errors.html#_CPPv4N4fort6hermes10WouldBlockE" title="fort::hermes::WouldBlock"><span class="n">WouldBlock</span></a></span></span> – if a non-blocking connection has no messages yet ready. </p></li>
+<li><p><span><span class="cpp-expr sig sig-inline cpp"><a class="reference internal" href="Errors.html#_CPPv4N4fort6hermes13InternalErrorE" title="fort::hermes::InternalError"><span class="n">InternalError</span></a></span></span> – if any other error occured </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="NetworkContext.html" class="btn btn-neutral float-right" title="fort::hermes::NetworkContext" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="C/C++ API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Alexandre Tuleu.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
