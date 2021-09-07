@@ -17,6 +17,8 @@ jobs:
           run: git fetch --prune --unshallow --tags
         - name: Install dependencies
           run: sudo apt install build-essential git cmake libasio-dev libboost-dev libprotobuf-dev protobuf-compiler lcov doxygen ccache
+        - name: Installs sphinx
+          run: pip install sphinx_rtd_theme
         - name: Uses ccache
           uses: hendrikmuhs/ccache-action@v1
         - name: Configure
