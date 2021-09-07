@@ -65,10 +65,11 @@ add_subdirectory(src/fort/hermes)
 add_subdirectory(pkgconfig)
 
 add_subdirectory(examples)
-if(FORT_HERMES_BUILD_DOCS)
-	add_subdirectory(docs)
-endif(FORT_HERMES_BUILD_DOCS)
 
 if(FORT_HERMES_BUILD_PYTHON)
 	add_subdirectory(src/python)
 endif(FORT_HERMES_BUILD_PYTHON)
+
+if(FORT_HERMES_BUILD_DOCS)
+	add_subdirectory(docs)
+endif(FORT_HERMES_BUILD_DOCS)
