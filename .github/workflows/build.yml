@@ -43,4 +43,4 @@ jobs:
           with:
             directory: ${{github.workspace}}/build/coverage
         - name: Build documentation
-          run: make fort-hermes-documentation
+          run: make fort-hermes-docs
