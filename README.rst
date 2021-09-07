@@ -79,9 +79,9 @@ file for details
    :target: https://github.com/formicidae-tracker/hermes/actions/workflows/build.yml
 .. |coverage Status| image:: https://codecov.io/gh/formicidae-tracker/hermes/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/formicidae-tracker/hermes
-.. |Stable Documentation Status| image:: https://readthedocs.org/projects/fort-hermes/badge/?version=stable
-   :target: https://fort-hermes.readthedocs.io/en/stable/?badge=stable
+.. |Stable Documentation Status| image:: https://github.com/formicidae-tracker/hermes/actions/workflows/docs.yml/badge.svg
+   :target: https://formicidae-tracker.github.io/hermes/latest
 .. |PyPI package|  image:: https://img.shields.io/pypi/v/formicidae-tracker-hermes.svg
-   :target: https://pypi.org/project/formicidae-tracker-project/
+   :target: https://pypi.org/project/formicidae-tracker-hermes/
 .. |License| image:: https://img.shields.io/github/license/formicidae-tracker/hermes.svg
    :target: https://github.com/formicidae-tracker/hermes/blob/master/LICENSE
