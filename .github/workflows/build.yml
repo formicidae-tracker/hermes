@@ -24,8 +24,9 @@ jobs:
             export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
             cmake -B ${{github.workspace}}/build \
                -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-               -DFORT_HERMES_ENABLE_COVERAGE=On \
-               -DFORT_HERMES_BUILD_PYTHON=On
+               -DENABLE_COVERAGE=On \
+               -DENABLE_PYTHON=On \
+               -DBUILD_DOCS=On
         - name: Build
           working-directory: ${{github.workspace}}/build
           run: |
@@ -39,5 +40,5 @@ jobs:
           id: send-coverage
           with:
             directory: ${{github.workspace}}/build/coverage
-        - name: Does not need to be silent
-          run: echo ${{join(steps.send-coverage.outputs.*)}}
+        - name: Build documentation
+          run: make fort-hermes-documentation
