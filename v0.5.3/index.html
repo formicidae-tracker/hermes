@@ -1,0 +1,297 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>fort-hermes — Tracking Data exchange format for the FORMicidae Tracker &mdash; fort-hermes  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting Started" href="getting_started.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home"> fort-hermes
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">The Basics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="read_a_file_sequence.html">Reading a file sequence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connect_to_a_leto_instance.html">Connect to a <strong>leto</strong> instance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Extra Informations</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">C/C++ API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html#python-api-reference">Python API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="format.html"><strong>fort-hermes</strong> File Format</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">fort-hermes</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><code class="docutils literal notranslate"><span class="pre">fort-hermes</span></code> — Tracking Data exchange format for the FORMicidae Tracker</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <p align="center"><img src="https://github.com/formicidae-tracker/hermes/raw/master/resources/icons/fort-hermes.svg" width="200px" alt="fort-hermes logo"></p><div class="section" id="fort-hermes-tracking-data-exchange-format-for-the-formicidae-tracker">
+<h1><code class="docutils literal notranslate"><span class="pre">fort-hermes</span></code> — Tracking Data exchange format for the FORMicidae Tracker<a class="headerlink" href="#fort-hermes-tracking-data-exchange-format-for-the-formicidae-tracker" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://github.com/formicidae-tracker/hermes/actions/workflows/build.yml"><img alt="Build Status" src="https://github.com/formicidae-tracker/hermes/actions/workflows/build.yml/badge.svg" /></a> <a class="reference external" href="https://codecov.io/gh/formicidae-tracker/hermes"><img alt="coverage Status" src="https://codecov.io/gh/formicidae-tracker/hermes/branch/master/graph/badge.svg" /></a> <a class="reference external" href="https://fort-hermes.readthedocs.io/en/stable/?badge=stable"><img alt="Stable Documentation Status" src="https://readthedocs.org/projects/fort-hermes/badge/?version=stable" /></a> <a class="reference external" href="https://pypi.org/project/formicidae-tracker-project/"><img alt="PyPI package" src="https://img.shields.io/pypi/v/formicidae-tracker-hermes.svg" /></a> <a class="reference external" href="https://github.com/formicidae-tracker/hermes/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/formicidae-tracker/hermes.svg" /></a></p>
+<p><a class="reference external" href="https://github.com/formicidae-tracker/documentation/wiki">FORT Project Wiki</a>
+• <a class="reference external" href="https://github.com/fortmicidae-tracker/hermes/issues/new">Report a Bug</a>
+• <a class="reference external" href="https://github.com/formicidae-tracker/hermes/issues/new">Request a Feature</a></p>
+<p><strong>fort-hermes</strong> is a small library, implemented in C/C++, go and
+python for the exchange format of tracking data for the FORmicidae
+Tracker project. This is mostly based on protocol buffer. It provides
+utilities to access file sequence of saved tracking data or to connect
+to live tracking instance to access broadcasted data.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="c-c">
+<h3>C/C++<a class="headerlink" href="#c-c" title="Permalink to this headline">¶</a></h3>
+<p><strong>libfort-hermes</strong> and <strong>libfort-hermes-cpp</strong> packages are distributed
+within the larger conda <strong>libfort-myrmidon</strong> package through the
+<a class="reference external" href="https://anaconda.org/formicidae-tracker">formicidae-tracker</a> channel.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install -c formicidae-tracker libfort-myrmidon
+</pre></div>
+</div>
+</div>
+<div class="section" id="python">
+<h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
+<p>The <strong>py_fort_hermes</strong> package is available through PyPI
+<a class="reference external" href="https://pypi.org/project/formicidae-tracker-hermes/">formicidae-tracker-hermes</a>
+project.</p>
+</div>
+<div class="section" id="golang">
+<h3>Golang<a class="headerlink" href="#golang" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>go get github.com/formicidae-tracker/hermes
+</pre></div>
+</div>
+</div>
+<div class="section" id="versioning">
+<h3>Versioning<a class="headerlink" href="#versioning" title="Permalink to this headline">¶</a></h3>
+<p><strong>fort-hermes</strong> use <a class="reference external" href="http://semver.org/">SemVer</a> for versioning. For the versions
+available, see the <a class="reference external" href="https://github.com/formicidae-tracker/hermes/releases">releases</a></p>
+</div>
+</div>
+<div class="section" id="authors">
+<h2>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h2>
+<p>The file <a class="reference external" href="https://github.com/formicidae-tracker/hermes/blob/masert/AUTHORS">AUTHORS</a>
+lists all copyright holders (physical or moral person) for this
+repository.</p>
+<p>See also the list of <a class="reference external" href="https://github.com/formicidae-tracker/hermes/contributors">contributors</a> who
+participated in this project.</p>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>This project is licensed under the GNU Lesser General Public License
+v3.0 or later - see the <a class="reference external" href="https://github.com/formicidae-tracker/hermes/blob/master/LICENSE">LICENSE</a>
+file for details</p>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">The Basics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="read_a_file_sequence.html">Reading a file sequence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connect_to_a_leto_instance.html">Connect to a <strong>leto</strong> instance</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Extra Informations</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">C/C++ API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/FileContext.html">fort::hermes::FileContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/NetworkContext.html">fort::hermes::NetworkContext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/Errors.html"><strong>fort::hermes</strong> Exception and Errors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html#python-api-reference">Python API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/py_fort_hermes_file.html">py_fort_hermes.file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/py_fort_hermes_network.html">py_fort_hermes.network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/py_fort_hermes_errors.html">py_fort_hermes errors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="format.html"><strong>fort-hermes</strong> File Format</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="getting_started.html" class="btn btn-neutral float-right" title="Getting Started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Alexandre Tuleu.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

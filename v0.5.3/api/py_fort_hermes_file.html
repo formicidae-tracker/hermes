@@ -1,0 +1,278 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>py_fort_hermes.file &mdash; fort-hermes  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="py_fort_hermes.network" href="py_fort_hermes_network.html" />
+    <link rel="prev" title="fort::hermes Exception and Errors" href="Errors.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> fort-hermes
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">The Basics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../read_a_file_sequence.html">Reading a file sequence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connect_to_a_leto_instance.html">Connect to a <strong>leto</strong> instance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Extra Informations</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">C/C++ API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html#python-api-reference">Python API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">py_fort_hermes.file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="py_fort_hermes_network.html">py_fort_hermes.network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="py_fort_hermes_errors.html">py_fort_hermes errors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../format.html"><strong>fort-hermes</strong> File Format</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">fort-hermes</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">C/C++ API Reference</a> &raquo;</li>
+        
+      <li>py_fort_hermes.file</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/api/py_fort_hermes_file.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-py_fort_hermes.file">
+<span id="py-fort-hermes-file"></span><h1>py_fort_hermes.file<a class="headerlink" href="#module-py_fort_hermes.file" title="Permalink to this headline">¶</a></h1>
+<p>This module provides a Context to read sequences of tracking file.</p>
+<p>Through the file.open() function one can get a context to read hermes
+tracking data file sequences.</p>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">py_fort_hermes</span> <span class="kn">as</span> <span class="nn">fh</span>
+
+<span class="k">with</span> <span class="n">fh</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;tracking.0000.hermes&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ro</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="c1">#do something with ro</span>
+    <span class="k">except</span> <span class="n">fh</span><span class="o">.</span><span class="n">UnexpectedEndOfFileSequence</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is corrupted&quot;</span><span class="o">%</span><span class="n">e</span><span class="o">.</span><span class="n">segmentPath</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="py_fort_hermes.file.Context">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">py_fort_hermes.file.</span></span><span class="sig-name descname"><span class="pre">Context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">followFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allocateNewMessages</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_fort_hermes.file.Context" title="Permalink to this definition">¶</a></dt>
+<dd><p>A context manager class to open a sequence of hermes tracking file.</p>
+<p>It is an iterable to be used in a for loop.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="py_fort_hermes.file.Context.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py_fort_hermes.file.Context.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Closes the context manager manually</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_fort_hermes.file.open">
+<span class="sig-prename descclassname"><span class="pre">py_fort_hermes.file.</span></span><span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">followFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allocateNewMessages</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_fort_hermes.file.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens a sequence of hermes tracking file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> – a path-like object to open</p></li>
+<li><p><strong>followFile</strong> (<em>bool</em>) – if True the sequence will be read until the
+last file, otherwise only filepath is read</p></li>
+<li><p><strong>allocateNewMessages</strong> (<em>bool</em>) – if True each call to next() will
+return a new FrameReadout. Otherwise, the same object will
+be Clear() and returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a context manager which is iterable</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#py_fort_hermes.file.Context" title="py_fort_hermes.file.Context">Context</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="py_fort_hermes_network.html" class="btn btn-neutral float-right" title="py_fort_hermes.network" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="Errors.html" class="btn btn-neutral float-left" title="fort::hermes Exception and Errors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Alexandre Tuleu.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
