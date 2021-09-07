@@ -74,9 +74,9 @@ add_subdirectory(pkgconfig)
 
 add_subdirectory(examples)
 
-if(BUILD_PYTHON)
+if(BUILD_PYTHON OR BUILD_DOCS)
 	add_subdirectory(src/python)
-endif(BUILD_PYTHON)
+endif(BUILD_PYTHON OR BUILD_DOCS)
 
 if(BUILD_DOCS)
 	add_subdirectory(docs)

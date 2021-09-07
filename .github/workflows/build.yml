@@ -27,7 +27,7 @@ jobs:
             cmake -B ${{github.workspace}}/build \
                -DCMAKE_BUILD_TYPE=RelWithDebInfo \
                -DENABLE_COVERAGE=On \
-               -DENABLE_PYTHON=On \
+               -DBUILD_PYTHON=On \
                -DBUILD_DOCS=On
         - name: Build
           working-directory: ${{github.workspace}}/build
