@@ -103,9 +103,8 @@ html_context = {
 
 ci_build = True
 
-html_static_path = ['_static']
-
 if ci_build:
+    html_extra_path = ['version_dropdown.js']
     html_context['version'] = 'placeholder'
     html_context['theme_display_version'] = True
-    html_js_files = ['js/version_dropdown.js']
+    html_js_files = ['../version_dropdown.js']
