@@ -6,6 +6,7 @@ version='latest';
 function changeVersion(newVersion) {
 	newURL = window.location.href;
 	newURL.replace('/'+version+'/','/'+newVersion+'/');
+	console.log(window.location.href,newURL)
 	if ( newURL != window.location.href ) {
 		window.location.href = newURL;
 	}
