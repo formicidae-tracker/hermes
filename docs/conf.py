@@ -23,6 +23,7 @@ def listFiles():
 
 # Check if we're running on Read the Docs' servers
 read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
+ci_build = os.environ.get('CI', None) is not None
 
 breathe_projects = {}
 
@@ -99,3 +100,12 @@ html_context = {
     'github_version': 'master',
     'conf_py_path': '/docs/',
 }
+
+ci_build = True
+
+html_static_path = ['_static']
+
+if ci_build:
+    html_context['version'] = 'placeholder'
+    html_context['theme_display_version'] = True
+    html_js_files = ['js/version_dropdown.js']
