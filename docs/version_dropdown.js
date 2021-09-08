@@ -2,12 +2,12 @@
 versions=['devel'];
 
 version='devel';
-
 function changeVersion(newVersion) {
-	newURL = window.location.href;
-	newURL.replace('/'+version+'/','/'+newVersion+'/');
+	newURL = window.location.href.replace('/'+version+'/','/'+newVersion+'/');
 	if ( newURL != window.location.href ) {
 		window.location.href = newURL;
+	} else {
+		console.log('are you in development?');
 	}
 }
 
@@ -27,24 +27,17 @@ $(document).ready(function() {
 		"position":"relative",
 		"display": "inline-block",
 		"width": "100px",
-		//"list-style": "none",
-		//"padding":"0px",
-		//"margin":"0px"});
 	});
 	$('.version .dropdown a').css({
 		"display":"block",
-		//"background":"#990E00",
-		//"margin-right":"5px",
-		//"width":"100px",
-		//"height":"20px",
-		//"line-height":"20px",
-		//"text-align":"center",
-		"color":"hsla(0,0%,100%,.3)",
+		"background":"#2980b9",
+		"margin":"1px",
+		"color":"hsla(0,0%,100%,.5)",
 	});
 	$('.version .dropdown-content').css({
 		"display":"block",
 		"position":"absolute",
-		"background":"#2980b9",
+		"background":"#49a0d9",
 		"width": "100px",
 		"z-index":"1",
 	});
