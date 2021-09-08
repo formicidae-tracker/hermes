@@ -69,6 +69,7 @@ jobs:
           set -x
           rsync -avh --exclude _static _build/ latest --delete
           rsync -avh _build/_static/ _static --delete
+          ./linkVersion.sh
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.5
         if: ${{ github.event_name == 'push' }}
