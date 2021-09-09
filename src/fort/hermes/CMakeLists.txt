@@ -58,8 +58,10 @@ set(UTEST_SRC_FILES UTestDataUTest.cpp
 add_executable(fort-hermes-tests ${UTEST_HDR_FILES} ${UTEST_SRC_FILES})
 target_link_libraries(fort-hermes-tests fort-hermes gtest)
 
-add_test(NAME fort-hermes-tests COMMAND fort-hermes-tests)
-add_dependencies(check fort-hermes-tests)
+if(TARGET check)
+	add_test(NAME fort-hermes-tests COMMAND fort-hermes-tests)
+	add_dependencies(check fort-hermes-tests)
+endif(TARGET check)
 
 foreach(h ${HDR_FILES})
 	list(APPEND HERMES_API_DOC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/${h})

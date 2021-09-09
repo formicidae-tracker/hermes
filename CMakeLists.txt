@@ -35,7 +35,6 @@ if(IS_MAIN)
 	enable_testing()
 	set(MAKE_CHECK_TEST_COMMAND ${CMAKE_CTEST_COMMAND} -V)
 	add_custom_target(check COMMAND ${MAKE_CHECK_TEST_COMMAND})
-
 endif(IS_MAIN)
 
 include_directories(${Protobuf_INCLUDE_DIRS})
