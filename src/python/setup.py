@@ -3,9 +3,14 @@ import setuptools.command.build_py
 import os
 import subprocess
 import sys
+import warnings
 
 from distutils.spawn import find_executable
 
+warnings.filterwarnings("ignore",
+                        message="Normalizing 'v.*' to '.*'",
+                        category=UserWarning,
+                        module='setuptools')
 
 with open("./README.rst", "r", encoding="utf-8") as fh:
     long_description = fh.read()
