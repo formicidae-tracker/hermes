@@ -13,13 +13,13 @@ Example:
 import py_fort_hermes as fh
 
 import socket
+import io
 
 
 class Context:
     """A context manager to open network connection to a live leto
 
     """
-
     __slots__ = [
         "_buffer",
         "_bytesRead",
@@ -29,7 +29,12 @@ class Context:
         "_ro",
     ]
 
-    def __init__(self, host, port=4002, blocking=True, timeout=2.0, allocateNewMessages=False):
+    def __init__(self,
+                 host,
+                 port=4002,
+                 blocking=True,
+                 timeout=2.0,
+                 allocateNewMessages=False):
         """Initializes a connection to leto
         Args:
             host(str): a host to connect to
@@ -68,7 +73,7 @@ class Context:
                 raise fh.InternalError(fh.ErrorCode.FH_STREAM_NO_HEADER,
                                        "could not read header: %s" % e)
             fh.check.CheckNetworkHeader(header)
-        except:
+        except Exception:
             self._s.close()
             raise
 
@@ -126,9 +131,10 @@ class Context:
             self._buffer += bytearray(size - len(self._buffer))
 
         while self._bytesRead < size:
-            b = self._s.recv_into(memoryview(self._buffer)[self._bytesRead:size],
-                                  size - self._bytesRead)
-            if b == 0 and self._blocking == True:
+            b = self._s.recv_into(
+                memoryview(self._buffer)[self._bytesRead:size],
+                size - self._bytesRead)
+            if b == 0 and self._blocking:
                 raise StopIteration
             self._bytesRead += b
 
@@ -136,15 +142,15 @@ class Context:
         self._readAll(1)
         while self._buffer[self._bytesRead - 1] & 0x80 != 0:
             self._readAll(self._bytesRead + 1)
-
-        v = self._buffer[0] & 0x7f
-        for i in range(1, self._bytesRead):
-            v = v << 7
-            v += self._buffer[i] & 0x7f
-        return v
+        return fh.utils._decodeVaruint32(
+            io.BytesIO(self._buffer[:self._bytesRead]))
 
 
-def connect(host, port=4002, blocking=True, timeout=2.0, allocateNewMessages=False):
+def connect(host,
+            port=4002,
+            blocking=True,
+            timeout=2.0,
+            allocateNewMessages=False):
     """Connects to a leto host.
 
     Args:

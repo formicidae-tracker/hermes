@@ -1,9 +1,7 @@
 import tracemalloc
-import unittest
 import threading
-import time
 
-from tests import utestdata, streamserver, assertions
+from tests import streamserver, assertions
 
 import py_fort_hermes
 
