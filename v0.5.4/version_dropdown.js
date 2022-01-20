@@ -1,7 +1,7 @@
 //hello
 versions=['latest','v0.5.3','v0.5.4'];
 
-version='latest';
+version='v0.5.4';
 function changeVersion(newVersion) {
 	newURL = window.location.href.replace('/'+version+'/','/'+newVersion+'/');
 	if ( newURL != window.location.href ) {

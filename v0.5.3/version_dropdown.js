@@ -1,5 +1,5 @@
 //hello
-versions=['latest','v0.5.3'];
+versions=['latest','v0.5.3','v0.5.4'];
 
 version='v0.5.3';
 function changeVersion(newVersion) {
