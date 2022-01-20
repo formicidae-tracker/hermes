@@ -1,5 +1,3 @@
-
-
 def _decodeVaruint32(stream):
     v = 0
     for i in range(5):
@@ -14,7 +12,7 @@ def _decodeVaruint32(stream):
 def _encodeVaruint32(v: int):
     if (v < 0):
         raise ValueError("%d must be positive" % v)
-    if (v > 2 ** 32 - 1):
+    if (v > 2**32 - 1):
         raise ValueError("%d is too large (max is 2^32-1)" % v)
     res = bytearray()
     while (v > 127):

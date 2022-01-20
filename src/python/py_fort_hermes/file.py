@@ -32,8 +32,10 @@ class Context:
     It is an iterable to be used in a for loop.
 
     """
-    __slots__ = ['width', 'height', 'path', 'followFile',
-                 'filestream', '_line', 'allocateNewMessages']
+    __slots__ = [
+        'width', 'height', 'path', 'followFile', 'filestream', '_line',
+        'allocateNewMessages'
+    ]
 
     def __init__(self, filepath, followFile=True, allocateNewMessages=False):
         """Initializes a new Context
@@ -92,8 +94,8 @@ class Context:
         try:
             self._readMessage(self._line)
         except Exception as e:
-            raise fh.UnexpectedEndOfFileSequence(segmentPath=self.path,
-                                                 what="cannot decode line: %s" % e)
+            raise fh.UnexpectedEndOfFileSequence(
+                segmentPath=self.path, what="cannot decode line: %s" % e)
         if self._line.HasField('readout'):
             self._line.readout.width = self.width
             self._line.readout.height = self.height
@@ -107,7 +109,7 @@ class Context:
             raise fh.UnexpectedEndOfFileSequence(segmentPath=self.path,
                                                  what="got an empty line")
 
-        if self._line.footer.next == '' or self.followFile == False:
+        if self._line.footer.next == '' or not self.followFile:
             self.close()
             raise StopIteration
 
