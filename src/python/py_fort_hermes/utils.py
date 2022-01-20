@@ -1,11 +1,16 @@
 def _decodeVaruint32(stream):
     v = 0
+    b = None
     for i in range(5):
         b = stream.read(1)
-        v += b[0] & 0x7f
+        if not len(b):
+            raise RuntimeError("EOF")
+        v += (b[0] & 0x7f) << (7 * i)
         if b[0] & 0x80 == 0:
             break
-        v = v << 7
+
+    if b[0] & 0x80 != 0:
+        raise RuntimeError("Varuint is too large")
     return v
 
 

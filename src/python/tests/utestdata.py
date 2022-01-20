@@ -175,11 +175,12 @@ class UTestData(metaclass=Singleton):
         ro.frameID = 12345
         ro.width = 1000
         ro.height = 1000
-        t = ro.tags.add()
-        t.ID = 123
-        t.x = 500
-        t.y = 500
-        t.theta = math.pi / 4
+        for i in range(10):
+            t = ro.tags.add()
+            t.ID = 123 + i
+            t.x = 500 + 10 * i
+            t.y = 500 + 10 * i
+            t.theta = math.pi / 4 * i
 
         self.Normal = _WriteSequence(Basepath=self.Basepath,
                                      Basename="normal",
