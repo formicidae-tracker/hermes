@@ -1,18 +1,18 @@
-from py_fort_hermes import Tag_pb2, FrameReadout_pb2, Header_pb2, utils
+from py_fort_hermes import FrameReadout_pb2, Header_pb2, utils
 import shutil
 import tempfile
 import math
 import os
 import gzip
-from dataclasses import dataclass, field
-from typing import List
+from dataclasses import dataclass
 
 
 class HermesFileWriter(object):
+
     def __init__(self, filepath, dual=False):
         self.gziped = gzip.open(filepath, "wb")
         self.uncomp = None
-        if (dual == True):
+        if dual:
             self.uncomp = open(filepath + "unc", "wb")
 
     def close(self):
@@ -37,8 +37,8 @@ class Singleton(type):
 
     def __call__(cls, *args, **kwargs):
         if cls not in cls._instances:
-            cls._instances[cls] = super(
-                Singleton, cls).__call__(*args, **kwargs)
+            cls._instances[cls] = super(Singleton,
+                                        cls).__call__(*args, **kwargs)
         return cls._instances[cls]
 
 
@@ -74,8 +74,9 @@ def _WriteSequence(*sargs, **kwargs):
     res = SequenceInfo(readoutsPerSegment=args.ReadoutsPerSegment)
     frameID = args.Readout.frameID
     for i in range(args.NumberOfSegments):
-        frameID, segmentPath, readouts = _WriteSegment(
-            index=i, frameID=frameID, args=args)
+        frameID, segmentPath, readouts = _WriteSegment(index=i,
+                                                       frameID=frameID,
+                                                       args=args)
         res.Readouts += readouts
         res.Segments.append(segmentPath)
     return res
@@ -87,14 +88,13 @@ def _truncateFile(filepath, length):
         f.truncate()
 
 
-def _WriteSegment(index,
-                  frameID,
-                  args: _WriteSequenceArgs):
-    filepath = os.path.join(
-        args.Basepath, _HermesFileName(args.Basename, index))
+def _WriteSegment(index, frameID, args: _WriteSequenceArgs):
+    filepath = os.path.join(args.Basepath,
+                            _HermesFileName(args.Basename, index))
     readouts = []
-    with HermesFileWriter(filepath, args.Dual and index == args.NumberOfSegments - 1) as f:
-        if args.NoHeader == False:
+    with HermesFileWriter(filepath, args.Dual
+                          and index == args.NumberOfSegments - 1) as f:
+        if not args.NoHeader:
             h = Header_pb2.Header()
             h.version.vmajor = 0
             h.version.vminor = 1
@@ -103,7 +103,7 @@ def _WriteSegment(index,
             h.width = args.Readout.width
             h.height = args.Readout.height
             if index > 0:
-                h.previous = _HermesFileName(args.Basename, index-1)
+                h.previous = _HermesFileName(args.Basename, index - 1)
             f.write(h)
 
         line = Header_pb2.FileLine()
@@ -136,22 +136,24 @@ def _WriteSegment(index,
 
         line.Clear()
 
-        if (index < args.NumberOfSegments - 1 or (args.MissFooter == False and args.Truncated == False)):
+        if (index < args.NumberOfSegments - 1
+                or (not args.MissFooter and not args.Truncated)):
             if (index < args.NumberOfSegments - 1):
                 line.footer.next = _HermesFileName(args.Basename, index + 1)
             else:
                 line.footer.next = ''
             f.write(line)
 
-    if args.Truncated == True and index == args.NumberOfSegments - 1:
+    if args.Truncated and index == args.NumberOfSegments - 1:
         _truncateFile(filepath, 60)
-        if args.Dual == True:
-            _truncateFile(filepath+"unc", 60)
+        if args.Dual:
+            _truncateFile(filepath + "unc", 60)
 
     return frameID, filepath, readouts
 
 
 class SequenceInfo():
+
     def __init__(self, readoutsPerSegment):
         self.ReadoutsPerSegment = readoutsPerSegment
         self.Segments = []

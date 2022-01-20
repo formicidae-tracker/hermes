@@ -5,3 +5,5 @@ hermes-file-doctor/hermes-file-doctor
 __pycache__
 *_pb2.py
 *~
+.direnv/
+venv/
