@@ -5,7 +5,7 @@
 ``fort-hermes`` — Tracking Data exchange format for the FORMicidae Tracker
 **************************************************************************
 
-|Build Status| |Coverage Status| |Stable Documentation Status| |PyPI package| |License|
+|Build Status| |Coverage Status| |Stable Documentation Status| |PyPI package| |License| |DOI|
 
 `FORT Project Wiki <https://github.com/formicidae-tracker/documentation/wiki>`_
 • `Report a Bug <https://github.com/fortmicidae-tracker/hermes/issues/new>`_
@@ -85,3 +85,6 @@ file for details
    :target: https://pypi.org/project/formicidae-tracker-hermes/
 .. |License| image:: https://img.shields.io/github/license/formicidae-tracker/hermes.svg
    :target: https://github.com/formicidae-tracker/hermes/blob/master/LICENSE
+.. |DOI| image:: https://zenodo.org/badge/185418877.svg
+   :target: https://zenodo.org/doi/10.5281/zenodo.10019084
+
