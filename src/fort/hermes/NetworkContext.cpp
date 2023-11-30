@@ -16,35 +16,41 @@ void NetworkContext::Reset() {
 	d_sizeByteLength = 1;
 }
 
-NetworkContext::NetworkContext(const std::string & host, int port, bool nonblocking)
-	: d_socket(d_service)
-	, d_sizeReceived(false) {
+NetworkContext::NetworkContext(
+    const std::string &host, int port, bool nonblocking
+)
+    : d_socket(d_service)
+    , d_sizeReceived(false) {
 	Reset();
-	asio::ip::tcp::resolver resolver(d_service);
-	asio::ip::tcp::resolver::query query(host,std::to_string(port));
+	asio::ip::tcp::resolver        resolver(d_service);
+	asio::ip::tcp::resolver::query query(host, std::to_string(port));
 	try {
-		asio::connect(d_socket,resolver.resolve(query));
-	} catch ( const asio::system_error & e ) {
-		throw InternalError(e.what(),FH_COULD_NOT_CONNECT);
+		asio::connect(d_socket, resolver.resolve(query));
+	} catch (const asio::system_error &e) {
+		throw InternalError(e.what(), FH_COULD_NOT_CONNECT);
 	}
 
 	fort::hermes::Header h;
 	for (;;) {
 		try {
-			if ( ReadMessageUnsafe(h) == true ) {
+			if (ReadMessageUnsafe(h) == true) {
 				break;
 			}
-		} catch (const std::exception & e ) {
-			throw InternalError(std::string("could not get header: ") + e.what(),FH_STREAM_NO_HEADER);
+		} catch (const std::exception &e) {
+			throw InternalError(
+			    std::string("could not get header: ") + e.what(),
+			    FH_STREAM_NO_HEADER
+			);
 		}
 	}
 
 	CheckNetworkHeader(h);
 
-	if (nonblocking == true ) {
+	if (nonblocking == true) {
 		d_socket.non_blocking(true);
 	}
 }
+
 NetworkContext::~NetworkContext() {
 	d_socket.close();
 }

@@ -30,16 +30,20 @@ TEST_F(ErrorsUTest, InternalErrorFormatting) {
 }
 
 TEST_F(ErrorsUTest, UnexpectedEndOfSequenceFormatting) {
-	UnexpectedEndOfFileSequence e("something is wrong", "/in/the/sound");
+	UnexpectedEndOfFileSequence e(
+	    "something is wrong",
+	    {.Filename = "sound", .Directory = "the"}
+	);
 	EXPECT_THAT(
 	    e.what(),
 	    AllOf(
-	        StartsWith("Unexpected end of file sequence in '/in/the/sound': "
+	        StartsWith("unexpected end of file sequence in file \"the/sound\": "
 	                   "something is wrong"),
 	        HasSubstr("\nStack trace (most recent call first):")
 	    )
 	);
-	EXPECT_EQ(e.SegmentFilePath(), "/in/the/sound");
+	EXPECT_EQ(e.FileLineContext().Filename, "sound");
+	EXPECT_EQ(e.FileLineContext().Directory, "the");
 }
 
 TEST_F(ErrorsUTest, WouldBlockFormatting) {

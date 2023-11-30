@@ -11,7 +11,7 @@ namespace hermes {
  */
 class Context {
 public:
-	virtual ~Context(){};
+	virtual ~Context() = default;
 
 	/**
 	 * Reads a FrameReadout from the Context
@@ -21,12 +21,12 @@ public:
 	 * @throws EndOfFile if the Context does not contains any other
 	 *         data
 	 * @throws UnexpectedEndOfFileSequence if a sequence of files does
- 	 *         not end up gracefully
+	 *         not end up gracefully
 	 * @throws WouldBlock if a non-blocking connection has no messages
-  	 *         yet ready.
+	 *         yet ready.
 	 * @throws InternalError if any other error occured
 	 */
-	virtual void Read(fort::hermes::FrameReadout * ro) = 0;
+	virtual void Read(fort::hermes::FrameReadout *ro) = 0;
 };
 
 } // namespace hermes

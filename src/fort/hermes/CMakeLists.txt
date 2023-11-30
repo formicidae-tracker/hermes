@@ -4,6 +4,8 @@ set(CPP_SRC_FILES
 	FileContext.cpp #
 	CheckHeader.hpp #
 	CheckHeader.cpp
+	details/FileSequence.hpp
+	details/FileSequence.cpp
 )
 
 set(C_SRC_FILES hermes.cpp)
@@ -24,7 +26,7 @@ set(PROTO_FILES
 
 protobuf_generate_cpp(PROTO_SRC PROTO_HDR ${PROTO_FILES})
 
-include_directories(${PROJECT_BINARY_DIR}/src)
+include_directories(${PROJECT_BINARY_DIR}/src ${PROJECT_SOURCE_DIR}/src)
 
 add_library(
 	fort-hermes-cpp SHARED ${CPP_SRC_FILES} ${HDR_FILES} ${PROTO_SRC}

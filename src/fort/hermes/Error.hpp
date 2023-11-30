@@ -1,6 +1,9 @@
 #pragma once
 
+#include "Types.hpp"
 #include "hermes.h"
+
+#include <filesystem>
 
 #include <cpptrace/cpptrace.hpp>
 
@@ -46,24 +49,16 @@ public:
 class UnexpectedEndOfFileSequence : public cpptrace::runtime_error {
 public:
 	UnexpectedEndOfFileSequence(
-	    const std::string &what, const std::string &segmentFilePath
-	) noexcept
-		: cpptrace::runtime_error{
-	          "Unexpected end of file sequence in '" + segmentFilePath +
-	          "': " + what
-			}
-		, d_segmentFilePath{segmentFilePath} {}
+	    const std::string &reason, FileLineContext &&context
+	) noexcept;
 
 	/**
 	 * @returns the segment path where the error occured
 	 */
-	const std::string &SegmentFilePath() const {
-		return d_segmentFilePath;
-	}
+	const fort::hermes::FileLineContext &FileLineContext() const;
 
 private:
-	std::string d_segmentFilePath;
-	std::string d_what;
+	struct FileLineContext d_context;
 };
 
 /**

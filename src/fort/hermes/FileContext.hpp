@@ -13,6 +13,9 @@
 namespace fort {
 namespace hermes {
 
+namespace details {
+class FileSequence;
+}
 
 /**
  * A context that reads from a hermes file sequence
@@ -23,32 +26,39 @@ public:
 	 * Open the file sequence starting with filename.
 	 *
 	 * @param filename the first file of the sequence to open
-	 * @param followFiles if false, only filename will be read,
+	 * @param followFiles if false, only this filename will be read,
 	 *        otherwise the complete sequence until the last segment
 	 *        is read by this context.
 	 *
 	 * @throws InternalError if filename is not a valid hermes file sequence
 	 */
-	FileContext(const std::string & filename, bool followFiles = true);
+	FileContext(const std::string &filename, bool followFiles = true);
 
 	virtual ~FileContext();
 
-	void Read(fort::hermes::FrameReadout * ro);
+	FileContext(FileContext &&other);
+	FileContext &operator=(FileContext &&other);
 
+	void Read(fort::hermes::FrameReadout *ro);
 
 private:
-	typedef std::shared_ptr<google::protobuf::io::FileInputStream> FilePtr;
-	typedef std::shared_ptr<google::protobuf::io::GzipInputStream> GZipPtr;
-
-	void OpenFile(const std::string & filename);
+	using FilePtr = std::unique_ptr<google::protobuf::io::FileInputStream>;
+	using GZipPtr = std::unique_ptr<google::protobuf::io::GzipInputStream>;
+	using FileSequencePtr = std::unique_ptr<details::FileSequence>;
+	void OpenFile(const std::string &filename);
 
 	std::filesystem::path d_path;
 
-	FilePtr d_file;
-	GZipPtr d_gzip;
+	FileSequencePtr d_sequence;
+
+	FilePtr  d_file;
+	GZipPtr  d_gzip;
 	FileLine d_line;
-	size_t   d_width,d_height;
-	bool     d_followFiles;
+	size_t   d_lineIndex   = 0;
+	size_t   d_lastFrameID = 0;
+	size_t   d_width       = 0;
+	size_t   d_height      = 0;
+	bool     d_followFiles = false;
 };
 
 } // namespace hermes

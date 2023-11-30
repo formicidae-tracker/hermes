@@ -11,9 +11,16 @@ namespace hermes {
 
 class NetworkContextUTest : public ::testing::Test {};
 
-TEST_F(NetworkContextUTest,ConnectionFailure) {
-	EXPECT_THROW(NetworkContext("example.com.does-not-exists",12345,false),InternalError);
+TEST_F(NetworkContextUTest, ConnectionFailure) {
+	try {
+		NetworkContext("example.com.does-not-exists", 12345, false);
+	} catch (const InternalError &e) {
 
+		return;
+	} catch (const std::exception &e) {
+		FAIL() << "Unexpected exception: " << e.what();
+	}
+	FAIL() << "should throw an exception";
 }
 
 TEST_F(NetworkContextUTest,NormalOperation) {

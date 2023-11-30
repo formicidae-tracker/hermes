@@ -53,7 +53,7 @@ TEST_F(FileContextUTest, TruncatedReadingLosses) {
 	    UnexpectedEndOfFileSequence
 	);
 	size_t dual;
-	context = FileContext(infoDual.Segments.front());
+	context = std::move(FileContext(infoDual.Segments.front()));
 	EXPECT_THROW(
 	    {
 		    for (dual = 0; dual < infoDual.Readouts.size(); ++dual) {
@@ -67,7 +67,7 @@ TEST_F(FileContextUTest, TruncatedReadingLosses) {
 
 TEST_F(FileContextUTest, ReportsNoFooterFile) {
 	const auto  &info = UTestData::Instance().NoFooter();
-	FileContext  context(info.Segments.back());
+	FileContext  context{info.Segments.back()};
 	FrameReadout ro;
 	for (size_t i = 0; i < info.ReadoutsPerSegment; ++i) {
 		EXPECT_NO_THROW(context.Read(&ro));
@@ -78,7 +78,15 @@ TEST_F(FileContextUTest, ReportsNoFooterFile) {
 		) << "Should throw UnexpectedEndOfFileSequence but throw nothing with "
 		  << info.Segments.back();
 	} catch (const UnexpectedEndOfFileSequence &e) {
-		EXPECT_EQ(e.SegmentFilePath(), info.Segments.back());
+		EXPECT_EQ(
+		    e.FileLineContext().Filename,
+		    info.Segments.back().filename()
+		);
+		EXPECT_EQ(
+		    e.FileLineContext().Directory,
+		    info.Segments.back().parent_path().filename()
+		);
+
 	} catch (...) {
 		ADD_FAILURE(
 		) << "Should throw UnexpectedEndOfFileSequence, but throw another one";
