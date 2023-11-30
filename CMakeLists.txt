@@ -1,3 +1,22 @@
+# libfort-hermes - Tracking File I/O library.
+#
+# Copyright (C) 2018-2023 Universitée de Lausanne
+#
+# This file is part of libfort-hermes.
+#
+# libfort-hermes is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or (at your option) any
+# later version.
+#
+# libfort-hermes is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# libfort-hermes.  If not, see <http://www.gnu.org/licenses/>.
+
 cmake_policy(SET CMP0048 NEW)
 
 cmake_minimum_required(VERSION 3.11)
@@ -13,6 +32,7 @@ option(BUILD_PYTHON "Enables python building" Off)
 option(BUILD_DOCS "Enables building of documentation" Off)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED 1)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
@@ -24,8 +44,17 @@ find_package(Asio 1.12 REQUIRED)
 
 include(FetchContent)
 
-if(NOT FORT_HERMES_IMPORTED)
+set(CPPTRACE_BUILD_SHARED On)
+include(FetchContent)
+FetchContent_Declare(
+	cpptrace
+	GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
+	GIT_TAG v0.3.0
+)
+FetchContent_MakeAvailable(cpptrace)
 
+if(NOT FORT_HERMES_IMPORTED)
+	set(INSTALL_GTEST Off)
 	FetchContent_Declare(
 		googletest
 		GIT_REPOSITORY https://github.com/google/googletest.git

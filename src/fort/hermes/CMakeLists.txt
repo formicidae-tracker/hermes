@@ -35,7 +35,9 @@ set_target_properties(
 							   SOVERSION ${PROJECT_VERSION_ABI}
 )
 
-target_link_libraries(fort-hermes-cpp protobuf::libprotobuf Asio::libasio)
+target_link_libraries(
+	fort-hermes-cpp protobuf::libprotobuf Asio::libasio cpptrace::cpptrace
+)
 
 install(TARGETS fort-hermes-cpp DESTINATION lib)
 
@@ -66,7 +68,9 @@ set(UTEST_SRC_FILES
 )
 if(NOT FORT_HERMES_IMPORTED)
 	add_executable(fort-hermes-tests ${UTEST_HDR_FILES} ${UTEST_SRC_FILES})
-	target_link_libraries(fort-hermes-tests fort-hermes gtest)
+	target_link_libraries(
+		fort-hermes-tests fort-hermes GTest::gtest_main GTest::gmock_main
+	)
 
 	add_test(NAME fort-hermes-tests COMMAND fort-hermes-tests)
 	add_dependencies(check fort-hermes-tests)

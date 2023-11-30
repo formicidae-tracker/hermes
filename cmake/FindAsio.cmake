@@ -21,5 +21,5 @@ find_package_handle_standard_args(
 if(Asio_FOUND)
 	set(ASIO_INCLUDE_DIRS ${ASIO_INCLUDE_DIR})
 	add_library(Asio::libasio INTERFACE IMPORTED GLOBAL)
-	target_link_libraries(Asio::libasio INTERFACE ${ASIO_INCLUDE_DIR})
+	target_include_directories(Asio::libasio INTERFACE ${ASIO_INCLUDE_DIR})
 endif(Asio_FOUND)
