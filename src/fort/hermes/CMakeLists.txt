@@ -67,6 +67,7 @@ set(UTEST_SRC_FILES
 	StreamServerUTest.hpp
 	StreamServerUTest.cpp
 	CheckHeaderUTest.cpp
+	details/FileSequenceUTest.cpp
 )
 if(NOT FORT_HERMES_IMPORTED)
 	add_executable(fort-hermes-tests ${UTEST_HDR_FILES} ${UTEST_SRC_FILES})

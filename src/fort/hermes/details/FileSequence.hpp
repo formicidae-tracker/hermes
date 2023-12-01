@@ -19,6 +19,8 @@ struct SegmentInfo {
 
 class FileSequence {
 public:
+	const static std::string SegmentIndexFilename;
+
 	FileSequence(const std::filesystem::path &path);
 
 	const SegmentInfo &At(const std::filesystem::path &path) const;
@@ -38,6 +40,8 @@ public:
 	    size_t                       lineIndex,
 	    size_t                       previousFrame
 	);
+
+	const std::map<std::string, SegmentInfo> &Segments() const noexcept;
 
 private:
 	std::filesystem::path IndexFilePath() const;

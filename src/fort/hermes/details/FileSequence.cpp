@@ -2,6 +2,10 @@
 #include <fstream>
 #include <regex>
 
+#ifndef NDEBUG
+#include <iostream>
+#endif
+
 namespace fort {
 namespace hermes {
 namespace details {
@@ -10,6 +14,10 @@ FileSequence::FileSequence(const std::filesystem::path &path)
     : d_directory{std::filesystem::absolute(path.parent_path())} {
 	static std::regex tddFileRx{"tracking.[0-9]{4}.hermes"};
 	if (!std::regex_search(path.filename().string(), tddFileRx)) {
+#ifndef NDEBUG
+		std::cerr << "libfort-hermes [INFO]: using empty index as " << path
+		          << " does not match regex" << std::endl;
+#endif
 		return;
 	}
 
@@ -17,11 +25,20 @@ FileSequence::FileSequence(const std::filesystem::path &path)
 		BuildFromIndexFile();
 		return;
 	} catch (const std::exception &e) {
+#ifndef NDEBUG
+		std::cerr
+		    << "libfort-hermes [ERROR]: could not build file sequence for "
+		    << path << " from index file: " << e.what() << std::endl;
+#endif
 	}
 
 	try {
 		ListFromDirectory();
 	} catch (const std::exception &e) {
+#ifndef NDEBUG
+		std::cerr << "libfort-hermes [INFO]: could not build file sequence for "
+		          << path << " from list of files: " << e.what() << std::endl;
+#endif
 	}
 }
 
@@ -34,6 +51,7 @@ void FileSequence::UpdateSegment(
     size_t                       currentLineIndex,
     size_t                       currentFrameNumber
 ) {
+
 	if (std::filesystem::absolute(path.parent_path()) != d_directory) {
 		return;
 	}
@@ -89,7 +107,11 @@ void FileSequence::Persist() {
 				     << std::endl;
 			}
 		}
-	} catch (const std::exception &) {
+	} catch (const std::exception &e) {
+#ifndef NDEBUG
+		std::cerr << "libfort-hermes [WARN]: could not persist index file in "
+		          << d_directory << ": " << e.what() << std::endl;
+#endif
 		return;
 	}
 	d_needUpdate = false;
@@ -121,41 +143,75 @@ FileLineContext FileSequence::FileLineContext(
 	}
 }
 
+const std::string FileSequence::SegmentIndexFilename{".segment-index.hermes"};
+
 std::filesystem::path FileSequence::IndexFilePath() const {
-	return d_directory / ".segments-index.hermes";
+	return d_directory / SegmentIndexFilename;
 }
 
 void FileSequence::BuildFromIndexFile() {
 	std::ifstream indexFile(IndexFilePath());
 
+	if (!indexFile) {
+		throw std::runtime_error{
+		    "\"" + IndexFilePath().string() + "\" does not exist"};
+	}
+
 	std::string line;
+	size_t      index{0};
 	while (std::getline(indexFile, line)) {
 		if (line[0] == '#') {
 			continue;
 		}
 		SegmentInfo infos;
 
-		infos.Name.resize(line.size());
+		auto delim = line.find("\",");
+		if (delim == std::string::npos) {
+			throw std::runtime_error{"could not find '\",' in " + line};
+		}
+		infos.Name = line.substr(1, delim - 1);
+		line       = line.substr(delim + 2);
 
-		sscanf(
-		    line.c_str(),
-		    "\"%s\",%lu,%lu,%lu",
-		    infos.Name.data(),
-		    &infos.LineCount,
-		    &infos.Start,
-		    &infos.End
-		);
+		delim = line.find(",");
+		if (delim == std::string::npos) {
+			throw std::runtime_error{"could not find ',' in " + line};
+		}
 
-		infos.Name.resize(strlen(infos.Name.data()));
+		infos.LineCount = (size_t)std::stol(line.substr(0, delim));
+		line            = line.substr(delim + 1);
 
+		delim = line.find(",");
+		if (delim == std::string::npos) {
+			throw std::runtime_error{"could not find ',' in " + line};
+		}
+		infos.Start = (size_t)std::stol(line.substr(0, delim));
+		infos.End   = (size_t)std::stol(line.substr(delim + 1));
+		infos.Index = index++;
 		d_segments[std::filesystem::absolute(d_directory / infos.Name)] = infos;
 	}
 }
 
 void FileSequence::ListFromDirectory() {
-	static std::regex trackingFile{R"-(tracking\.\([0-9]{4}\)\.hermes)-"};
+	static std::regex trackingFile{R"-(tracking\.([0-9]{4})\.hermes)-"};
 	for (const auto &entry : std::filesystem::directory_iterator{d_directory}) {
+		std::string filename = entry.path().filename();
+		std::smatch match;
+		if (!std::regex_match(filename, match, trackingFile)) {
+			continue;
+		}
+		d_segments[std::filesystem::absolute(entry.path())] = {
+		    .Name      = filename,
+		    .Index     = (size_t)std::stol(match[1]),
+		    .LineCount = 0,
+		    .Start     = 0,
+		    .End       = 0,
+		};
 	}
+} // namespace details
+
+const std::map<std::string, SegmentInfo> &
+FileSequence::Segments() const noexcept {
+	return d_segments;
 }
 
 } // namespace details

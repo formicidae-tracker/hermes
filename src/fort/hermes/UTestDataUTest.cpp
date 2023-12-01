@@ -231,19 +231,19 @@ size_t WriteSegment(UTestData::SequenceInfo & info,
 
 }
 
-UTestData::SequenceInfo WriteSequenceInfo(const SequenceInfoWriteArgs & args) {
+UTestData::SequenceInfo WriteSequenceInfo(const SequenceInfoWriteArgs &args) {
 	UTestData::SequenceInfo res;
 	std::filesystem::create_directories(args.Basepath);
 
 	size_t frameID = args.Readout.frameid();
-	for ( size_t i = 0; i < args.NumberOfSegments; ++i) {
-		frameID = WriteSegment(res,args,i,frameID);
+	for (size_t i = 0; i < args.NumberOfSegments; ++i) {
+		frameID = WriteSegment(res, args, i, frameID);
 	}
 	res.ReadoutsPerSegment = args.ReadoutsPerSegment;
 	return res;
 }
 
-void UTestData::WriteSequenceInfos(const std::filesystem::path & basepath) {
+void UTestData::WriteSequenceInfos(const std::filesystem::path &basepath) {
 
 	FrameReadout ro;
 	ro.set_width(1000);
@@ -253,66 +253,68 @@ void UTestData::WriteSequenceInfos(const std::filesystem::path & basepath) {
 	t->set_id(123);
 	t->set_x(500);
 	t->set_y(500);
-	t->set_theta(3.14159265/4);
+	t->set_theta(3.14159265 / 4);
 
+	d_normal = WriteSequenceInfo({
+	    .Basepath           = basepath,
+	    .Basename           = "tracking",
+	    .Readout            = ro,
+	    .NumberOfSegments   = 3,
+	    .ReadoutsPerSegment = 10,
+	    .MissFooter         = false,
+	    .Dual               = false,
+	    .Truncated          = false,
+	    .NoHeader           = false,
+	});
 
-	d_normal= WriteSequenceInfo({.Basepath = basepath,
-	                             .Basename = "normal",
-	                             .Readout = ro,
-	                             .NumberOfSegments = 3,
-	                             .ReadoutsPerSegment = 10,
-	                             .MissFooter = false,
-	                             .Dual = false,
-	                             .Truncated = false,
-	                             .NoHeader = false,
-		});
+	d_noFooter = WriteSequenceInfo({
+	    .Basepath           = basepath,
+	    .Basename           = "no-footer",
+	    .Readout            = ro,
+	    .NumberOfSegments   = 3,
+	    .ReadoutsPerSegment = 10,
+	    .MissFooter         = true,
+	    .Dual               = false,
+	    .Truncated          = false,
+	    .NoHeader           = false,
+	});
 
-	d_noFooter= WriteSequenceInfo({.Basepath = basepath,
-	                               .Basename = "no-footer",
-	                               .Readout = ro,
-	                               .NumberOfSegments = 3,
-	                               .ReadoutsPerSegment = 10,
-	                               .MissFooter = true,
-	                               .Dual = false,
-	                               .Truncated = false,
-	                               .NoHeader = false,
-		});
+	d_truncated = WriteSequenceInfo({
+	    .Basepath           = basepath,
+	    .Basename           = "truncated-classic",
+	    .Readout            = ro,
+	    .NumberOfSegments   = 3,
+	    .ReadoutsPerSegment = 10,
+	    .MissFooter         = false,
+	    .Dual               = false,
+	    .Truncated          = true,
+	    .NoHeader           = false,
+	});
 
-	d_truncated= WriteSequenceInfo({.Basepath = basepath,
-	                                .Basename = "truncated-classic",
-	                                .Readout = ro,
-	                                .NumberOfSegments = 3,
-	                                .ReadoutsPerSegment = 10,
-	                                .MissFooter = false,
-	                                .Dual = false,
-	                                .Truncated = true,
-	                                .NoHeader = false,
-		});
+	d_truncatedDual = WriteSequenceInfo({
+	    .Basepath           = basepath,
+	    .Basename           = "truncated-dual",
+	    .Readout            = ro,
+	    .NumberOfSegments   = 3,
+	    .ReadoutsPerSegment = 10,
+	    .MissFooter         = false,
+	    .Dual               = true,
+	    .Truncated          = true,
+	    .NoHeader           = false,
+	});
 
-	d_truncatedDual = WriteSequenceInfo({.Basepath = basepath,
-	                                     .Basename = "truncated-dual",
-	                                     .Readout = ro,
-	                                     .NumberOfSegments = 3,
-	                                     .ReadoutsPerSegment = 10,
-	                                     .MissFooter = false,
-	                                     .Dual = true,
-	                                     .Truncated = true,
-	                                     .NoHeader = false,
-		});
-
-	d_noHeader = WriteSequenceInfo({.Basepath = basepath,
-	                                .Basename = "no-header",
-	                                .Readout = ro,
-	                                .NumberOfSegments = 1,
-	                                .ReadoutsPerSegment = 2,
-	                                .MissFooter = false,
-	                                .Dual = false,
-	                                .Truncated = false,
-	                                .NoHeader = true,
-		});
-
+	d_noHeader = WriteSequenceInfo({
+	    .Basepath           = basepath,
+	    .Basename           = "no-header",
+	    .Readout            = ro,
+	    .NumberOfSegments   = 1,
+	    .ReadoutsPerSegment = 2,
+	    .MissFooter         = false,
+	    .Dual               = false,
+	    .Truncated          = false,
+	    .NoHeader           = true,
+	});
 }
-
 
 } // namespace hermes
 } // namespace fort

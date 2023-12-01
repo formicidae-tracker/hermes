@@ -138,12 +138,12 @@ void FileContext::Read(fort::hermes::FrameReadout *ro) {
 			);
 		}
 	}
-
 	++d_lineIndex;
 
 	if (ro->has_time()) {
 		ro->set_width(d_width);
 		ro->set_height(d_height);
+		d_sequence->UpdateSegment(d_path, d_lineIndex - 1, ro->frameid());
 		d_lastFrameID = ro->frameid();
 	} else if (d_line.has_footer() == false) {
 		throw UnexpectedEndOfFileSequence(
@@ -155,6 +155,8 @@ void FileContext::Read(fort::hermes::FrameReadout *ro) {
 	if (d_line.has_footer() == false) {
 		return;
 	}
+
+	d_sequence->Persist();
 
 	if (d_line.footer().next().length() == 0 || d_followFiles == false) {
 		d_gzip.reset();
