@@ -26,8 +26,10 @@ BuildWhat(const std::string &reason, const FileLineContext &context) noexcept {
 		oss << " ( " << context.SegmentIndex << "/" << context.SegmentCount
 		    << ")";
 	}
-	if (context.LineCount > 0 || context.LineIndex > 0) {
+	if (context.LineIndex < context.LineCount) {
 		oss << " at line " << context.LineIndex << "/" << context.LineCount;
+	} else {
+		oss << " at line " << context.LineIndex;
 	}
 	oss << ": " << reason;
 	return oss.str();

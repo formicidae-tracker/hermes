@@ -32,13 +32,18 @@ TEST_F(ErrorsUTest, InternalErrorFormatting) {
 TEST_F(ErrorsUTest, UnexpectedEndOfSequenceFormatting) {
 	UnexpectedEndOfFileSequence e(
 	    "something is wrong",
-	    {.Filename = "sound", .Directory = "the"}
+	    {
+	        .Filename  = "sound",
+	        .Directory = "the",
+	        .LineIndex = 2,
+	        .LineCount = 2,
+	    }
 	);
 	EXPECT_THAT(
 	    e.what(),
 	    AllOf(
-	        StartsWith("unexpected end of file sequence in file \"the/sound\": "
-	                   "something is wrong"),
+	        StartsWith("unexpected end of file sequence in file \"the/sound\" "
+	                   "at line 2: something is wrong"),
 	        HasSubstr("\nStack trace (most recent call first):")
 	    )
 	);
