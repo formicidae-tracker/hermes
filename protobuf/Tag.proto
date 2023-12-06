@@ -1,3 +1,22 @@
+// libfort-hermes - Tracking File I/O library.
+//
+// Copyright (C) 2018-2023  Universitée de Lausanne
+//
+// This file is part of libfort-hermes.
+//
+// libfort-hermes is free software: you can redistribute it and/or modify it
+// under the terms of the GNU General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option) any
+// later version.
+//
+// libfort-hermes is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+// details.
+//
+// You should have received a copy of the GNU General Public License along with
+// libfort-hermes.  If not, see <http://www.gnu.org/licenses/>.
+
 syntax = "proto3";
 
 option optimize_for = LITE_RUNTIME;
@@ -6,8 +25,8 @@ option go_package = "github.com/formicidae-tracker/hermes";
 package fort.hermes;
 
 message Tag {
-	uint32 ID    = 1;
-	double x     = 2;
-	double y     = 3;
+	uint32 ID = 1;
+	double x = 2;
+	double y = 3;
 	double theta = 4;
 };

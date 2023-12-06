@@ -1,46 +1,62 @@
+// libfort-hermes - Tracking File I/O library.
+//
+// Copyright (C) 2018-2023  Universitée de Lausanne
+//
+// This file is part of libfort-hermes.
+//
+// libfort-hermes is free software: you can redistribute it and/or modify it
+// under the terms of the GNU General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option) any
+// later version.
+//
+// libfort-hermes is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+// details.
+//
+// You should have received a copy of the GNU General Public License along with
+// libfort-hermes.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <stdint.h>
-#include <stddef.h>
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 #include <sys/time.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif //__cplusplus
 
-
 // Errors that are returned by any <fh_frame_readout_t>
 typedef enum fh_readout_error {
 	// Success
-	NO_ERROR = 0,
+	NO_ERROR           = 0,
 	// A low-level tracking process overflow occured.
-	PROCESS_OVERFLOW = 1,
+	PROCESS_OVERFLOW   = 1,
 	// One of the distributed tracking process did not finished this
 	// frame in time.
-	PROCESS_TIMEOUT = 2,
+	PROCESS_TIMEOUT    = 2,
 	// issue with the illumination system prevented the tag tracking.
 	ILLUMINATION_ERROR = 3,
 } fh_readout_error_e;
 
-
 // Error types that are returned by libfort-hermes functions.
 typedef enum fh_error_code {
 	// Success
-	FH_NO_ERROR = 0,
+	FH_NO_ERROR                        = 0,
 	// The selected traking stream did not gave any header.
-	FH_STREAM_NO_HEADER = 10001,
+	FH_STREAM_NO_HEADER                = 10001,
 	// The stream is in an incompatible version
-	FH_STREAM_WRONG_VERSION = 10002,
+	FH_STREAM_WRONG_VERSION            = 10002,
 	// The end of the stream has been reached
-	FH_END_OF_STREAM = 10003,
+	FH_END_OF_STREAM                   = 10003,
 	// The next message in the stream could not be decoded.
-	FH_MESSAGE_DECODE_ERROR = 10004,
+	FH_MESSAGE_DECODE_ERROR            = 10004,
 	// Could not connect to the network stream
-	FH_COULD_NOT_CONNECT = 10005,
+	FH_COULD_NOT_CONNECT               = 10005,
 	// Network error
-	FH_SOCKET_ERROR = 10006,
+	FH_SOCKET_ERROR                    = 10006,
 	// Unexpected End of File Sequence
 	FH_UNEXPECTED_END_OF_FILE_SEQUENCE = 10007,
 } fh_error_code_e;
@@ -60,7 +76,7 @@ typedef enum fh_error_code {
  */
 typedef struct fh_error {
 	// Textual description of the error.
-	char * what;
+	char	       *what;
 	// Type of the error
 	fh_error_code_e code;
 } fh_error_t;
@@ -68,10 +84,10 @@ typedef struct fh_error {
 // Creates a new fh_error_t structure for reporting
 //
 // @return a newly allocated <fh_error_t>
-fh_error_t * fh_error_create();
+fh_error_t *fh_error_create();
 // Frees an fh_error_t
 // @err the <fh_error_t> to free.
-void fh_error_destroy(fh_error_t * err);
+void        fh_error_destroy(fh_error_t *err);
 
 /* Represents a tag frame readout.
  *
@@ -95,12 +111,12 @@ typedef void fh_frame_readout_t;
  */
 typedef void fh_tag_t;
 
-
-/* Creates a new <fh_frame_readout_t> to be used with <fh_context_t::fh_context_read>.
+/* Creates a new <fh_frame_readout_t> to be used with
+ * <fh_context_t::fh_context_read>.
  *
  * @return a newly allocated <fh_frame_readout_t>
  */
-fh_frame_readout_t * fh_frame_readout_create();
+fh_frame_readout_t *fh_frame_readout_create();
 // Frame timetamp.
 // @re the <fh_frame_readout_t>
 //
@@ -110,23 +126,23 @@ fh_frame_readout_t * fh_frame_readout_create();
 // date that could be used to find a frame in time.
 //
 // @return the frame timestamp in microsecond.
-uint64_t fh_frame_readout_timestamp(fh_frame_readout_t * re);
+uint64_t            fh_frame_readout_timestamp(fh_frame_readout_t *re);
 // Frame UID
 // @re the <fh_frame_readout_t>
 //
 // @return the unique frame ID thte readout refers to.
-uint64_t fh_frame_readout_frame_id(fh_frame_readout_t * re);
+uint64_t            fh_frame_readout_frame_id(fh_frame_readout_t *re);
 // Numbers of tags detected in the frame.
 // @re the <fh_frame_readout_t>
 //
 // @return the number of tag detected in the frame
-size_t fh_frame_readout_tag_size(fh_frame_readout_t * re);
+size_t              fh_frame_readout_tag_size(fh_frame_readout_t *re);
 // A <fh_tag_t> accessor.
 // @re the <fh_frame_readout_t>
 // @i the index of the tag that should be < to <fh_frame_readout_tag_size>.
 //
 // @return a <fh_tag_t> at the given index
-fh_tag_t * fh_frame_readout_tag(fh_frame_readout_t * re, size_t i);
+fh_tag_t           *fh_frame_readout_tag(fh_frame_readout_t *re, size_t i);
 // Original frame emission date.
 // @re the <fh_frame_readout_t>
 //
@@ -139,42 +155,41 @@ fh_tag_t * fh_frame_readout_tag(fh_frame_readout_t * re, size_t i);
 //
 // @return a struct timeval at which the frame was originally received
 // by the node who processed the tracking.
-void fh_frame_readout_time(fh_frame_readout_t * re,struct timeval * res);
+void fh_frame_readout_time(fh_frame_readout_t *re, struct timeval *res);
 // Tracking processing errors
 // @re the <fh_frame_readout_t>
 //
 // @return a <fh_readout_error_e> representing the tracking process error.
-fh_readout_error_e fh_frame_readout_error(fh_frame_readout_t * re);
+fh_readout_error_e fh_frame_readout_error(fh_frame_readout_t *re);
 // Frame width
 // @re the <fh_frame_readout_t>
 //
 // @return the original frame width
-int32_t fh_frame_readout_width(fh_frame_readout_t * re);
+int32_t            fh_frame_readout_width(fh_frame_readout_t *re);
 // Frame height
 // @re the <fh_frame_readout_t>
 //
 // @return the original frame height
-int32_t fh_frame_readout_height(fh_frame_readout_t * re);
+int32_t            fh_frame_readout_height(fh_frame_readout_t *re);
 // Frees all resources associated with a <fh_frame_readout_t>
 // @re the <fh_frame_readout_t> to free
-void fh_frame_readout_destroy(fh_frame_readout_t * re);
-
+void               fh_frame_readout_destroy(fh_frame_readout_t *re);
 
 // ID of the detected tag.
 // @ a the <fh_tag_t>
 //
 // @return the Unique tag ID.
-uint32_t fh_tag_id(fh_tag_t * a);
+uint32_t fh_tag_id(fh_tag_t *a);
 // X position in image space.
 // @ a the <fh_tag_t>
 //
 // @return the x position in image space.
-double fh_tag_x(fh_tag_t * a);
+double   fh_tag_x(fh_tag_t *a);
 // Y position in image space.
 // @ a the <fh_tag_t>
 //
 // @return the y position in image space.
-double fh_tag_y(fh_tag_t * a);
+double   fh_tag_y(fh_tag_t *a);
 // Orientation in image space.
 // @ a the <fh_tag_t>
 //
@@ -183,8 +198,7 @@ double fh_tag_y(fh_tag_t * a);
 // defined positive when going from the X to Y axis.
 //
 // @return the orientation of the tag.
-double fh_tag_theta(fh_tag_t * a);
-
+double   fh_tag_theta(fh_tag_t *a);
 
 /* A context is used to read <fh_frame_readout_t>
  *
@@ -201,7 +215,7 @@ typedef void fh_context_t;
  * @return A new opened <fh_context_t> upon success, otherwise NULL
  *         and an appropriate error in <err>.
  */
-fh_context_t * fh_open_file(const char * filename, fh_error_t * err);
+fh_context_t *fh_open_file(const char *filename, fh_error_t *err);
 
 /* Connects to a remote for live tracking data processing.
  * @host the host to connect to
@@ -217,13 +231,13 @@ fh_context_t * fh_open_file(const char * filename, fh_error_t * err);
  * @return A new opened <fh_context_t> upon success, otherwise NULL
  * with an appropriate error in <err>.
  */
-fh_context_t * fh_connect(const char * host,int port , bool nonblocking, fh_error_t * err);
-
+fh_context_t *
+fh_connect(const char *host, int port, bool nonblocking, fh_error_t *err);
 
 /* Frees any ressources associated with an opened context.
  * @ctx the <fh_context_t> to free
  */
-void fh_context_destroy(fh_context_t * ctx);
+void fh_context_destroy(fh_context_t *ctx);
 
 /* Reads a new fh_frame_readout_t from a fh_context_t.
  * @ctx the fh_context_t to read from
@@ -240,8 +254,10 @@ void fh_context_destroy(fh_context_t * ctx);
  * @return true if a new fh_frame_readout_t has been successfully read.
  *
  */
-bool fh_context_read(fh_context_t * ctx,fh_frame_readout_t * ro, fh_error_t * err);
+bool fh_context_read(
+    fh_context_t *ctx, fh_frame_readout_t *ro, fh_error_t *err
+);
 
 #ifdef __cplusplus
-}  // extern "C"
+} // extern "C"
 #endif //__cplusplus
