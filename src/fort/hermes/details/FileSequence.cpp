@@ -1,5 +1,6 @@
 #include "FileSequence.hpp"
 #include <fstream>
+#include <optional>
 #include <regex>
 
 #ifndef NDEBUG
@@ -23,6 +24,7 @@ FileSequence::FileSequence(const std::filesystem::path &path)
 
 	try {
 		BuildFromIndexFile();
+		RebuildIndex();
 		return;
 	} catch (const std::exception &e) {
 #ifndef NDEBUG
@@ -40,6 +42,8 @@ FileSequence::FileSequence(const std::filesystem::path &path)
 		          << path << " from list of files: " << e.what() << std::endl;
 #endif
 	}
+
+	RebuildIndex();
 }
 
 const SegmentInfo &FileSequence::At(const std::filesystem::path &path) const {
@@ -64,12 +68,9 @@ void FileSequence::UpdateSegment(
 		    .LineCount = 0,
 		    .Start     = 0,
 		    .End       = 0,
+		    .Next      = std::nullopt,
 		};
-
-		size_t index = 0;
-		for (auto &[p, infos] : d_segments) {
-			infos.Index = index++;
-		}
+		RebuildIndex();
 	}
 
 	auto &infos = d_segments.at(absPath);
@@ -85,7 +86,7 @@ void FileSequence::UpdateSegment(
 		infos.End    = currentFrameNumber + 1;
 		d_needUpdate = true;
 	}
-}
+} // namespace details
 
 const std::filesystem::path &FileSequence::Directory() const {
 	return d_directory;
@@ -126,16 +127,19 @@ FileLineContext FileSequence::FileLineContext(
 		return fort::hermes::FileLineContext{
 		    .Filename        = path.filename(),
 		    .Directory       = d_directory.filename(),
+		    .Next            = infos.Next,
 		    .PreviousFrameID = previousFrame,
 		    .SegmentIndex    = infos.Index,
 		    .SegmentCount    = d_segments.size(),
 		    .LineIndex       = lineIndex,
 		    .LineCount       = infos.LineCount,
+
 		};
 	} catch (const std::exception &) {
 		return fort::hermes::FileLineContext{
 		    .Filename        = path.filename(),
 		    .Directory       = d_directory.filename(),
+		    .Next            = std::nullopt,
 		    .PreviousFrameID = previousFrame,
 		    .SegmentCount    = d_segments.size(),
 		    .LineIndex       = lineIndex,
@@ -158,7 +162,6 @@ void FileSequence::BuildFromIndexFile() {
 	}
 
 	std::string line;
-	size_t      index{0};
 	while (std::getline(indexFile, line)) {
 		if (line[0] == '#') {
 			continue;
@@ -186,7 +189,6 @@ void FileSequence::BuildFromIndexFile() {
 		}
 		infos.Start = (size_t)std::stol(line.substr(0, delim));
 		infos.End   = (size_t)std::stol(line.substr(delim + 1));
-		infos.Index = index++;
 		d_segments[std::filesystem::absolute(d_directory / infos.Name)] = infos;
 	}
 }
@@ -201,7 +203,6 @@ void FileSequence::ListFromDirectory() {
 		}
 		d_segments[std::filesystem::absolute(entry.path())] = {
 		    .Name      = filename,
-		    .Index     = (size_t)std::stol(match[1]),
 		    .LineCount = 0,
 		    .Start     = 0,
 		    .End       = 0,
@@ -212,6 +213,21 @@ void FileSequence::ListFromDirectory() {
 const std::map<std::string, SegmentInfo> &
 FileSequence::Segments() const noexcept {
 	return d_segments;
+}
+
+void FileSequence::RebuildIndex() {
+	size_t index{0};
+
+	for (auto iter = d_segments.begin(); iter != d_segments.end(); ++iter) {
+		iter->second.Index = index++;
+		auto next          = iter;
+		++next;
+		if (next == d_segments.end()) {
+			iter->second.Next = std::nullopt;
+		} else {
+			iter->second.Next = next->first;
+		}
+	}
 }
 
 } // namespace details

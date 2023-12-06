@@ -77,6 +77,31 @@ TEST_F(FileSequenceUTest, RebuildIndexWhenFullyRead) {
 	};
 }
 
+TEST_F(FileSequenceUTest, IndicatesNextFile) {
+	const auto &normalSequence = UTestData::Instance().NormalSequence();
+
+	FileSequence infos{normalSequence.Segments.front()};
+
+	ASSERT_EQ(infos.Segments().size(), normalSequence.Segments.size());
+	size_t i = 0;
+	for (const auto &s : normalSequence.Segments) {
+		SCOPED_TRACE(s.string());
+		ASSERT_EQ(infos.Segments().count(s), 1);
+		EXPECT_EQ(infos.Segments().at(s).Name, s.filename());
+		EXPECT_EQ(infos.Segments().at(s).Index, i++);
+		if (i < normalSequence.Segments.size()) {
+			EXPECT_NO_THROW({
+				EXPECT_EQ(
+				    infos.Segments().at(s).Next.value(),
+				    normalSequence.Segments[i]
+				);
+			});
+		} else {
+			EXPECT_FALSE(infos.Segments().at(s).Next.has_value());
+		}
+	}
+}
+
 } // namespace details
 } // namespace hermes
 } // namespace fort

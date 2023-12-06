@@ -4,6 +4,7 @@
 #include <map>
 
 #include <fort/hermes/Types.hpp>
+#include <optional>
 
 namespace fort {
 namespace hermes {
@@ -15,6 +16,8 @@ struct SegmentInfo {
 	size_t      LineCount;
 	size_t      Start;
 	size_t      End;
+
+	std::optional<std::filesystem::path> Next;
 };
 
 class FileSequence {
@@ -47,6 +50,7 @@ private:
 	std::filesystem::path IndexFilePath() const;
 	void                  BuildFromIndexFile();
 
+	void RebuildIndex();
 	void ListFromDirectory();
 
 	std::map<std::string, SegmentInfo> d_segments;

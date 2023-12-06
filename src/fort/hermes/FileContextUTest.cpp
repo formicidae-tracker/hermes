@@ -43,25 +43,45 @@ TEST_F(FileContextUTest, TruncatedReadingLosses) {
 	const auto  &infoDual = UTestData::Instance().TruncatedDualStreamSequence();
 	FileContext  context(info.Segments.front());
 	FrameReadout ro;
-	size_t       classic;
-	EXPECT_THROW(
-	    {
-		    for (classic = 0; classic < info.Readouts.size(); ++classic) {
-			    context.Read(&ro);
-		    }
-	    },
-	    UnexpectedEndOfFileSequence
-	);
-	size_t dual;
-	context = std::move(FileContext(infoDual.Segments.front()));
-	EXPECT_THROW(
-	    {
-		    for (dual = 0; dual < infoDual.Readouts.size(); ++dual) {
-			    context.Read(&ro);
-		    }
-	    },
-	    UnexpectedEndOfFileSequence
-	);
+
+	auto checkExceptionThrown = [](const auto &info) {
+		FileContext  context(info.Segments.front());
+		FrameReadout ro;
+		size_t       size;
+		try {
+			for (size = 0; size < info.Readouts.size(); ++size) {
+				context.Read(&ro);
+			}
+		} catch (UnexpectedEndOfFileSequence e) {
+			return std::make_tuple(size, e);
+		} catch (const std::exception &e) {
+			throw std::runtime_error{
+			    std::string("it throw another: ") + e.what()};
+		}
+		throw std::runtime_error{"it throw nothing"};
+	};
+
+	size_t classic, dual;
+	try {
+		const auto &[classic_, e] = checkExceptionThrown(info);
+
+		classic = classic_;
+
+		EXPECT_EQ(e.FileLineContext().Next, info.Segments[2]);
+	} catch (const std::exception &e) {
+		ADD_FAILURE() << e.what();
+	}
+
+	try {
+		const auto &[dual_, e] = checkExceptionThrown(infoDual);
+
+		dual = dual_;
+
+		EXPECT_FALSE(e.FileLineContext().Next.has_value());
+	} catch (const std::exception &e) {
+		ADD_FAILURE() << e.what();
+	}
+
 	EXPECT_GT(dual, classic);
 }
 
@@ -74,9 +94,9 @@ TEST_F(FileContextUTest, ReportsNoFooterFile) {
 	}
 	try {
 		context.Read(&ro);
-		ADD_FAILURE(
-		) << "Should throw UnexpectedEndOfFileSequence but throw nothing with "
-		  << info.Segments.back();
+		ADD_FAILURE() << "Should throw UnexpectedEndOfFileSequence but "
+		                 "throw nothing with "
+		              << info.Segments.back();
 	} catch (const UnexpectedEndOfFileSequence &e) {
 		EXPECT_EQ(
 		    e.FileLineContext().Filename,
@@ -86,10 +106,10 @@ TEST_F(FileContextUTest, ReportsNoFooterFile) {
 		    e.FileLineContext().Directory,
 		    info.Segments.back().parent_path().filename()
 		);
-
+		EXPECT_FALSE(e.FileLineContext().Next.has_value());
 	} catch (...) {
-		ADD_FAILURE(
-		) << "Should throw UnexpectedEndOfFileSequence, but throw another one";
+		ADD_FAILURE() << "Should throw UnexpectedEndOfFileSequence, but "
+		                 "throw another one";
 	}
 }
 
