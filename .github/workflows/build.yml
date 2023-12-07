@@ -18,7 +18,9 @@ jobs:
         - name: Install dependencies
           run: sudo apt install build-essential git cmake libasio-dev libboost-dev libprotobuf-dev protobuf-compiler lcov doxygen ccache
         - name: Installs sphinx
-          run: pip install sphinx_rtd_theme==0.5.2 breathe
+          run: |
+            python -m pip install --upgrade pip
+            pip install sphinx_rtd_theme==0.5.2 breathe
         - name: Uses ccache
           uses: hendrikmuhs/ccache-action@v1
         - name: Configure
