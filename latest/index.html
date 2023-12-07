@@ -34,7 +34,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
         <script src="_static/../version_dropdown.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -172,8 +174,8 @@
            <div itemprop="articleBody">
             
   <p align="center"><img src="https://github.com/formicidae-tracker/hermes/raw/master/resources/icons/fort-hermes.svg" width="200px" alt="fort-hermes logo"></p><div class="section" id="fort-hermes-tracking-data-exchange-format-for-the-formicidae-tracker">
-<h1><code class="docutils literal notranslate"><span class="pre">fort-hermes</span></code> — Tracking Data exchange format for the FORMicidae Tracker<a class="headerlink" href="#fort-hermes-tracking-data-exchange-format-for-the-formicidae-tracker" title="Permalink to this headline">¶</a></h1>
-<p><a class="reference external" href="https://github.com/formicidae-tracker/hermes/actions/workflows/build.yml"><img alt="Build Status" src="https://github.com/formicidae-tracker/hermes/actions/workflows/build.yml/badge.svg" /></a> <a class="reference external" href="https://codecov.io/gh/formicidae-tracker/hermes"><img alt="coverage Status" src="https://codecov.io/gh/formicidae-tracker/hermes/branch/master/graph/badge.svg" /></a> <a class="reference external" href="https://formicidae-tracker.github.io/hermes/latest"><img alt="Stable Documentation Status" src="https://github.com/formicidae-tracker/hermes/actions/workflows/docs.yml/badge.svg" /></a> <a class="reference external" href="https://pypi.org/project/formicidae-tracker-hermes/"><img alt="PyPI package" src="https://img.shields.io/pypi/v/formicidae-tracker-hermes.svg" /></a> <a class="reference external" href="https://github.com/formicidae-tracker/hermes/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/formicidae-tracker/hermes.svg" /></a></p>
+<h1><code class="docutils literal notranslate"><span class="pre">fort-hermes</span></code> — Tracking Data exchange format for the FORMicidae Tracker<a class="headerlink" href="#fort-hermes-tracking-data-exchange-format-for-the-formicidae-tracker" title="Permalink to this heading">¶</a></h1>
+<p><a class="reference external" href="https://github.com/formicidae-tracker/hermes/actions/workflows/build.yml"><img alt="Build Status" src="https://github.com/formicidae-tracker/hermes/actions/workflows/build.yml/badge.svg" /></a> <a class="reference external" href="https://codecov.io/gh/formicidae-tracker/hermes"><img alt="coverage Status" src="https://codecov.io/gh/formicidae-tracker/hermes/branch/master/graph/badge.svg" /></a> <a class="reference external" href="https://formicidae-tracker.github.io/hermes/latest"><img alt="Stable Documentation Status" src="https://github.com/formicidae-tracker/hermes/actions/workflows/docs.yml/badge.svg" /></a> <a class="reference external" href="https://pypi.org/project/formicidae-tracker-hermes/"><img alt="PyPI package" src="https://img.shields.io/pypi/v/formicidae-tracker-hermes.svg" /></a> <a class="reference external" href="https://github.com/formicidae-tracker/hermes/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/formicidae-tracker/hermes.svg" /></a> <a class="reference external" href="https://zenodo.org/doi/10.5281/zenodo.10019084"><img alt="DOI" src="https://zenodo.org/badge/185418877.svg" /></a></p>
 <p><a class="reference external" href="https://github.com/formicidae-tracker/documentation/wiki">FORT Project Wiki</a>
 • <a class="reference external" href="https://github.com/fortmicidae-tracker/hermes/issues/new">Report a Bug</a>
 • <a class="reference external" href="https://github.com/formicidae-tracker/hermes/issues/new">Request a Feature</a></p>
@@ -183,36 +185,36 @@ Tracker project. This is mostly based on protocol buffer. It provides
 utilities to access file sequence of saved tracking data or to connect
 to live tracking instance to access broadcasted data.</p>
 <div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
 <div class="section" id="c-c">
-<h3>C/C++<a class="headerlink" href="#c-c" title="Permalink to this headline">¶</a></h3>
+<h3>C/C++<a class="headerlink" href="#c-c" title="Permalink to this heading">¶</a></h3>
 <p><strong>libfort-hermes</strong> and <strong>libfort-hermes-cpp</strong> packages are distributed
 within the larger conda <strong>libfort-myrmidon</strong> package through the
 <a class="reference external" href="https://anaconda.org/formicidae-tracker">formicidae-tracker</a> channel.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install -c formicidae-tracker libfort-myrmidon
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>formicidae-tracker<span class="w"> </span>libfort-myrmidon
 </pre></div>
 </div>
 </div>
 <div class="section" id="python">
-<h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
+<h3>Python<a class="headerlink" href="#python" title="Permalink to this heading">¶</a></h3>
 <p>The <strong>py_fort_hermes</strong> package is available through PyPI
 <a class="reference external" href="https://pypi.org/project/formicidae-tracker-hermes/">formicidae-tracker-hermes</a>
 project.</p>
 </div>
 <div class="section" id="golang">
-<h3>Golang<a class="headerlink" href="#golang" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>go get github.com/formicidae-tracker/hermes
+<h3>Golang<a class="headerlink" href="#golang" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>go<span class="w"> </span>get<span class="w"> </span>github.com/formicidae-tracker/hermes
 </pre></div>
 </div>
 </div>
 <div class="section" id="versioning">
-<h3>Versioning<a class="headerlink" href="#versioning" title="Permalink to this headline">¶</a></h3>
+<h3>Versioning<a class="headerlink" href="#versioning" title="Permalink to this heading">¶</a></h3>
 <p><strong>fort-hermes</strong> use <a class="reference external" href="http://semver.org/">SemVer</a> for versioning. For the versions
 available, see the <a class="reference external" href="https://github.com/formicidae-tracker/hermes/releases">releases</a></p>
 </div>
 </div>
 <div class="section" id="authors">
-<h2>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h2>
+<h2>Authors<a class="headerlink" href="#authors" title="Permalink to this heading">¶</a></h2>
 <p>The file <a class="reference external" href="https://github.com/formicidae-tracker/hermes/blob/masert/AUTHORS">AUTHORS</a>
 lists all copyright holders (physical or moral person) for this
 repository.</p>
@@ -220,7 +222,7 @@ repository.</p>
 participated in this project.</p>
 </div>
 <div class="section" id="license">
-<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<h2>License<a class="headerlink" href="#license" title="Permalink to this heading">¶</a></h2>
 <p>This project is licensed under the GNU Lesser General Public License
 v3.0 or later - see the <a class="reference external" href="https://github.com/formicidae-tracker/hermes/blob/master/LICENSE">LICENSE</a>
 file for details</p>

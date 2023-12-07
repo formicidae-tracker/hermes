@@ -34,7 +34,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/../version_dropdown.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
@@ -186,9 +188,9 @@
            <div itemprop="articleBody">
             
   <div class="section" id="fort-hermes-exception-and-errors">
-<h1><strong>fort::hermes</strong> Exception and Errors<a class="headerlink" href="#fort-hermes-exception-and-errors" title="Permalink to this headline">¶</a></h1>
+<h1><strong>fort::hermes</strong> Exception and Errors<a class="headerlink" href="#fort-hermes-exception-and-errors" title="Permalink to this heading">¶</a></h1>
 <div class="section" id="fort-hermes-endoffile">
-<h2>fort::hermes::EndOfFile<a class="headerlink" href="#fort-hermes-endoffile" title="Permalink to this headline">¶</a></h2>
+<h2>fort::hermes::EndOfFile<a class="headerlink" href="#fort-hermes-endoffile" title="Permalink to this heading">¶</a></h2>
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N4fort6hermes9EndOfFileE">
 <span id="_CPPv3N4fort6hermes9EndOfFileE"></span><span id="_CPPv2N4fort6hermes9EndOfFileE"></span><span id="fort::hermes::EndOfFile"></span><span class="target" id="classfort_1_1hermes_1_1EndOfFile"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">EndOfFile</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">exception</span></span><a class="headerlink" href="#_CPPv4N4fort6hermes9EndOfFileE" title="Permalink to this definition">¶</a><br /></dt>
@@ -197,7 +199,7 @@
 
 </div>
 <div class="section" id="fort-hermes-wouldblock">
-<h2>fort::hermes::WouldBlock<a class="headerlink" href="#fort-hermes-wouldblock" title="Permalink to this headline">¶</a></h2>
+<h2>fort::hermes::WouldBlock<a class="headerlink" href="#fort-hermes-wouldblock" title="Permalink to this heading">¶</a></h2>
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N4fort6hermes10WouldBlockE">
 <span id="_CPPv3N4fort6hermes10WouldBlockE"></span><span id="_CPPv2N4fort6hermes10WouldBlockE"></span><span id="fort::hermes::WouldBlock"></span><span class="target" id="classfort_1_1hermes_1_1WouldBlock"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">WouldBlock</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">exception</span></span><a class="headerlink" href="#_CPPv4N4fort6hermes10WouldBlockE" title="Permalink to this definition">¶</a><br /></dt>
@@ -206,10 +208,10 @@
 
 </div>
 <div class="section" id="fort-hermes-internalerror">
-<h2>fort::hermes::InternalError<a class="headerlink" href="#fort-hermes-internalerror" title="Permalink to this headline">¶</a></h2>
+<h2>fort::hermes::InternalError<a class="headerlink" href="#fort-hermes-internalerror" title="Permalink to this heading">¶</a></h2>
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N4fort6hermes13InternalErrorE">
-<span id="_CPPv3N4fort6hermes13InternalErrorE"></span><span id="_CPPv2N4fort6hermes13InternalErrorE"></span><span id="fort::hermes::InternalError"></span><span class="target" id="classfort_1_1hermes_1_1InternalError"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">fort</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">hermes</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">InternalError</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">runtime_error</span></span><a class="headerlink" href="#_CPPv4N4fort6hermes13InternalErrorE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N4fort6hermes13InternalErrorE"></span><span id="_CPPv2N4fort6hermes13InternalErrorE"></span><span id="fort::hermes::InternalError"></span><span class="target" id="classfort_1_1hermes_1_1InternalError"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InternalError</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">runtime_error</span></span><a class="headerlink" href="#_CPPv4N4fort6hermes13InternalErrorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Represents any kinds of errors with hermes file sequence or streams. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
@@ -228,17 +230,17 @@
 
 </div>
 <div class="section" id="fort-hermes-unexpectedendoffilesequence">
-<h2>fort::hermes::UnexpectedEndOfFileSequence<a class="headerlink" href="#fort-hermes-unexpectedendoffilesequence" title="Permalink to this headline">¶</a></h2>
+<h2>fort::hermes::UnexpectedEndOfFileSequence<a class="headerlink" href="#fort-hermes-unexpectedendoffilesequence" title="Permalink to this heading">¶</a></h2>
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4N4fort6hermes27UnexpectedEndOfFileSequenceE">
-<span id="_CPPv3N4fort6hermes27UnexpectedEndOfFileSequenceE"></span><span id="_CPPv2N4fort6hermes27UnexpectedEndOfFileSequenceE"></span><span id="fort::hermes::UnexpectedEndOfFileSequence"></span><span class="target" id="classfort_1_1hermes_1_1UnexpectedEndOfFileSequence"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">fort</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">hermes</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">UnexpectedEndOfFileSequence</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">exception</span></span><a class="headerlink" href="#_CPPv4N4fort6hermes27UnexpectedEndOfFileSequenceE" title="Permalink to this definition">¶</a><br /></dt>
+<span id="_CPPv3N4fort6hermes27UnexpectedEndOfFileSequenceE"></span><span id="_CPPv2N4fort6hermes27UnexpectedEndOfFileSequenceE"></span><span id="fort::hermes::UnexpectedEndOfFileSequence"></span><span class="target" id="classfort_1_1hermes_1_1UnexpectedEndOfFileSequence"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">UnexpectedEndOfFileSequence</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">runtime_error</span></span><a class="headerlink" href="#_CPPv4N4fort6hermes27UnexpectedEndOfFileSequenceE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Exception thrown by <a class="reference internal" href="FileContext.html#classfort_1_1hermes_1_1FileContext"><span class="std std-ref">FileContext</span></a> when an error occured while reading a file sequence. </p>
 <p>Such errors happens when during acquisition of the data, the disk became full and the file where truncated. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK4fort6hermes27UnexpectedEndOfFileSequence15SegmentFilePathEv">
-<span id="_CPPv3NK4fort6hermes27UnexpectedEndOfFileSequence15SegmentFilePathEv"></span><span id="_CPPv2NK4fort6hermes27UnexpectedEndOfFileSequence15SegmentFilePathEv"></span><span id="fort::hermes::UnexpectedEndOfFileSequence::SegmentFilePathC"></span><span class="target" id="classfort_1_1hermes_1_1UnexpectedEndOfFileSequence_1aea008ca9a35ee6b792a54abd57e9af8c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">SegmentFilePath</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4fort6hermes27UnexpectedEndOfFileSequence15SegmentFilePathEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK4fort6hermes27UnexpectedEndOfFileSequence15FileLineContextEv">
+<span id="_CPPv3NK4fort6hermes27UnexpectedEndOfFileSequence15FileLineContextEv"></span><span id="_CPPv2NK4fort6hermes27UnexpectedEndOfFileSequence15FileLineContextEv"></span><span id="fort::hermes::UnexpectedEndOfFileSequence::FileLineContextC"></span><span class="target" id="classfort_1_1hermes_1_1UnexpectedEndOfFileSequence_1a231ee90bdf6fab113f4bbbc038bdbc71"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">fort</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">hermes</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">FileLineContext</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">FileLineContext</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4fort6hermes27UnexpectedEndOfFileSequence15FileLineContextEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>the segment path where the error occured </p>

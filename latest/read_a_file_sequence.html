@@ -34,7 +34,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
         <script src="_static/../version_dropdown.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -177,7 +179,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="reading-a-file-sequence">
-<h1>Reading a file sequence<a class="headerlink" href="#reading-a-file-sequence" title="Permalink to this headline">¶</a></h1>
+<h1>Reading a file sequence<a class="headerlink" href="#reading-a-file-sequence" title="Permalink to this heading">¶</a></h1>
 <p>FORT’s <strong>artemis</strong>/<strong>leto</strong> writes tracking data in sequence of files,
 where each files ususally contains 2 hours worth of tracking
 data. Theses files are usually named
@@ -186,7 +188,7 @@ data. Theses files are usually named
 files through <a class="reference internal" href="api/FileContext.html#_CPPv4N4fort6hermes11FileContextE" title="fort::hermes::FileContext"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">fort::hermes::FileContext</span></code></a> or
 <a class="reference internal" href="api/py_fort_hermes_file.html#py_fort_hermes.file.Context" title="py_fort_hermes.file.Context"><code class="xref py py-class docutils literal notranslate"><span class="pre">py_fort_hermes.file.Context</span></code></a></p>
 <div class="section" id="c">
-<h2>C++<a class="headerlink" href="#c" title="Permalink to this headline">¶</a></h2>
+<h2>C++<a class="headerlink" href="#c" title="Permalink to this heading">¶</a></h2>
 <p><strong>fort-hermes</strong> provides the class
 <a class="reference internal" href="api/FileContext.html#_CPPv4N4fort6hermes11FileContextE" title="fort::hermes::FileContext"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">fort::hermes::FileContext</span></code></a> to access a sequence of
 tracking file. By default it will read the first provided segment and
@@ -195,47 +197,47 @@ continue until the last one is fully successfully read and throw a
 before the last segment is succesfully read a
 <a class="reference internal" href="api/Errors.html#_CPPv4N4fort6hermes27UnexpectedEndOfFileSequenceE" title="fort::hermes::UnexpectedEndOfFileSequence"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">fort::hermes::UnexpectedEndOfFileSequence</span></code></a> exception is
 thrown.</p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;fort/hermes/FileContext.hpp&gt;</span><span class="cp"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;fort/hermes/FileContext.hpp&gt;</span>
 
-<span class="n">FileContext</span> <span class="nf">context</span><span class="p">(</span><span class="s">&quot;tracking.0000.hermes&quot;</span><span class="p">)</span>
+<span class="n">FileContext</span><span class="w"> </span><span class="n">context</span><span class="p">(</span><span class="s">&quot;tracking.0000.hermes&quot;</span><span class="p">)</span>
 
 <span class="c1">// to avoid ununcessary memory allocation, the same protobuf</span>
 <span class="c1">// message is re-used for each iteration</span>
-<span class="n">fort</span><span class="o">::</span><span class="n">hermes</span><span class="o">::</span><span class="n">FrameReadout</span> <span class="n">ro</span><span class="p">;</span>
+<span class="n">fort</span><span class="o">::</span><span class="n">hermes</span><span class="o">::</span><span class="n">FrameReadout</span><span class="w"> </span><span class="n">ro</span><span class="p">;</span>
 
-<span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// enter an unknown loop</span>
-    <span class="k">try</span> <span class="p">{</span>
-        <span class="c1">// read a FrameReadout from the context</span>
-        <span class="n">context</span><span class="p">.</span><span class="n">Read</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ro</span><span class="p">);</span>
-        <span class="c1">//do something with the readout</span>
-    <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="k">const</span> <span class="n">fort</span><span class="o">::</span><span class="n">hermes</span><span class="o">::</span><span class="n">EndOfFile</span> <span class="o">&amp;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">//EndOfFile is thrown when no data is available</span>
-        <span class="k">break</span><span class="p">;</span>
-    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">fort</span><span class="o">::</span><span class="n">hermes</span><span class="o">::</span><span class="n">UnexpectedEndOfFileSequence</span> <span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// if an error occurs before the end of file sequence, we</span>
-        <span class="c1">// can access the corrupted segment file path</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Got an error in &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span><span class="p">.</span><span class="n">SegmentFilePath</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-        <span class="k">break</span><span class="p">;</span>
-    <span class="p">}</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// enter an unknown loop</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// read a FrameReadout from the context</span>
+<span class="w">        </span><span class="n">context</span><span class="p">.</span><span class="n">Read</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ro</span><span class="p">);</span>
+<span class="w">        </span><span class="c1">//do something with the readout</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">fort</span><span class="o">::</span><span class="n">hermes</span><span class="o">::</span><span class="n">EndOfFile</span><span class="w"> </span><span class="o">&amp;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">//EndOfFile is thrown when no data is available</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">fort</span><span class="o">::</span><span class="n">hermes</span><span class="o">::</span><span class="n">UnexpectedEndOfFileSequence</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// if an error occurs before the end of file sequence, we</span>
+<span class="w">        </span><span class="c1">// can access the corrupted segment file path</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cerr</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Got an error in &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">SegmentFilePath</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="python">
-<h2>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
+<h2>Python<a class="headerlink" href="#python" title="Permalink to this heading">¶</a></h2>
 <p>The function <a class="reference internal" href="api/py_fort_hermes_file.html#py_fort_hermes.file.open" title="py_fort_hermes.file.open"><code class="xref py py-func docutils literal notranslate"><span class="pre">py_fort_hermes.file.open()</span></code></a> opens a
 <a class="reference internal" href="api/py_fort_hermes_file.html#py_fort_hermes.file.Context" title="py_fort_hermes.file.Context"><code class="xref py py-class docutils literal notranslate"><span class="pre">py_fort_hermes.file.Context</span></code></a> which is iterable in a <strong>for</strong>
 loop. Again if the file sequence encounters an errors before the last
 segment is fully read,a
 <a class="reference internal" href="api/py_fort_hermes_errors.html#py_fort_hermes.UnexpectedEndOfFileSequence" title="py_fort_hermes.UnexpectedEndOfFileSequence"><code class="xref py py-class docutils literal notranslate"><span class="pre">py_fort_hermes.UnexpectedEndOfFileSequence</span></code></a> is raised.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">py_fort_hermes</span> <span class="kn">as</span> <span class="nn">fh</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">py_fort_hermes</span> <span class="k">as</span> <span class="nn">fh</span>
 
 <span class="k">with</span> <span class="n">fh</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;tracking.0000.hermes&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">ro</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
             <span class="c1"># do something with readout</span>
     <span class="k">except</span> <span class="n">fh</span><span class="o">.</span><span class="n">UnexpectedEndOfFileSequence</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is corrupted&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">segmentPath</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is corrupted&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="o">.</span><span class="n">segmentPath</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

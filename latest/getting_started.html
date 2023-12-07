@@ -34,7 +34,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
         <script src="_static/../version_dropdown.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -187,17 +189,17 @@
            <div itemprop="articleBody">
             
   <div class="section" id="getting-started">
-<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h1>
 <div class="section" id="c">
-<h2>C++<a class="headerlink" href="#c" title="Permalink to this headline">¶</a></h2>
+<h2>C++<a class="headerlink" href="#c" title="Permalink to this heading">¶</a></h2>
 <div class="section" id="installation-from-conda">
-<h3>Installation from conda<a class="headerlink" href="#installation-from-conda" title="Permalink to this headline">¶</a></h3>
+<h3>Installation from conda<a class="headerlink" href="#installation-from-conda" title="Permalink to this heading">¶</a></h3>
 <p>It is recommanded to install the <a class="reference external" href="https://conda.io">conda</a> package
 <a class="reference external" href="https://anaconda.org/formicidae-tracker/libfort-myrmidon">libfort-myrmidon</a> from a
 fresh miniconda install:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -n my-env
-conda activate my-env
-conda install -c formicidae-tracker libfort-myrmidon
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>my-env
+conda<span class="w"> </span>activate<span class="w"> </span>my-env
+conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>formicidae-tracker<span class="w"> </span>libfort-myrmidon
 </pre></div>
 </div>
 <p>This will install the <strong>fort-hermes</strong> library which
@@ -205,46 +207,46 @@ conda install -c formicidae-tracker libfort-myrmidon
 library from sources.</p>
 </div>
 <div class="section" id="installation-from-sources">
-<h3>Installation from sources<a class="headerlink" href="#installation-from-sources" title="Permalink to this headline">¶</a></h3>
+<h3>Installation from sources<a class="headerlink" href="#installation-from-sources" title="Permalink to this heading">¶</a></h3>
 <p>The library requires a recent <strong>cmake</strong>, <strong>libasio-dev</strong>,
 <strong>libprotobuf-dev</strong> and <strong>protobuf-compiler</strong> packages on Debian based distribution.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/formicidae-tracker/hermes
-<span class="nb">cd</span> hermes
-mkdir -p build
-<span class="nb">cd</span> build
-cmake -DCMAKE_BUILD_TYPE<span class="o">=</span>RelWithDebInfo ../
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/formicidae-tracker/hermes
+<span class="nb">cd</span><span class="w"> </span>hermes
+mkdir<span class="w"> </span>-p<span class="w"> </span>build
+<span class="nb">cd</span><span class="w"> </span>build
+cmake<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>RelWithDebInfo<span class="w"> </span>../
 make
-sudo make install
+sudo<span class="w"> </span>make<span class="w"> </span>install
 </pre></div>
 </div>
 </div>
 <div class="section" id="linking-to-a-c-project">
-<h3>Linking to a C++ project<a class="headerlink" href="#linking-to-a-c-project" title="Permalink to this headline">¶</a></h3>
+<h3>Linking to a C++ project<a class="headerlink" href="#linking-to-a-c-project" title="Permalink to this heading">¶</a></h3>
 <div class="section" id="cmake-based-project">
-<h4>CMake based project<a class="headerlink" href="#cmake-based-project" title="Permalink to this headline">¶</a></h4>
+<h4>CMake based project<a class="headerlink" href="#cmake-based-project" title="Permalink to this heading">¶</a></h4>
 <p>The installation provides a <strong>FortHermesCppConfig.cmake</strong> file simply use
 in your project:</p>
-<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_package</span><span class="p">(</span><span class="s">FortHermesCpp</span> <span class="s">REQUIRED</span><span class="p">)</span>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_package</span><span class="p">(</span><span class="s">FortHermesCpp</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
 <span class="nb">include_directories</span><span class="p">(</span><span class="o">${</span><span class="nv">FORT_HERMES_CPP_INCLUDE_DIRS</span><span class="o">}</span><span class="p">)</span>
 
-<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">my-target</span> <span class="o">${</span><span class="nv">FORT_HERMES_CPP_LIBRARIES</span><span class="o">}</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">my-target</span><span class="w"> </span><span class="o">${</span><span class="nv">FORT_HERMES_CPP_LIBRARIES</span><span class="o">}</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="pkg-config-project">
-<h4><strong>pkg-config</strong> project<a class="headerlink" href="#pkg-config-project" title="Permalink to this headline">¶</a></h4>
+<h4><strong>pkg-config</strong> project<a class="headerlink" href="#pkg-config-project" title="Permalink to this heading">¶</a></h4>
 <p>The package provides a <strong>fort-hermes.pc</strong> files to provides cflags and
 linker options.</p>
 </div>
 </div>
 </div>
 <div class="section" id="go">
-<h2>Go<a class="headerlink" href="#go" title="Permalink to this headline">¶</a></h2>
+<h2>Go<a class="headerlink" href="#go" title="Permalink to this heading">¶</a></h2>
 <p>The package <a class="reference external" href="https://pkg.go.dev/github.com/formicidae-tracker/hermes&#64;v0.5.0/src/go/hermes">github.com/formicidae-tracker/hermes/src/go/hermes</a>
 provides compiled protobuf messages and utilities.</p>
 </div>
 <div class="section" id="python">
-<h2>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
+<h2>Python<a class="headerlink" href="#python" title="Permalink to this heading">¶</a></h2>
 <p>The python package is available through <a class="reference external" href="https://pypi.org/project/formicidae-tracker-hermes/">PyPI’s project
 formicidae-tracker-hermes</a></p>
 </div>

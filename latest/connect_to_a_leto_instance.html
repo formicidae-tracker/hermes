@@ -34,7 +34,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
         <script src="_static/../version_dropdown.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -177,7 +179,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="connect-to-a-leto-instance">
-<h1>Connect to a <strong>leto</strong> instance<a class="headerlink" href="#connect-to-a-leto-instance" title="Permalink to this headline">¶</a></h1>
+<h1>Connect to a <strong>leto</strong> instance<a class="headerlink" href="#connect-to-a-leto-instance" title="Permalink to this heading">¶</a></h1>
 <dl class="simple">
 <dt><strong>fort-hermes</strong> provides utility to connect to a live <strong>leto</strong></dt><dd><p>instance. Usually those broadcast live tracking data on TCP
 port 4002. Those broadcast can be accessed with
@@ -186,26 +188,26 @@ port 4002. Those broadcast can be accessed with
 </dd>
 </dl>
 <div class="section" id="c">
-<h2>C++<a class="headerlink" href="#c" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;fort/hermes/NetworkContext.hpp&gt;</span><span class="cp"></span>
+<h2>C++<a class="headerlink" href="#c" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;fort/hermes/NetworkContext.hpp&gt;</span>
 
-<span class="n">NetworkContext</span> <span class="nf">context</span><span class="p">(</span><span class="s">&quot;host&quot;</span><span class="p">,</span><span class="mi">4002</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span>
+<span class="n">NetworkContext</span><span class="w"> </span><span class="n">context</span><span class="p">(</span><span class="s">&quot;host&quot;</span><span class="p">,</span><span class="mi">4002</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span>
 
 <span class="c1">// Like for FileContext, we re-use the same FrameReadout through the loop;</span>
-<span class="n">FrameReadout</span> <span class="n">ro</span><span class="p">;</span>
-<span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">try</span> <span class="p">{</span>
-        <span class="n">context</span><span class="p">.</span><span class="n">Read</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ro</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span> <span class="k">const</span> <span class="n">fort</span><span class="o">::</span><span class="n">Hermes</span><span class="o">::</span><span class="n">WouldBlock</span> <span class="o">&amp;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">//No message ready yet</span>
-    <span class="p">}</span>
+<span class="n">FrameReadout</span><span class="w"> </span><span class="n">ro</span><span class="p">;</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">context</span><span class="p">.</span><span class="n">Read</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ro</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">fort</span><span class="o">::</span><span class="n">Hermes</span><span class="o">::</span><span class="n">WouldBlock</span><span class="w"> </span><span class="o">&amp;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">//No message ready yet</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="python">
-<h2>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">py_fort_hermes</span> <span class="kn">as</span> <span class="nn">fh</span>
+<h2>Python<a class="headerlink" href="#python" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">py_fort_hermes</span> <span class="k">as</span> <span class="nn">fh</span>
 
 <span class="k">with</span> <span class="n">fh</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;host&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">c</span><span class="p">:</span>
      <span class="k">try</span><span class="p">:</span>
