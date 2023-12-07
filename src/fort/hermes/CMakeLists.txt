@@ -88,7 +88,7 @@ set(UTEST_SRC_FILES
 	CheckHeaderUTest.cpp
 	details/FileSequenceUTest.cpp
 )
-if(NOT FORT_HERMES_IMPORTED)
+if(FORT_HERMES_MAIN)
 	add_executable(fort-hermes-tests ${UTEST_HDR_FILES} ${UTEST_SRC_FILES})
 	target_link_libraries(
 		fort-hermes-tests fort-hermes GTest::gtest_main GTest::gmock_main
@@ -96,14 +96,14 @@ if(NOT FORT_HERMES_IMPORTED)
 
 	add_test(NAME fort-hermes-tests COMMAND fort-hermes-tests)
 	add_dependencies(check fort-hermes-tests)
-else(NOT FORT_HERMES_IMPORTED)
+else(FORT_HERMES_MAIN)
 	add_library(fort-hermes::libfort-hermes INTERFACE IMPORTED GLOBAL)
 	target_link_libraries(fort-hermes::libfort-hermes INTERFACE fort-hermes-cpp)
 	target_include_directories(
 		fort-hermes::libfort-hermes INTERFACE ${PROJECT_SOURCE_DIR}/src
 											  ${PROJECT_BINARY_DIR}/src
 	)
-endif(NOT FORT_HERMES_IMPORTED)
+endif(FORT_HERMES_MAIN)
 
 foreach(h ${HDR_FILES})
 	list(APPEND HERMES_API_DOC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/${h})

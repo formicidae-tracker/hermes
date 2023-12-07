@@ -23,9 +23,9 @@ cmake_minimum_required(VERSION 3.11)
 
 project(hermes LANGUAGES C CXX)
 
-if(NOT CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
-	set(FORT_HERMES_IMPORTED 1)
-endif(NOT CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+	set(FORT_HERMES_MAIN 1)
+endif(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
 
 option(ENABLE_COVERAGE "Enables code coverage" Off)
 option(BUILD_PYTHON "Enables python building" Off)
@@ -53,7 +53,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(cpptrace)
 
-if(NOT FORT_HERMES_IMPORTED)
+if(FORT_HERMES_MAIN)
 	set(INSTALL_GTEST Off)
 	FetchContent_Declare(
 		googletest
@@ -72,7 +72,7 @@ if(NOT FORT_HERMES_IMPORTED)
 	enable_testing()
 	set(MAKE_CHECK_TEST_COMMAND ${CMAKE_CTEST_COMMAND} -V)
 	add_custom_target(check COMMAND ${MAKE_CHECK_TEST_COMMAND})
-endif(NOT FORT_HERMES_IMPORTED)
+endif(FORT_HERMES_MAIN)
 
 set(INCLUDE_INSTALL_DIR include/fort/hermes)
 set(LIB_INSTALL_DIR lib)
@@ -95,7 +95,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/FortHermesCppConfig.cmake
 		DESTINATION ${LIB_INSTALL_DIR}/FortHermesCpp/cmake
 )
 
-if((NOT FORT_HERMES_IMPORTED) AND ENABLE_COVERAGE)
+if(FORT_HERMES_MAIN AND ENABLE_COVERAGE)
 	include(CodeCoverage)
 	enable_coverage()
 	setup_target_for_coverage(
@@ -111,7 +111,7 @@ if((NOT FORT_HERMES_IMPORTED) AND ENABLE_COVERAGE)
 		--include
 		"'${PROJECT_SOURCE_DIR}/src/fort/hermes/*'"
 	)
-endif((NOT FORT_HERMES_IMPORTED) AND ENABLE_COVERAGE)
+endif(FORT_HERMES_MAIN AND ENABLE_COVERAGE)
 
 add_subdirectory(src/fort/hermes)
 
@@ -119,10 +119,10 @@ add_subdirectory(pkgconfig)
 
 add_subdirectory(examples)
 
-if(BUILD_PYTHON OR BUILD_DOCS)
+if(FORT_HERMES_MAIN AND (BUILD_PYTHON OR BUILD_DOCS))
 	add_subdirectory(src/python)
-endif(BUILD_PYTHON OR BUILD_DOCS)
+endif(FORT_HERMES_MAIN AND (BUILD_PYTHON OR BUILD_DOCS))
 
-if(BUILD_DOCS)
+if(FORT_HERMES_MAIN AND BUILD_DOCS)
 	add_subdirectory(docs)
-endif(BUILD_DOCS)
+endif(FORT_HERMES_MAIN AND BUILD_DOCS)
