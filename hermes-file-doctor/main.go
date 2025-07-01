@@ -4,7 +4,6 @@ import (
 	"compress/gzip"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log/slog"
 	"os"
 	"path/filepath"
@@ -13,6 +12,10 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/jessevdk/go-flags"
 )
+
+// TODO: flag to cut on error, or check error path for each segment.
+// TODO: checks support for uncompressed files.
+// TODO: unit tests ?
 
 type LineFixer func(*hermes.FileLine) (bool, error)
 type HeaderFixer func(*hermes.Header) error
@@ -105,15 +108,49 @@ func openGzip(filename string) (io.ReadCloser, error) {
 }
 
 func copyFile(in, out string) error {
-	input, err := ioutil.ReadFile(in)
+	input, err := os.ReadFile(in)
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(out, input, 0644)
+	return os.WriteFile(out, input, 0644)
 }
 
-func writeHermesFile(filename string, header *hermes.Header, lines []*hermes.FileLine) error {
-	file, err := os.Create(filename)
+type hermesFileRewriter struct {
+	filename string
+	header   *hermes.Header
+	lines    []*hermes.FileLine
+	logger   *slog.Logger
+}
+
+var toRewrite *hermesFileRewriter = nil
+
+func pushRewrite(filename string, header *hermes.Header, lines []*hermes.FileLine, logger *slog.Logger) {
+	var err error
+	if toRewrite != nil {
+		err = toRewrite.rewrite()
+		if err != nil {
+			toRewrite.logger.Error("rewrite error", "error", err)
+		}
+		toRewrite = nil
+	}
+	toRewrite = &hermesFileRewriter{
+		filename: filename,
+		header:   header,
+		lines:    lines,
+		logger:   logger,
+	}
+}
+
+func (w *hermesFileRewriter) rewrite() error {
+	dest := w.filename + ".bak"
+	w.logger.Info("backuping", "dest", dest)
+	err := copyFile(w.filename, dest)
+	if err != nil {
+		return err
+	}
+
+	w.logger.Info("rewriting", "lines", len(w.lines))
+	file, err := os.Create(w.filename)
 	if err != nil {
 		return err
 	}
@@ -121,7 +158,7 @@ func writeHermesFile(filename string, header *hermes.Header, lines []*hermes.Fil
 	compressed := gzip.NewWriter(file)
 	defer compressed.Close()
 	b := proto.NewBuffer(nil)
-	err = b.EncodeMessage(header)
+	err = b.EncodeMessage(w.header)
 	if err != nil {
 		return err
 	}
@@ -130,7 +167,7 @@ func writeHermesFile(filename string, header *hermes.Header, lines []*hermes.Fil
 		return err
 	}
 
-	for _, l := range lines {
+	for _, l := range w.lines {
 		b = proto.NewBuffer(nil)
 		err = b.EncodeMessage(l)
 		if err != nil {
@@ -168,6 +205,7 @@ func (a App) RunForFile(filename string, file io.ReadCloser) error {
 
 	lines := []*hermes.FileLine{}
 	var nextFilename string
+	var next io.ReadCloser
 	for {
 		line := &hermes.FileLine{}
 		ok := true
@@ -205,50 +243,29 @@ func (a App) RunForFile(filename string, file io.ReadCloser) error {
 		if len(line.Footer.Next) == 0 {
 			break
 		}
+
 		file.Close()
+
 		nextFilename = filepath.Join(filepath.Dir(filename), line.Footer.Next)
-		next, err := openGzip(nextFilename)
+		next, err = openGzip(nextFilename)
 		if err != nil {
 			line.Footer.Next = ""
+			good = false
 			next.Close()
-			break
 		}
-		err = a.RunForFile(nextFilename, next)
-		next.Close()
-		if err != nil {
-			line.Footer.Next = ""
-		}
+		break
 	}
 
-	if err != nil {
-		good = false
-		logger.Warn("Creating a new termination footer", "error", err)
-		if lines[len(lines)-1].Footer == nil {
-			lines = append(lines, &hermes.FileLine{Footer: &hermes.Footer{}})
-		}
-		lines[len(lines)-1].Footer.Next = ""
-		err = nil
+	if good == false && a.DryRun == false {
+		pushRewrite(filename, h, lines, logger)
 	}
 
-	if a.DryRun == true {
-		if good == false {
-			os.Exit(1)
-		}
-		return nil
+	if nextFilename != "" && next != nil {
+		defer next.Close()
+		return a.RunForFile(nextFilename, next)
 	}
 
-	if good == true {
-		return nil
-	}
-
-	logger.Info("rewriting file")
-
-	err = copyFile(filename, filename+".bak")
-	if err != nil {
-		return err
-	}
-
-	return writeHermesFile(filename, h, lines)
+	return nil
 }
 
 func Execute() error {
