@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
+	"log/slog"
 	"os"
 	"path/filepath"
 
@@ -18,19 +18,57 @@ type LineFixer func(*hermes.FileLine) (bool, error)
 type HeaderFixer func(*hermes.Header) error
 
 func PrintHeader(h *hermes.Header) error {
-	log.Printf("Got Header %+v", h)
+	slog.Info("show data", "header", h)
 	return nil
 }
 
 func PrintLine(l *hermes.FileLine) (bool, error) {
-	log.Printf("Got Line %+v", l)
+	slog.Info("show data", "line", l)
+	return true, nil
+}
+
+type Int32TimestampFixer struct {
+	last      *int64
+	timestamp int64
+}
+
+func (f *Int32TimestampFixer) fixLine(l *hermes.FileLine) (bool, error) {
+
+	if l.Readout == nil {
+		return true, nil
+	}
+
+	if f.last == nil {
+		f.last = new(int64)
+		*f.last = l.Readout.Timestamp
+		f.timestamp = l.Readout.Timestamp
+		if f.timestamp < 0 {
+			f.timestamp = 0
+			l.Readout.Timestamp = 0
+			return true, fmt.Errorf("Frame %d starts with a negative timestamp, forcing it to 0", l.Readout.FrameID)
+		}
+		return true, nil
+	}
+
+	diff := uint32(l.Readout.Timestamp) - uint32(*f.last)
+	*f.last = l.Readout.Timestamp
+	f.timestamp += int64(diff)
+
+	if f.timestamp != l.Readout.Timestamp {
+		err := fmt.Errorf("Wrong timestamp %d (previous: %d, udiff: %d), rewritting it to %d",
+			l.Readout.Timestamp, *f.last, diff, f.timestamp)
+		l.Readout.Timestamp = f.timestamp
+		return true, err
+	}
+
 	return true, nil
 }
 
 type App struct {
-	Verbose bool `short:"v" long:"verbose" description:"verbose mode"`
-	DryRun  bool `short:"n" long:"dry-run" description:"Do not modify the file, and just report error"`
-	Args    struct {
+	Verbose  bool `short:"v" long:"verbose" description:"verbose mode"`
+	DryRun   bool `short:"n" long:"dry-run" description:"Do not modify the file, and just report error"`
+	FixInt32 bool `long:"fix-int32-timestamp" description:"Fix int32 timestamp"`
+	Args     struct {
 		File *flags.Filename
 	} `positional-args:"yes" required:"true"`
 
@@ -107,6 +145,9 @@ func writeHermesFile(filename string, header *hermes.Header, lines []*hermes.Fil
 }
 
 func (a App) RunForFile(filename string, file io.ReadCloser) error {
+	defer file.Close()
+	logger := slog.With("file", filename)
+	logger.Info("start reading")
 	h := &hermes.Header{}
 	ok, err := hermes.ReadDelimitedMessage(file, h)
 	if ok == false || err != nil {
@@ -120,13 +161,13 @@ func (a App) RunForFile(filename string, file io.ReadCloser) error {
 	for _, hf := range a.headerFixers {
 		err := hf(h)
 		if err != nil {
-			log.Printf("Got header error: %s", err)
+			logger.Warn("header error", "error", err)
 			good = false
 		}
 	}
 
 	lines := []*hermes.FileLine{}
-
+	var nextFilename string
 	for {
 		line := &hermes.FileLine{}
 		ok := true
@@ -137,12 +178,18 @@ func (a App) RunForFile(filename string, file io.ReadCloser) error {
 			}
 			break
 		}
+		lineLogger := logger
+		if line.Readout != nil {
+			lineLogger = logger.With("FrameID", line.Readout.FrameID)
+		}
+
 		keep := true
 		for _, f := range a.lineFixers {
 			keepIt, err := f(line)
+
 			if err != nil {
 				good = false
-				log.Printf("Got error: %s", err)
+				lineLogger.Warn("line error", "error", err)
 			}
 			if keepIt == false {
 				keep = false
@@ -159,7 +206,7 @@ func (a App) RunForFile(filename string, file io.ReadCloser) error {
 			break
 		}
 		file.Close()
-		nextFilename := filepath.Join(filepath.Dir(filename), line.Footer.Next)
+		nextFilename = filepath.Join(filepath.Dir(filename), line.Footer.Next)
 		next, err := openGzip(nextFilename)
 		if err != nil {
 			line.Footer.Next = ""
@@ -175,7 +222,7 @@ func (a App) RunForFile(filename string, file io.ReadCloser) error {
 
 	if err != nil {
 		good = false
-		log.Printf("Got error: %s\n Creating a new termination footer", err)
+		logger.Warn("Creating a new termination footer", "error", err)
 		if lines[len(lines)-1].Footer == nil {
 			lines = append(lines, &hermes.FileLine{Footer: &hermes.Footer{}})
 		}
@@ -193,6 +240,8 @@ func (a App) RunForFile(filename string, file io.ReadCloser) error {
 	if good == true {
 		return nil
 	}
+
+	logger.Info("rewriting file")
 
 	err = copyFile(filename, filename+".bak")
 	if err != nil {
@@ -217,6 +266,11 @@ func Execute() error {
 		//add something
 	}
 
+	if a.FixInt32 == true {
+		f := Int32TimestampFixer{}
+		a.lineFixers = append(a.lineFixers, f.fixLine)
+	}
+
 	file, err := openGzip(string(*a.Args.File))
 	if err != nil {
 		return err
@@ -226,6 +280,7 @@ func Execute() error {
 func main() {
 
 	if err := Execute(); err != nil {
-		log.Fatalf("Unhandled error: %s", err)
+		slog.Error("Unhandled error", "error", err)
+		os.Exit(1)
 	}
 }
