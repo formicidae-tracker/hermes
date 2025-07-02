@@ -94,7 +94,7 @@ if(FORT_HERMES_MAIN)
 		fort-hermes-tests fort-hermes GTest::gtest_main GTest::gmock_main
 	)
 
-	add_test(NAME fort-hermes-tests COMMAND fort-hermes-tests)
+	gtest_discover_tests(fort-hermes-tests)
 	add_dependencies(check fort-hermes-tests)
 else(FORT_HERMES_MAIN)
 	add_library(fort-hermes::libfort-hermes INTERFACE IMPORTED GLOBAL)

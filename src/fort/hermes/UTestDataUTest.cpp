@@ -18,6 +18,7 @@
 // libfort-hermes.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "UTestDataUTest.hpp"
+#include "fort/hermes/FileContext.hpp"
 
 #include <cpptrace/cpptrace.hpp>
 #include <fcntl.h>
@@ -167,15 +168,16 @@ size_t WriteSegment(
 	    std::make_unique<google::protobuf::io::GzipOutputStream>(file.get());
 	std::unique_ptr<google::protobuf::io::FileOutputStream> uncomp;
 	if (args.Dual && i == (args.NumberOfSegments - 1)) {
-		int fdUncomp = open(
-		    (filepath.string() + "unc").c_str(),
-		    O_CREAT | O_TRUNC | O_RDWR | O_BINARY,
-		    0644
-		);
+		auto uncompressedFilepath = FileContext::UncompressedFilename(filepath);
+		int  fdUncomp             = open(
+            uncompressedFilepath.c_str(),
+            O_CREAT | O_TRUNC | O_RDWR | O_BINARY,
+            0644
+        );
 		if (fd <= 0) {
 			throw cpptrace::runtime_error(
-			    "open('" + filepath.string() +
-			    "unc',O_CREAT | O_TRUNC | O_RDWR | O_BINARY): " +
+			    "open('" + uncompressedFilepath +
+			    ",O_CREAT | O_TRUNC | O_RDWR | O_BINARY): " +
 			    std::to_string(errno)
 			);
 		}
@@ -251,9 +253,9 @@ size_t WriteSegment(
 		gziped.reset();
 		uncomp.reset();
 		file.reset();
-		TruncateFile(filepath, 60);
+		TruncateFile(filepath, 100);
 		if (args.Dual == true && i == args.NumberOfSegments - 1) {
-			TruncateFile(filepath.string() + "unc", 60);
+			TruncateFile(FileContext::UncompressedFilename(filepath), 100);
 		}
 	}
 
@@ -315,7 +317,7 @@ void UTestData::WriteSequenceInfos(const std::filesystem::path &basepath) {
 	    .ReadoutsPerSegment = 10,
 	    .MissFooter         = false,
 	    .Dual               = false,
-	    .TruncatedIndex     = 1,
+	    .TruncatedIndex     = 2,
 	    .NoHeader           = false,
 	});
 

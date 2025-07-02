@@ -63,22 +63,23 @@ TEST_F(FileContextUTest, TruncatedReadingLosses) {
 	FileContext  context(info.Segments.front());
 	FrameReadout ro;
 
-	auto checkExceptionThrown = [](const auto &info) {
-		FileContext  context(info.Segments.front());
-		FrameReadout ro;
-		size_t       size;
-		try {
-			for (size = 0; size < info.Readouts.size(); ++size) {
-				context.Read(&ro);
-			}
-		} catch (UnexpectedEndOfFileSequence e) {
-			return std::make_tuple(size, e);
-		} catch (const std::exception &e) {
-			throw std::runtime_error{
-			    std::string("it throw another: ") + e.what()};
-		}
-		throw std::runtime_error{"it throw nothing"};
-	};
+	auto checkExceptionThrown =
+	    [](const fort::hermes::UTestData::SequenceInfo &info) {
+		    FileContext  context(info.Segments.front());
+		    FrameReadout ro;
+		    size_t       size;
+		    try {
+			    for (size = 0; size < info.Readouts.size(); ++size) {
+				    context.Read(&ro);
+			    }
+		    } catch (UnexpectedEndOfFileSequence e) {
+			    return std::make_tuple(size, e);
+		    } catch (const std::exception &e) {
+			    throw std::runtime_error{
+			        std::string("it throw another: ") + e.what()};
+		    }
+		    throw std::runtime_error{"it throw nothing"};
+	    };
 
 	size_t classic, dual;
 	try {
@@ -86,7 +87,7 @@ TEST_F(FileContextUTest, TruncatedReadingLosses) {
 
 		classic = classic_;
 
-		EXPECT_EQ(e.FileLineContext().Next, info.Segments[2]);
+		EXPECT_FALSE(e.FileLineContext().Next.has_value());
 	} catch (const std::exception &e) {
 		ADD_FAILURE() << e.what();
 	}

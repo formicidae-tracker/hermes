@@ -54,6 +54,12 @@ FileSequence::FileSequence(const std::filesystem::path &path)
 	}
 
 	try {
+#ifndef NDEBUG
+		std::cerr
+		    << "libfort-hermes [INFO]: building file sequence from files regex"
+		    << std::endl;
+#endif
+
 		ListFromDirectory();
 	} catch (const std::exception &e) {
 #ifndef NDEBUG
@@ -217,6 +223,7 @@ void FileSequence::ListFromDirectory() {
 	for (const auto &entry : std::filesystem::directory_iterator{d_directory}) {
 		std::string filename = entry.path().filename();
 		std::smatch match;
+
 		if (!std::regex_match(filename, match, trackingFile)) {
 			continue;
 		}
@@ -227,6 +234,7 @@ void FileSequence::ListFromDirectory() {
 		    .End       = 0,
 		};
 	}
+
 } // namespace details
 
 const std::map<std::string, SegmentInfo> &

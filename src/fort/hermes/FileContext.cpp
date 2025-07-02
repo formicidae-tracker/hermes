@@ -69,14 +69,32 @@ FileContext &FileContext::operator=(FileContext &&other) {
 	return *this;
 }
 
+std::string FileContext::UncompressedFilename(const std::filesystem::path &path
+) {
+	return path.parent_path() / ("uncompressed-" + path.filename().string());
+}
+
 void FileContext::OpenFile(const std::string &filename) {
 	google::protobuf::io::ZeroCopyInputStream *stream = nullptr;
-	int fd = open((filename + "unc").c_str(), O_RDONLY | O_BINARY);
+
+#ifndef NDEBUG
+	std::cerr << "libhermes [INFO]: checking file '" +
+	                 UncompressedFilename(filename) + "'"
+	          << std::endl;
+#endif
+
+	int fd =
+	    open((UncompressedFilename(filename)).c_str(), O_RDONLY | O_BINARY);
 	if (fd > 0) {
 		d_file = std::make_unique<google::protobuf::io::FileInputStream>(fd);
 		d_file->SetCloseOnDelete(true);
 		d_gzip.reset();
 		stream = d_file.get();
+#ifndef NDEBUG
+		std::cerr << "libhermes [INFO]: using uncompressed file '" +
+		                 UncompressedFilename(filename) + "'"
+		          << std::endl;
+#endif
 	} else {
 		fd = open(filename.c_str(), O_RDONLY | O_BINARY);
 		if (fd < 0) {

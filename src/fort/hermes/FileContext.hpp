@@ -41,6 +41,7 @@ class FileSequence;
  */
 class FileContext : public Context {
 public:
+	static std::string UncompressedFilename(const std::filesystem::path &path);
 	/**
 	 * Open the file sequence starting with filename.
 	 *

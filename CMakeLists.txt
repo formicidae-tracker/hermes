@@ -70,8 +70,9 @@ if(FORT_HERMES_MAIN)
 
 	include(GoogleTest)
 	enable_testing()
-	set(MAKE_CHECK_TEST_COMMAND ${CMAKE_CTEST_COMMAND} -V)
-	add_custom_target(check COMMAND ${MAKE_CHECK_TEST_COMMAND})
+	add_custom_target(
+		check COMMAND ${CMAKE_CTEST_COMMAND} ARGS --output-on-failure
+	)
 endif(FORT_HERMES_MAIN)
 
 set(INCLUDE_INSTALL_DIR include/fort/hermes)
