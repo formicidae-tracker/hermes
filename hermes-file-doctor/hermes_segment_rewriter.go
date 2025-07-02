@@ -79,5 +79,10 @@ func (w *hermesFileRewriter) rewrite() error {
 		}
 	}
 
-	return os.RemoveAll(UncompressedFilename(w.filename))
+	uncompressedFilepath := UncompressedFilename(w.filename)
+	if _, err := os.Stat(uncompressedFilepath); err != nil {
+		w.logger.Info("removing uncompressed", "filepath", uncompressedFilepath)
+	}
+	return os.RemoveAll(uncompressedFilepath)
+
 }

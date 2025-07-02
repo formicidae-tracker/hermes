@@ -9,16 +9,18 @@ import (
 	"os"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/formicidae-tracker/hermes/src/go/hermes"
 	"github.com/jessevdk/go-flags"
+	"github.com/lmittmann/tint"
 )
 
 // TODO: flag to cut on error, or check error path for each segment.
 // TODO: checks support for uncompressed files.
 // TODO: unit tests ?
 
-type LineFixer func(*hermes.FileLine) (bool, error)
+type LineFixer func(*hermes.FileLine) (bool, bool, error)
 type HeaderFixer func(*hermes.Header) error
 
 func PrintHeader(h *hermes.Header) error {
@@ -26,20 +28,32 @@ func PrintHeader(h *hermes.Header) error {
 	return nil
 }
 
-func PrintLine(l *hermes.FileLine) (bool, error) {
+func PrintLine(l *hermes.FileLine) (bool, bool, error) {
 	slog.Info("show data", "line", l)
-	return true, nil
+	return true, false, nil
 }
 
 type Int32TimestampFixer struct {
 	last      *int64
 	timestamp int64
+	logged    bool
 }
 
-func (f *Int32TimestampFixer) fixLine(l *hermes.FileLine) (bool, error) {
+func (f *Int32TimestampFixer) fixLine(l *hermes.FileLine) (keep bool, shouldLog bool, err error) {
+
+	defer func() {
+		if err == nil {
+			return
+		}
+		if f.logged == false {
+			shouldLog = true
+			f.logged = true
+			slog.Warn("all subsequent timestamp will be modified")
+		}
+	}()
 
 	if l.Readout == nil {
-		return true, nil
+		return true, false, nil
 	}
 
 	if f.last == nil {
@@ -49,23 +63,24 @@ func (f *Int32TimestampFixer) fixLine(l *hermes.FileLine) (bool, error) {
 		if f.timestamp <= 0 {
 			f.timestamp = 1
 			l.Readout.Timestamp = 1
-			return true, fmt.Errorf("Frame %d starts with a negative or null timestamp, forcing it to 1", l.Readout.FrameID)
-		}
-		return true, nil
-	}
+			return true, false, fmt.Errorf("Frame %d starts with a negative or null timestamp, forcing it to 1", l.Readout.FrameID)
 
-	diff := uint32(l.Readout.Timestamp) - uint32(*f.last)
-	*f.last = l.Readout.Timestamp
+		}
+		return true, false, nil
+	}
+	prev := uint32(*f.last)
+	diff := uint32(l.Readout.Timestamp) - prev
 	f.timestamp += int64(diff)
+	*f.last = l.Readout.Timestamp
 
 	if f.timestamp != l.Readout.Timestamp {
 		err := fmt.Errorf("Wrong timestamp %d (previous: %d, udiff: %d), rewritting it to %d",
-			l.Readout.Timestamp, *f.last, diff, f.timestamp)
+			l.Readout.Timestamp, prev, diff, f.timestamp)
 		l.Readout.Timestamp = f.timestamp
-		return true, err
+		return true, false, err
 	}
 
-	return true, nil
+	return true, false, nil
 }
 
 type App struct {
@@ -158,14 +173,13 @@ func (a App) RunForFile(fs *FileSequence, i int) error {
 		}
 		return err
 	}
-
-	good := true
+	fixed := 0
 
 	for _, hf := range a.headerFixers {
 		err := hf(h)
 		if err != nil {
 			logger.Warn("header error", "error", err)
-			good = false
+			fixed += 1
 		}
 	}
 
@@ -188,6 +202,14 @@ func (a App) RunForFile(fs *FileSequence, i int) error {
 
 		if err != nil {
 			logger.Error("could not read complete file", "error", err)
+			logger.Info("terminating file", "lines", lineIdx+1)
+			lines = append(lines, &hermes.FileLine{
+				Readout: nil,
+				Footer: &hermes.Footer{
+					Next: fs.Segments[i].Next,
+				},
+			})
+			fixed += 1
 			break
 		}
 
@@ -199,14 +221,15 @@ func (a App) RunForFile(fs *FileSequence, i int) error {
 		}
 
 		keep := true
-
 		for _, f := range a.lineFixers {
-			keepIt, err := f(line)
-
+			keepIt, shouldLog, err := f(line)
 			if err != nil {
-				good = false
-				lineLogger.Warn("line error", "error", err)
+				if shouldLog == true {
+					lineLogger.Error("line error", "error", err)
+				}
+				fixed += 1
 			}
+
 			if keepIt == false {
 				keep = false
 			}
@@ -222,8 +245,8 @@ func (a App) RunForFile(fs *FileSequence, i int) error {
 
 		expectedNext := fs.Segments[i].Next
 		if line.Footer.Next != expectedNext {
-			lineLogger.Warn("missing next footer", "expectedNext", expectedNext)
-			good = false
+			lineLogger.Error("missing next footer", "expectedNext", expectedNext)
+			fixed += 1
 			line.Footer.Next = expectedNext
 		}
 
@@ -232,7 +255,9 @@ func (a App) RunForFile(fs *FileSequence, i int) error {
 		}
 	}
 
-	if good == false && a.DryRun == false {
+	logger.Info("segment read", "lines", lineIdx+1, "fixes", fixed)
+
+	if fixed > 0 && a.DryRun == false {
 		PushRewrite(filepath, h, lines, logger)
 	}
 
@@ -240,6 +265,14 @@ func (a App) RunForFile(fs *FileSequence, i int) error {
 }
 
 func Execute() error {
+
+	slog.SetDefault(slog.New(
+		tint.NewHandler(os.Stderr, &tint.Options{
+			Level:      slog.LevelDebug,
+			TimeFormat: time.TimeOnly,
+		}),
+	))
+
 	a := &App{
 		headerFixers: []HeaderFixer{},
 		lineFixers:   []LineFixer{},
