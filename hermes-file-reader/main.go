@@ -16,6 +16,7 @@ import (
 type Opts struct {
 	CSVStyle     bool `long:"csv" Description:"output data in CSV"`
 	ARTagConvert bool `long:"convert-artag" Description:"Convert tags to ARTAg expected ID"`
+	NoFollow     bool `long:"no-follow" Description:"only read the file given and not subsequent segments"`
 }
 
 var ARTagID100 []int = []int{4, 57, 260, 5, 52, 59, 65, 244, 397, 540, 929, 2, 6, 7, 9, 14,
@@ -161,7 +162,7 @@ func Execute() error {
 			continue
 		}
 
-		if len(line.Footer.Next) == 0 {
+		if len(line.Footer.Next) == 0 || o.NoFollow == true {
 			//endof stream
 			return nil
 		}
