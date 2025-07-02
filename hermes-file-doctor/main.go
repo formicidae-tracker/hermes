@@ -2,14 +2,15 @@ package main
 
 import (
 	"compress/gzip"
+	"errors"
 	"fmt"
 	"io"
 	"log/slog"
 	"os"
-	"path/filepath"
+	"path"
+	"strings"
 
 	"github.com/formicidae-tracker/hermes/src/go/hermes"
-	"github.com/golang/protobuf/proto"
 	"github.com/jessevdk/go-flags"
 )
 
@@ -45,10 +46,10 @@ func (f *Int32TimestampFixer) fixLine(l *hermes.FileLine) (bool, error) {
 		f.last = new(int64)
 		*f.last = l.Readout.Timestamp
 		f.timestamp = l.Readout.Timestamp
-		if f.timestamp < 0 {
-			f.timestamp = 0
-			l.Readout.Timestamp = 0
-			return true, fmt.Errorf("Frame %d starts with a negative timestamp, forcing it to 0", l.Readout.FrameID)
+		if f.timestamp <= 0 {
+			f.timestamp = 1
+			l.Readout.Timestamp = 1
+			return true, fmt.Errorf("Frame %d starts with a negative or null timestamp, forcing it to 1", l.Readout.FrameID)
 		}
 		return true, nil
 	}
@@ -115,77 +116,41 @@ func copyFile(in, out string) error {
 	return os.WriteFile(out, input, 0644)
 }
 
-type hermesFileRewriter struct {
-	filename string
-	header   *hermes.Header
-	lines    []*hermes.FileLine
-	logger   *slog.Logger
+func UncompressedFilename(filename string) string {
+
+	basename := path.Base(filename)
+	if strings.HasPrefix(basename, "uncompressed-") == true {
+		return filename
+	}
+	dirname := path.Dir(filename)
+	return path.Join(dirname, "uncompressed-"+basename)
 }
 
-var toRewrite *hermesFileRewriter = nil
+func openSegment(filename string) (io.ReadCloser, error) {
+	f, err := os.Open(UncompressedFilename(filename))
+	if err == nil {
+		return f, nil
+	}
 
-func pushRewrite(filename string, header *hermes.Header, lines []*hermes.FileLine, logger *slog.Logger) {
-	var err error
-	if toRewrite != nil {
-		err = toRewrite.rewrite()
-		if err != nil {
-			toRewrite.logger.Error("rewrite error", "error", err)
-		}
-		toRewrite = nil
-	}
-	toRewrite = &hermesFileRewriter{
-		filename: filename,
-		header:   header,
-		lines:    lines,
-		logger:   logger,
-	}
+	return openGzip(filename)
 }
 
-func (w *hermesFileRewriter) rewrite() error {
-	dest := w.filename + ".bak"
-	w.logger.Info("backuping", "dest", dest)
-	err := copyFile(w.filename, dest)
+func (a App) RunForFile(fs *FileSequence, i int) error {
+	name := fs.Segments[i].Name
+	filepath := path.Join(fs.dirpath, fs.Segments[i].Name)
+
+	file, err := openSegment(filepath)
 	if err != nil {
 		return err
 	}
 
-	w.logger.Info("rewriting", "lines", len(w.lines))
-	file, err := os.Create(w.filename)
-	if err != nil {
-		return err
-	}
 	defer file.Close()
-	compressed := gzip.NewWriter(file)
-	defer compressed.Close()
-	b := proto.NewBuffer(nil)
-	err = b.EncodeMessage(w.header)
-	if err != nil {
-		return err
-	}
-	_, err = compressed.Write(b.Bytes())
-	if err != nil {
-		return err
-	}
-
-	for _, l := range w.lines {
-		b = proto.NewBuffer(nil)
-		err = b.EncodeMessage(l)
-		if err != nil {
-			return err
-		}
-		_, err := compressed.Write(b.Bytes())
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func (a App) RunForFile(filename string, file io.ReadCloser) error {
-	defer file.Close()
-	logger := slog.With("file", filename)
+	defer fs.Persist()
+	logger := slog.With("file", fs.Segments[i].Name)
 	logger.Info("start reading")
+
 	h := &hermes.Header{}
+
 	ok, err := hermes.ReadDelimitedMessage(file, h)
 	if ok == false || err != nil {
 		if err == nil {
@@ -195,6 +160,7 @@ func (a App) RunForFile(filename string, file io.ReadCloser) error {
 	}
 
 	good := true
+
 	for _, hf := range a.headerFixers {
 		err := hf(h)
 		if err != nil {
@@ -204,24 +170,36 @@ func (a App) RunForFile(filename string, file io.ReadCloser) error {
 	}
 
 	lines := []*hermes.FileLine{}
-	var nextFilename string
-	var next io.ReadCloser
+
+	fs.ResetSegment(i)
+	lineIdx := -1
 	for {
 		line := &hermes.FileLine{}
 		ok := true
 		ok, err = hermes.ReadDelimitedMessage(file, line)
-		if ok == false || err != nil {
-			if err == nil {
-				err = fmt.Errorf("Could not read line")
-			}
+		if ok == false && err == nil {
+			err = fmt.Errorf("Could not read line")
+		}
+
+		if errors.Is(err, io.EOF) {
+			err = nil
 			break
 		}
+
+		if err != nil {
+			logger.Error("could not read complete file", "error", err)
+			break
+		}
+
 		lineLogger := logger
 		if line.Readout != nil {
 			lineLogger = logger.With("FrameID", line.Readout.FrameID)
+			lineIdx += 1
+			fs.Update(name, lineIdx, line.Readout.FrameID)
 		}
 
 		keep := true
+
 		for _, f := range a.lineFixers {
 			keepIt, err := f(line)
 
@@ -233,6 +211,7 @@ func (a App) RunForFile(filename string, file io.ReadCloser) error {
 				keep = false
 			}
 		}
+
 		if keep == true {
 			lines = append(lines, line)
 		}
@@ -240,29 +219,21 @@ func (a App) RunForFile(filename string, file io.ReadCloser) error {
 		if line.Footer == nil {
 			continue
 		}
+
+		expectedNext := fs.Segments[i].Next
+		if line.Footer.Next != expectedNext {
+			lineLogger.Warn("missing next footer", "expectedNext", expectedNext)
+			good = false
+			line.Footer.Next = expectedNext
+		}
+
 		if len(line.Footer.Next) == 0 {
 			break
 		}
-
-		file.Close()
-
-		nextFilename = filepath.Join(filepath.Dir(filename), line.Footer.Next)
-		next, err = openGzip(nextFilename)
-		if err != nil {
-			line.Footer.Next = ""
-			good = false
-			next.Close()
-		}
-		break
 	}
 
 	if good == false && a.DryRun == false {
-		pushRewrite(filename, h, lines, logger)
-	}
-
-	if nextFilename != "" && next != nil {
-		defer next.Close()
-		return a.RunForFile(nextFilename, next)
+		PushRewrite(filepath, h, lines, logger)
 	}
 
 	return nil
@@ -288,11 +259,22 @@ func Execute() error {
 		a.lineFixers = append(a.lineFixers, f.fixLine)
 	}
 
-	file, err := openGzip(string(*a.Args.File))
+	fs, err := NewHermesFileSequence(string(*a.Args.File))
 	if err != nil {
 		return err
 	}
-	return a.RunForFile(string(*a.Args.File), file)
+
+	defer PopRewrite()
+	defer fs.Persist()
+
+	var errs error
+	for i := range fs.Segments {
+		if err := a.RunForFile(fs, i); err != nil {
+			errs = errors.Join(errs, fmt.Errorf("while repairing '%s': %w", path.Join(fs.dirpath, fs.Segments[i].Name), err))
+		}
+	}
+
+	return errs
 }
 func main() {
 
