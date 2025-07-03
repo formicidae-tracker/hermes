@@ -73,7 +73,7 @@ jobs:
           rsync -avh _build/_static/ _static --delete
           ./linkVersion.sh
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@4.1.5
+        uses: JamesIves/github-pages-deploy-action@v4
         if: ${{ github.event_name == 'push' }}
         with:
           branch: gh-pages
