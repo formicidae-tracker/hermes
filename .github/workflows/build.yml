@@ -9,7 +9,7 @@ on:
 
 jobs:
   run-tests-coverage-docs:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
         - name: Checkout
           uses: actions/checkout@v2.0.0
@@ -48,7 +48,7 @@ jobs:
           working-directory: ${{github.workspace}}/build
           run: make fort-hermes-docs
         - name: Uploads documentation
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v4
           with:
             name: sphinx-documentation
             path: ${{github.workspace}}/build/docs/sphinx
