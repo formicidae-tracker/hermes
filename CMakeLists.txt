@@ -44,12 +44,10 @@ find_package(Asio 1.12 REQUIRED)
 
 include(FetchContent)
 
-set(CPPTRACE_BUILD_SHARED On)
-include(FetchContent)
 FetchContent_Declare(
 	cpptrace
 	GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
-	GIT_TAG v0.3.0
+	GIT_TAG v1.0.2
 )
 FetchContent_MakeAvailable(cpptrace)
 
