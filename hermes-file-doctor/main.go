@@ -187,6 +187,7 @@ func (a App) RunForFile(fs *FileSequence, i int) error {
 
 	fs.ResetSegment(i)
 	lineIdx := -1
+	hasFooter := false
 	for {
 		line := &hermes.FileLine{}
 		ok := true
@@ -243,16 +244,27 @@ func (a App) RunForFile(fs *FileSequence, i int) error {
 			continue
 		}
 
+		hasFooter = true
 		expectedNext := fs.Segments[i].Next
+
 		if line.Footer.Next != expectedNext {
+
 			lineLogger.Error("missing next footer", "expectedNext", expectedNext)
 			fixed += 1
 			line.Footer.Next = expectedNext
 		}
 
-		if len(line.Footer.Next) == 0 {
-			break
-		}
+		break
+	}
+
+	if hasFooter == false {
+		logger.Error("segment is missing a footer")
+		lines = append(lines, &hermes.FileLine{
+			Footer: &hermes.Footer{
+				Next: fs.Segments[i].Next,
+			},
+		})
+		fixed += 1
 	}
 
 	logger.Info("segment read", "lines", lineIdx+1, "fixes", fixed)
