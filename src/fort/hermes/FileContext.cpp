@@ -136,9 +136,9 @@ void FileContext::OpenFile(const std::string &filename) {
 FileContext::FileContext(const std::string &filename, bool followFiles)
     : d_path(filename)
     , d_sequence{std::make_unique<details::FileSequence>(filename)}
+    , d_lastFrameID{std::numeric_limits<size_t>::max()}
     , d_width(0)
     , d_height(0)
-    , d_lastFrameID{std::numeric_limits<size_t>::max()}
     , d_followFiles(followFiles) {
 	OpenFile(filename);
 }

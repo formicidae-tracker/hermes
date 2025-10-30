@@ -31,8 +31,12 @@ option(ENABLE_COVERAGE "Enables code coverage" Off)
 option(BUILD_PYTHON "Enables python building" Off)
 option(BUILD_DOCS "Enables building of documentation" Off)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED 1)
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+	add_definitions(-Wall -Wpedantic -Werror)
+endif()
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 

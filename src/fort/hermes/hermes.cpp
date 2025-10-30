@@ -73,7 +73,7 @@ size_t fh_frame_readout_tag_size(fh_frame_readout_t *re) {
 fh_tag_t *fh_frame_readout_tag(fh_frame_readout_t *re, size_t i) {
 	fort::hermes::FrameReadout *re_ =
 	    reinterpret_cast<fort::hermes::FrameReadout *>(re);
-	if (i >= re_->tags_size()) {
+	if (int(i) >= re_->tags_size()) {
 		return NULL;
 	}
 	return reinterpret_cast<void *>(re_->mutable_tags(i));

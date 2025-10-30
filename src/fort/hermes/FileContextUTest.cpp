@@ -72,11 +72,12 @@ TEST_F(FileContextUTest, TruncatedReadingLosses) {
 			    for (size = 0; size < info.Readouts.size(); ++size) {
 				    context.Read(&ro);
 			    }
-		    } catch (UnexpectedEndOfFileSequence e) {
+		    } catch (const UnexpectedEndOfFileSequence &e) {
 			    return std::make_tuple(size, e);
 		    } catch (const std::exception &e) {
 			    throw std::runtime_error{
-			        std::string("it throw another: ") + e.what()};
+			        std::string("it throw another: ") + e.what()
+			    };
 		    }
 		    throw std::runtime_error{"it throw nothing"};
 	    };

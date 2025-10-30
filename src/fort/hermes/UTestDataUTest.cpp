@@ -357,33 +357,34 @@ void UTestData::WriteSequenceInfos(const std::filesystem::path &basepath) {
 	<< "Expected: " << bExpr << "." << #field << std::endl \
 	<< "Which is: " << b.field
 
-#define assert_equal(aExpr,bExpr,a,b,field) do {	  \
-		if ( a.field != b.field ) { \
-			return failure_helper(aExpr,bExpr,a,b,field); \
-		} \
-	} while(0)
+#define assert_equal(aExpr, bExpr, a, b, field)                                \
+	do {                                                                       \
+		if (a.field != b.field) {                                              \
+			return failure_helper(aExpr, bExpr, a, b, field);                  \
+		}                                                                      \
+	} while (0)
 
+::testing::AssertionResult AssertReadoutEqual(
+    const char                       *aExpr,
+    const char                       *bExpr,
+    const fort::hermes::FrameReadout &a,
+    const fort::hermes::FrameReadout &b
+) {
 
-::testing::AssertionResult AssertReadoutEqual(const char * aExpr,
-                                              const char * bExpr,
-                                              const fort::hermes::FrameReadout & a,
-                                              const fort::hermes::FrameReadout & b) {
+	assert_equal(aExpr, bExpr, a, b, timestamp());
+	assert_equal(aExpr, bExpr, a, b, frameid());
+	assert_equal(aExpr, bExpr, a, b, producer_uuid());
+	assert_equal(aExpr, bExpr, a, b, quads());
+	assert_equal(aExpr, bExpr, a, b, width());
+	assert_equal(aExpr, bExpr, a, b, height());
+	assert_equal(aExpr, bExpr, a, b, tags_size());
 
-	assert_equal(aExpr,bExpr,a,b,timestamp());
-	assert_equal(aExpr,bExpr,a,b,frameid());
-	assert_equal(aExpr,bExpr,a,b,producer_uuid());
-	assert_equal(aExpr,bExpr,a,b,quads());
-	assert_equal(aExpr,bExpr,a,b,width());
-	assert_equal(aExpr,bExpr,a,b,height());
-	assert_equal(aExpr,bExpr,a,b,tags_size());
-
-	for ( size_t i = 0; i < b.tags_size(); ++i ) {
-		assert_equal(aExpr,bExpr,a,b,tags(i).id());
-		assert_equal(aExpr,bExpr,a,b,tags(i).x());
-		assert_equal(aExpr,bExpr,a,b,tags(i).y());
-		assert_equal(aExpr,bExpr,a,b,tags(i).theta());
+	for (int i = 0; i < b.tags_size(); ++i) {
+		assert_equal(aExpr, bExpr, a, b, tags(i).id());
+		assert_equal(aExpr, bExpr, a, b, tags(i).x());
+		assert_equal(aExpr, bExpr, a, b, tags(i).y());
+		assert_equal(aExpr, bExpr, a, b, tags(i).theta());
 	}
-
 
 	return ::testing::AssertionSuccess();
 }
