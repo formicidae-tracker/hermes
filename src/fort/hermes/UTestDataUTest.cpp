@@ -230,7 +230,9 @@ size_t WriteSegment(
 		}
 		line.set_allocated_readout(&ro);
 		write(line);
-		line.release_readout();
+		// Note: (void) marks an explicit discard of the readout, and it is save
+		// as it comes from line.set_allocated_readout(&ro);
+		(void)line.release_readout();
 
 		ro.set_width(args.Readout.width());
 		ro.set_height(args.Readout.height());

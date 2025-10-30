@@ -161,7 +161,10 @@ void FileContext::Read(fort::hermes::FrameReadout *ro) {
         stream,
         &cleanEOF
     );
-	d_line.release_readout();
+
+	// Note: (void) marks an explicit discard of the readout, and it is save
+	// as it comes from line.set_allocated_readout(&ro);
+	(void)d_line.release_readout();
 	if (good == false) {
 		if (cleanEOF == false) {
 			throw UnexpectedEndOfFileSequence(
