@@ -18,13 +18,13 @@
 // libfort-hermes.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "FileSequence.hpp"
+#include <cpptrace/exceptions.hpp>
 #include <fstream>
 #include <optional>
 #include <regex>
 
-#ifndef NDEBUG
-#include <iostream>
-#endif
+#include <slog++/Logger.hpp>
+#include <slog++/slog++.hpp>
 
 namespace fort {
 namespace hermes {
@@ -33,11 +33,13 @@ namespace details {
 FileSequence::FileSequence(const std::filesystem::path &path)
     : d_directory{std::filesystem::absolute(path.parent_path())} {
 	static std::regex tddFileRx{"tracking.[0-9]{4}.hermes"};
+	auto              logger = slog::With(
+        slog::String("domain", "libhermes"),
+        slog::String("path", path)
+    );
+
 	if (!std::regex_search(path.filename().string(), tddFileRx)) {
-#ifndef NDEBUG
-		std::cerr << "libfort-hermes [INFO]: using empty index as " << path
-		          << " does not match regex" << std::endl;
-#endif
+		logger.DInfo("using empty index as path does not match regex");
 		return;
 	}
 
@@ -45,27 +47,31 @@ FileSequence::FileSequence(const std::filesystem::path &path)
 		BuildFromIndexFile();
 		RebuildIndex();
 		return;
+	} catch (const cpptrace::exception &e) {
+		logger.DError(
+		    "could not build sequence",
+		    slog::String("error", e.message())
+		);
 	} catch (const std::exception &e) {
-#ifndef NDEBUG
-		std::cerr
-		    << "libfort-hermes [ERROR]: could not build file sequence for "
-		    << path << " from index file: " << e.what() << std::endl;
-#endif
+		logger.DError(
+		    "could not build sequence",
+		    slog::String("error", e.what())
+		);
 	}
 
 	try {
-#ifndef NDEBUG
-		std::cerr
-		    << "libfort-hermes [INFO]: building file sequence from files regex"
-		    << std::endl;
-#endif
-
+		logger.Info("building file sequence from files regex");
 		ListFromDirectory();
+	} catch (const cpptrace::exception &e) {
+		logger.DError(
+		    "could not build file sequence from list of files",
+		    slog::String("error", e.message())
+		);
 	} catch (const std::exception &e) {
-#ifndef NDEBUG
-		std::cerr << "libfort-hermes [INFO]: could not build file sequence for "
-		          << path << " from list of files: " << e.what() << std::endl;
-#endif
+		logger.DError(
+		    "could not build file sequence from list of files",
+		    slog::String("error", e.what())
+		);
 	}
 
 	RebuildIndex();
@@ -133,11 +139,21 @@ void FileSequence::Persist() {
 				     << std::endl;
 			}
 		}
+	} catch (const cpptrace::exception &e) {
+		slog::DWarn(
+		    "could not persist index file",
+		    slog::String("domain", "libhermes"),
+		    slog::String("directory", d_directory),
+		    slog::String("error", e.message())
+		);
+		return;
 	} catch (const std::exception &e) {
-#ifndef NDEBUG
-		std::cerr << "libfort-hermes [WARN]: could not persist index file in "
-		          << d_directory << ": " << e.what() << std::endl;
-#endif
+		slog::DWarn(
+		    "could not persist index file",
+		    slog::String("domain", "libhermes"),
+		    slog::String("directory", d_directory),
+		    slog::String("error", e.what())
+		);
 		return;
 	}
 	d_needUpdate = false;
@@ -183,7 +199,8 @@ void FileSequence::BuildFromIndexFile() {
 
 	if (!indexFile) {
 		throw std::runtime_error{
-		    "\"" + IndexFilePath().string() + "\" does not exist"};
+		    "\"" + IndexFilePath().string() + "\" does not exist"
+		};
 	}
 
 	std::string line;

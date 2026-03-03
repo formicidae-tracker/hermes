@@ -51,9 +51,16 @@ include(FetchContent)
 FetchContent_Declare(
 	cpptrace
 	GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
-	GIT_TAG v1.0.2
+	GIT_TAG v1.0.4
 )
-FetchContent_MakeAvailable(cpptrace)
+
+FetchContent_Declare(
+	slogpp
+	GIT_REPOSITORY https://github.com/atuleu/slogpp.git
+	GIT_TAG 26ca0aa97b726fcaa4a4e4b0bfa312a0267a387b
+)
+
+FetchContent_MakeAvailable(slogpp cpptrace)
 
 if(FORT_HERMES_MAIN)
 	set(INSTALL_GTEST Off)

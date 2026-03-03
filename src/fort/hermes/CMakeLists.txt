@@ -58,6 +58,7 @@ set_target_properties(
 
 target_link_libraries(
 	fort-hermes-cpp protobuf::libprotobuf Asio::libasio cpptrace::cpptrace
+	slog++::slog++
 )
 
 install(TARGETS fort-hermes-cpp DESTINATION lib)

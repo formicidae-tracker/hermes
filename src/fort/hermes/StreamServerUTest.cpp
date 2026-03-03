@@ -24,6 +24,8 @@
 
 #include <asio/write.hpp>
 
+#include <slog++/slog++.hpp>
+
 namespace fort {
 namespace hermes {
 
@@ -62,8 +64,12 @@ void WriteMessage(
 	    asio::buffer(out.str()),
 	    [](asio::error_code ec, size_t length) {
 		    if (ec) {
-			    std::cerr << "could not write message: " << ec << " after "
-			              << length << "bytes" << std::endl;
+			    slog::Error(
+			        "could not write message",
+			        slog::Int("code", ec.value()),
+			        slog::String("error", ec.message()),
+			        slog::Int("bytes_written", length)
+			    );
 		    }
 	    }
 	);

@@ -23,6 +23,7 @@
 #include <fstream>
 #include <limits>
 #include <regex>
+#include <slog++/slog++.hpp>
 #include <stdexcept>
 #include <sys/stat.h>
 
@@ -76,12 +77,11 @@ std::string FileContext::UncompressedFilename(const std::filesystem::path &path
 
 void FileContext::OpenFile(const std::string &filename) {
 	google::protobuf::io::ZeroCopyInputStream *stream = nullptr;
-
-#ifndef NDEBUG
-	std::cerr << "libhermes [INFO]: checking file '" +
-	                 UncompressedFilename(filename) + "'"
-	          << std::endl;
-#endif
+	auto logger = slog::With(slog::String("domain", "libhermes"));
+	logger.DDebug(
+	    "checking file",
+	    slog::String("path", UncompressedFilename(filename))
+	);
 
 	int fd =
 	    open((UncompressedFilename(filename)).c_str(), O_RDONLY | O_BINARY);
@@ -90,12 +90,13 @@ void FileContext::OpenFile(const std::string &filename) {
 		d_file->SetCloseOnDelete(true);
 		d_gzip.reset();
 		stream = d_file.get();
-#ifndef NDEBUG
-		std::cerr << "libhermes [INFO]: using uncompressed file '" +
-		                 UncompressedFilename(filename) + "'"
-		          << std::endl;
-#endif
+		logger.DInfo(
+		    "using uncompressed file",
+		    slog::String("path", UncompressedFilename(filename))
+		);
 	} else {
+		logger.DInfo("using compressed file", slog::String("path", filename));
+
 		fd = open(filename.c_str(), O_RDONLY | O_BINARY);
 		if (fd < 0) {
 			throw InternalError(
