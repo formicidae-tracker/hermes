@@ -33,13 +33,14 @@ namespace details {
 FileSequence::FileSequence(const std::filesystem::path &path)
     : d_directory{std::filesystem::absolute(path.parent_path())} {
 	static std::regex tddFileRx{"tracking.[0-9]{4}.hermes"};
-	auto              logger = slog::With(
-        slog::String("domain", "libhermes"),
-        slog::String("path", path)
-    );
+
+	auto logger = slog::With(slog::String("path", path));
 
 	if (!std::regex_search(path.filename().string(), tddFileRx)) {
-		logger.DInfo("using empty index as path does not match regex");
+		logger.DInfo(
+		    "using empty index as path does not match regex",
+		    slog::Location()
+		);
 		return;
 	}
 
@@ -50,26 +51,33 @@ FileSequence::FileSequence(const std::filesystem::path &path)
 	} catch (const cpptrace::exception &e) {
 		logger.DError(
 		    "could not build sequence",
+		    slog::Location(),
 		    slog::String("error", e.message())
 		);
 	} catch (const std::exception &e) {
 		logger.DError(
 		    "could not build sequence",
+		    slog::Location(),
 		    slog::String("error", e.what())
 		);
 	}
 
 	try {
-		logger.Info("building file sequence from files regex");
+		logger.Info(
+		    "building file sequence from files regex",
+		    slog::Location()
+		);
 		ListFromDirectory();
 	} catch (const cpptrace::exception &e) {
 		logger.DError(
 		    "could not build file sequence from list of files",
+		    slog::Location(),
 		    slog::String("error", e.message())
 		);
 	} catch (const std::exception &e) {
 		logger.DError(
 		    "could not build file sequence from list of files",
+		    slog::Location(),
 		    slog::String("error", e.what())
 		);
 	}
@@ -142,7 +150,7 @@ void FileSequence::Persist() {
 	} catch (const cpptrace::exception &e) {
 		slog::DWarn(
 		    "could not persist index file",
-		    slog::String("domain", "libhermes"),
+		    slog::Location(),
 		    slog::String("directory", d_directory),
 		    slog::String("error", e.message())
 		);
@@ -150,7 +158,7 @@ void FileSequence::Persist() {
 	} catch (const std::exception &e) {
 		slog::DWarn(
 		    "could not persist index file",
-		    slog::String("domain", "libhermes"),
+		    slog::Location(),
 		    slog::String("directory", d_directory),
 		    slog::String("error", e.what())
 		);

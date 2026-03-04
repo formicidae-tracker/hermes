@@ -61,6 +61,10 @@ target_link_libraries(
 	slog++::slog++
 )
 
+target_compile_options(
+	fort-hermes-cpp PRIVATE -ffile-prefix-map=${PROJECT_SOURCE_DIR}/src/=
+)
+
 install(TARGETS fort-hermes-cpp DESTINATION lib)
 
 install(FILES ${HDR_FILES} ${PROTO_HDR} ${PROTO_FILES}

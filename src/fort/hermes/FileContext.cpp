@@ -20,22 +20,19 @@
 #include <cstring>
 #include <fcntl.h>
 #include <filesystem>
-#include <fstream>
 #include <limits>
-#include <regex>
-#include <slog++/slog++.hpp>
-#include <stdexcept>
+
 #include <sys/stat.h>
 
 #include <google/protobuf/util/delimited_message_util.h>
 
-#include <fort/hermes/Header.pb.h>
+#include <slog++/slog++.hpp>
 
-#include "CheckHeader.hpp"
-#include "Error.hpp"
-#include "FileContext.hpp"
-#include "Types.hpp"
 #include "fort/hermes/details/FileSequence.hpp"
+#include <fort/hermes/CheckHeader.hpp>
+#include <fort/hermes/Error.hpp>
+#include <fort/hermes/FileContext.hpp>
+#include <fort/hermes/Header.pb.h>
 
 #ifndef O_BINARY
 #define O_BINARY 0
@@ -77,9 +74,10 @@ std::string FileContext::UncompressedFilename(const std::filesystem::path &path
 
 void FileContext::OpenFile(const std::string &filename) {
 	google::protobuf::io::ZeroCopyInputStream *stream = nullptr;
-	auto logger = slog::With(slog::String("domain", "libhermes"));
-	logger.DDebug(
+
+	slog::DDebug(
 	    "checking file",
+	    slog::Location(),
 	    slog::String("path", UncompressedFilename(filename))
 	);
 
@@ -90,12 +88,17 @@ void FileContext::OpenFile(const std::string &filename) {
 		d_file->SetCloseOnDelete(true);
 		d_gzip.reset();
 		stream = d_file.get();
-		logger.DInfo(
+		slog::DInfo(
 		    "using uncompressed file",
+		    slog::Location(),
 		    slog::String("path", UncompressedFilename(filename))
 		);
 	} else {
-		logger.DInfo("using compressed file", slog::String("path", filename));
+		slog::DInfo(
+		    "using compressed file",
+		    slog::Location(),
+		    slog::String("path", filename)
+		);
 
 		fd = open(filename.c_str(), O_RDONLY | O_BINARY);
 		if (fd < 0) {
