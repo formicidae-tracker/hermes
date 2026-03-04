@@ -57,7 +57,7 @@ FetchContent_Declare(
 FetchContent_Declare(
 	slogpp
 	GIT_REPOSITORY https://github.com/atuleu/slogpp.git
-	GIT_TAG 11f2c8f86fb1d8226393e6810bc209eca88c652f
+	GIT_TAG fe4404f84129ff81beaec9b9b9787d18ce223fb9
 )
 
 FetchContent_MakeAvailable(slogpp cpptrace)

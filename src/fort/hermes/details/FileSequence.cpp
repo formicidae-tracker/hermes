@@ -48,18 +48,9 @@ FileSequence::FileSequence(const std::filesystem::path &path)
 		BuildFromIndexFile();
 		RebuildIndex();
 		return;
-	} catch (const cpptrace::exception &e) {
-		logger.DError(
-		    "could not build sequence",
-		    slog::Location(),
-		    slog::String("error", e.message())
-		);
 	} catch (const std::exception &e) {
-		logger.DError(
-		    "could not build sequence",
-		    slog::Location(),
-		    slog::String("error", e.what())
-		);
+		logger
+		    .DError("could not build sequence", slog::Location(), slog::Err(e));
 	}
 
 	try {
@@ -68,17 +59,11 @@ FileSequence::FileSequence(const std::filesystem::path &path)
 		    slog::Location()
 		);
 		ListFromDirectory();
-	} catch (const cpptrace::exception &e) {
-		logger.DError(
-		    "could not build file sequence from list of files",
-		    slog::Location(),
-		    slog::String("error", e.message())
-		);
 	} catch (const std::exception &e) {
 		logger.DError(
 		    "could not build file sequence from list of files",
 		    slog::Location(),
-		    slog::String("error", e.what())
+		    slog::Err(e)
 		);
 	}
 
@@ -147,20 +132,12 @@ void FileSequence::Persist() {
 				     << std::endl;
 			}
 		}
-	} catch (const cpptrace::exception &e) {
-		slog::DWarn(
-		    "could not persist index file",
-		    slog::Location(),
-		    slog::String("directory", d_directory),
-		    slog::String("error", e.message())
-		);
-		return;
 	} catch (const std::exception &e) {
 		slog::DWarn(
 		    "could not persist index file",
 		    slog::Location(),
 		    slog::String("directory", d_directory),
-		    slog::String("error", e.what())
+		    slog::Err(e)
 		);
 		return;
 	}
